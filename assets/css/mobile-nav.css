@@ -1,0 +1,193 @@
+/**
+ * Sai Flower — Mobile shell navigation (site-wide, lg:hidden only).
+ * Premium full-screen drawer; desktop header unchanged.
+ */
+.sf-mnav-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 110;
+    background: rgba(20, 16, 12, 0.42);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.28s ease, visibility 0.28s ease;
+}
+
+.sf-mnav-backdrop.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+#mobileMenu.sf-mnav-drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 120;
+    width: min(100vw, 22rem);
+    max-width: 100%;
+    height: 100dvh;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    background: #ffffff;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border: none;
+    border-right: 1px solid rgba(236, 231, 221, 0.9);
+    box-shadow: 12px 0 40px rgba(32, 28, 23, 0.14);
+    transform: translate3d(-104%, 0, 0);
+    visibility: hidden;
+    pointer-events: none;
+    transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.34s;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+#mobileMenu.sf-mnav-drawer.is-open {
+    transform: translate3d(0, 0, 0);
+    visibility: visible;
+    pointer-events: auto;
+}
+
+/* Override Tailwind `hidden` when drawer is open */
+#mobileMenu.sf-mnav-drawer.is-open.hidden {
+    display: block;
+}
+
+@media (min-width: 1024px) {
+    .sf-mnav-backdrop,
+    #mobileMenu.sf-mnav-drawer {
+        display: none !important;
+    }
+}
+
+.sf-mnav-drawer__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 1rem 1rem 0.85rem;
+    padding-top: max(1rem, env(safe-area-inset-top, 0px));
+    border-bottom: 1px solid #ece7dd;
+    position: sticky;
+    top: 0;
+    background: rgba(255, 255, 255, 0.96);
+    z-index: 1;
+}
+
+.sf-mnav-drawer__brand {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1f5138;
+    text-decoration: none;
+}
+
+.sf-mnav-drawer__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border: 0;
+    border-radius: 999px;
+    background: #f7f4ee;
+    color: #201c17;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.sf-mnav-drawer__close:active {
+    transform: scale(0.94);
+    background: #ece7dd;
+}
+
+.sf-mnav-drawer__nav {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+    padding: 0.75rem 0.85rem 1.25rem;
+}
+
+.sf-mnav-drawer__nav a {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 0.75rem 1rem;
+    border-radius: 0.9rem;
+    font-size: 0.975rem;
+    font-weight: 600;
+    color: #4b463e;
+    text-decoration: none;
+    transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.sf-mnav-drawer__nav a:active {
+    transform: scale(0.985);
+    background: #eef5f0;
+    color: #1f5138;
+}
+
+.sf-mnav-drawer__nav a.is-active {
+    background: #eef5f0;
+    color: #1f5138;
+}
+
+.sf-mnav-drawer__account {
+    border-top: 1px solid #ece7dd;
+    margin: 0.25rem 0.85rem 1.5rem;
+    padding: 0.75rem 0.15rem 0;
+}
+
+.sf-mnav-drawer__account a {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 0.65rem 1rem;
+    border-radius: 0.9rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+body.sf-mnav-locked {
+    overflow: hidden;
+    touch-action: none;
+    overscroll-behavior: none;
+}
+
+#mobileMenuBtn .sf-mnav-icon-close {
+    display: none;
+}
+
+#mobileMenuBtn[aria-expanded="true"] .sf-mnav-icon-menu {
+    display: none;
+}
+
+#mobileMenuBtn[aria-expanded="true"] .sf-mnav-icon-close {
+    display: inline-block;
+}
+
+/* Larger header touch targets on small screens */
+@media (max-width: 1023px) {
+    header.sticky nav > .flex.items-center.gap-2 a,
+    header.sticky nav > .flex.items-center.gap-2 button,
+    header.sticky #mobileMenuBtn,
+    header.sticky button[aria-label="Open search"] {
+        min-width: 48px;
+        min-height: 48px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sf-mnav-backdrop,
+    #mobileMenu.sf-mnav-drawer {
+        transition: none;
+    }
+}

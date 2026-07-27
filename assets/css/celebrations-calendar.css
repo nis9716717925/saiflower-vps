@@ -1,0 +1,320 @@
+/**
+ * Celebrations Calendar — horizontal carousel (all breakpoints).
+ */
+
+.hp-celebrations {
+    background: #fff;
+    overflow: hidden;
+}
+
+.hp-celebrations-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    width: 100%;
+}
+
+.hp-celebrations-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: #1f5138;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+}
+
+.hp-celebrations-all:hover {
+    color: #a3823e;
+}
+
+.hp-celebrations-carousel-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+}
+
+.hp-celebrations-track-wrap {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Soft fade on edges so overflow feels intentional */
+.hp-celebrations-track-wrap::before,
+.hp-celebrations-track-wrap::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 1rem;
+    width: 2.5rem;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.hp-celebrations-track-wrap::before {
+    left: 0;
+    background: linear-gradient(to right, #fff 15%, transparent);
+}
+
+.hp-celebrations-track-wrap::after {
+    right: 0;
+    background: linear-gradient(to left, #fff 15%, transparent);
+}
+
+.hp-celebrations-track-wrap.is-scrollable-left::before,
+.hp-celebrations-track-wrap.is-scrollable-right::after {
+    opacity: 1;
+}
+
+.hp-celebrations__track {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 0.625rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    padding: 0.35rem 0.25rem 1.25rem;
+    margin: 0 -0.25rem;
+    scrollbar-width: none;
+    cursor: grab;
+    touch-action: pan-x;
+}
+
+.hp-celebrations__track.is-dragging {
+    cursor: grabbing;
+    scroll-snap-type: none;
+    scroll-behavior: auto;
+    user-select: none;
+}
+
+.hp-celebrations__track::-webkit-scrollbar {
+    display: none;
+}
+
+.hp-celebrations-nav {
+    flex-shrink: 0;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    color: #0f172a;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    transition: transform 0.15s ease, background 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
+    z-index: 3;
+}
+
+.hp-celebrations-nav:hover:not([disabled]) {
+    background: #f7f3e8;
+    border-color: #d4af37;
+    transform: scale(1.06);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+}
+
+.hp-celebrations-nav:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.45);
+}
+
+.hp-celebrations-nav[disabled] {
+    opacity: 0.3;
+    cursor: default;
+    pointer-events: none;
+}
+
+.hp-celebration-card {
+    /* Mobile: 2 full cards + ~35% peek of the 3rd */
+    flex: 0 0 calc((100% - 1.25rem) / 2.35);
+    width: calc((100% - 1.25rem) / 2.35);
+    min-width: calc((100% - 1.25rem) / 2.35);
+    max-width: calc((100% - 1.25rem) / 2.35);
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    text-decoration: none;
+    color: inherit;
+    background: #fff;
+    border-radius: 1.125rem;
+    padding: 0.875rem 0.75rem 1rem;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hp-celebration-card:hover,
+.hp-celebration-card:focus-visible {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+    outline: none;
+}
+
+.hp-celebration-card:focus-visible {
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12), 0 0 0 3px rgba(212, 175, 55, 0.45);
+}
+
+.hp-celebration-card__date {
+    display: block;
+    text-align: center;
+    font-size: 0.6875rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 0.625rem;
+    line-height: 1.2;
+}
+
+.hp-celebration-card__img-wrap {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    border-radius: 0.875rem;
+    overflow: hidden;
+    background: #f1f5f9;
+    flex-shrink: 0;
+}
+
+.hp-celebration-card__img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+    pointer-events: none;
+}
+
+.hp-celebration-card:hover .hp-celebration-card__img-wrap img,
+.hp-celebration-card:focus-visible .hp-celebration-card__img-wrap img {
+    transform: scale(1.05);
+}
+
+.hp-celebration-card__title {
+    display: block;
+    margin-top: 0.75rem;
+    text-align: center;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.35;
+    padding: 0 0.125rem;
+}
+
+@media (max-width: 639px) {
+    .hp-celebrations-carousel-wrap {
+        gap: 0;
+    }
+
+    .hp-celebrations-nav {
+        display: none;
+    }
+
+    .hp-celebrations-track-wrap::before,
+    .hp-celebrations-track-wrap::after {
+        width: 1.5rem;
+    }
+}
+
+@media (min-width: 640px) {
+    .hp-celebrations__track {
+        gap: 1.125rem;
+        padding-bottom: 1.5rem;
+    }
+
+    .hp-celebration-card {
+        flex: 0 0 13rem;
+        width: 13rem;
+        min-width: 13rem;
+        max-width: 13rem;
+        padding: 1rem 0.875rem 1.125rem;
+    }
+
+    .hp-celebration-card__date {
+        font-size: 0.75rem;
+    }
+
+    .hp-celebration-card__title {
+        font-size: 0.875rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .hp-celebrations-carousel-wrap {
+        gap: 0.75rem;
+    }
+
+    .hp-celebrations-track-wrap::before,
+    .hp-celebrations-track-wrap::after {
+        width: 3rem;
+    }
+
+    .hp-celebrations__track {
+        gap: 1.25rem;
+        scroll-padding-inline: 0.25rem;
+    }
+
+    .hp-celebration-card {
+        flex: 0 0 14.5rem;
+        width: 14.5rem;
+        min-width: 14.5rem;
+        max-width: 14.5rem;
+        border-radius: 1.25rem;
+        padding: 1.125rem 1rem 1.25rem;
+    }
+
+    .hp-celebration-card__img-wrap {
+        border-radius: 1rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .hp-celebrations-nav {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    .hp-celebrations__track {
+        gap: 1.5rem;
+    }
+
+    .hp-celebration-card {
+        flex: 0 0 15.5rem;
+        width: 15.5rem;
+        min-width: 15.5rem;
+        max-width: 15.5rem;
+        padding: 1.25rem 1rem 1.375rem;
+    }
+
+    .hp-celebration-card__img-wrap {
+        border-radius: 1.125rem;
+    }
+
+    .hp-celebration-card__title {
+        font-size: 0.9375rem;
+    }
+}
+
+@media (min-width: 1280px) {
+    .hp-celebration-card {
+        flex: 0 0 16.25rem;
+        width: 16.25rem;
+        min-width: 16.25rem;
+        max-width: 16.25rem;
+    }
+}

@@ -1,0 +1,124 @@
+<?php
+/**
+ * Seed: Bouquet for father's day — custom page (dynamic_pages)
+ * Run once: php tools/seed_bouquet_fathers_day_page.php
+ */
+require_once __DIR__ . '/../config.php';
+
+$slug = 'bouquet-for-fathers-day';
+
+$check = $conn->prepare("SELECT id FROM dynamic_pages WHERE slug = ? LIMIT 1");
+$check->bind_param('s', $slug);
+$check->execute();
+if ($check->get_result()->num_rows > 0) {
+    echo "Page already exists (slug: {$slug}). Skipping.\n";
+    exit(0);
+}
+
+$title = "Bouquet for father's day";
+
+$content = <<<'HTML'
+<h2>Celebrate Dad with a Thoughtful Bouquet for Father's Day</h2>
+<p>Father's Day is when a simple gesture can mean everything. Skip the generic gift card and surprise him with a fresh <strong>bouquet for father's day</strong> that arrives while he is still sipping his chai. A well-chosen arrangement tells Dad you noticed the early alarms, quiet sacrifices, and steady love he has shown year after year.</p>
+
+<p>At <strong>Sai Flower</strong>, we hand-tie every stem so your <strong>bouquet for father's day</strong> looks polished from the first glance. Whether Dad prefers classic red roses, white lilies, or a vibrant mixed bunch, our florists use daily-fresh blooms for lasting beauty and fragrance.</p>
+
+<h2>Why a Bouquet for Father's Day Works Every Time</h2>
+<p>Flowers are not just for birthdays. A structured <strong>bouquet for father's day</strong> feels personal without being over the top. Bold colours, clean lines, and premium wrapping make the gift feel intentional. Pair it with a short note and you have a moment he will remember.</p>
+
+<p>Families across Delhi NCR choose a <strong>bouquet for father's day</strong> because it photographs beautifully, fits on an office desk, and brightens the living room when relatives visit. Unlike generic gifts, fresh flower arrangements carry warmth, colour, and a personal touch that store-bought items rarely match.</p>
+
+<h3>Same-Day Delivery Across Delhi NCR</h3>
+<p>Father's Day week gets busy fast. Order a <strong>bouquet for father's day</strong> before the daily cut-off and we deliver across Delhi, Gurgaon, Noida, and nearby NCR pin codes — fresh, on time, and presentation-ready. Pick a delivery date at checkout or message us on WhatsApp to confirm express slots.</p>
+
+<h3>Popular Styles: Roses, Mixed Blooms &amp; Premium Arrangements</h3>
+<ul>
+<li><strong>Classic rose bouquet</strong> — timeless and perfect for dads who appreciate tradition</li>
+<li><strong>Mixed seasonal bouquet</strong> — cheerful colour blends for a warm surprise</li>
+<li><strong>Premium hand-tied arrangement</strong> — larger stems and elegant wrapping</li>
+<li><strong>Compact desk bouquet</strong> — neat and refined for the workplace</li>
+</ul>
+
+<p>Browse the picks above to find a <strong>bouquet for father's day</strong> that matches his personality. Not sure what to choose? Tell us Dad's favourite colours and we will recommend the best fit within your budget.</p>
+
+<h2>How to Order Your Father's Day Bouquet Online</h2>
+<p>Select your <strong>bouquet for father's day</strong> from the showcase, add delivery details, and pay via UPI, card, or wallet. Explore our <a href="/flowers" title="Order flowers online Delhi">flower collection</a>, add a <a href="/cakes" title="Father's Day cakes Delhi">designer cake</a>, or pair blooms with a <a href="/gifts" title="Gift hampers for Father's Day">gift hamper</a> for a complete celebration.</p>
+
+<p>Every <strong>bouquet for father's day</strong> is prepared shortly before dispatch so stems stay crisp. Protective packaging handles summer heat and monsoon humidity across Delhi NCR.</p>
+
+<h3>Make This Father's Day Unforgettable</h3>
+<p>Dad may say he does not need anything, but a doorstep surprise always changes his expression. Honour him with a fresh <strong>bouquet for father's day</strong> that feels as genuine as your gratitude. Order early for the best slots, or rely on same-day delivery when the calendar sneaks up on you.</p>
+
+<p>From our family at Sai Flower to yours — here is to every father who showed up without asking for applause. Shop now, choose same-day flower delivery in Delhi NCR, and let us help you make his day truly special.</p>
+HTML;
+
+$meta_title = "Bouquet for Father's Day Delivery | Sai Flower";
+$meta_description = "Order a fresh bouquet for Father's Day with same-day delivery in Delhi NCR. Hand-tied roses & mixed blooms from Sai Flower. Shop online today.";
+$meta_keywords = "bouquet for father's day, father's day flowers, father day bouquet delivery, same day flower delivery delhi, roses for dad, fresh flower bouquet, gift for father";
+
+$faqs = [
+    [
+        'question' => "What is the best bouquet for father's day?",
+        'answer'   => "The best bouquet for father's day depends on Dad's taste. Classic red or yellow roses suit traditional fathers, while mixed seasonal blooms work well for a cheerful surprise. Sai Flower florists can recommend a hand-tied arrangement based on his favourite colours and your budget.",
+    ],
+    [
+        'question' => "Can I get same-day bouquet for father's day delivery in Delhi?",
+        'answer'   => "Yes. Place your order before the daily cut-off for same-day bouquet for father's day delivery across Delhi, Gurgaon, Noida, and selected NCR areas. Add your pin code at checkout or WhatsApp our team to confirm express availability.",
+    ],
+    [
+        'question' => "What flowers are ideal for a father's day bouquet?",
+        'answer'   => "Roses, lilies, carnations, and mixed seasonal flowers are popular for a father's day bouquet. Choose bold, structured arrangements with clean wrapping for a refined look. Avoid overly delicate styles if Dad prefers something simple and masculine.",
+    ],
+    [
+        'question' => "How do I order a bouquet for father's day online?",
+        'answer'   => "Visit this page, pick a bouquet from the product showcase, enter the delivery address and date, then complete secure checkout. You can also shop our flowers, cakes, and gifts collections and add a personal message in the order notes.",
+    ],
+    [
+        'question' => "What is the price range for father's day bouquets?",
+        'answer'   => "Father's day bouquet prices vary by size, flower type, and add-ons. Budget-friendly bunches start at affordable everyday rates, while premium hand-tied arrangements cost more. Filter products above or contact us on WhatsApp for a custom quote.",
+    ],
+    [
+        'question' => "Can I send a father's day bouquet to Dad's office?",
+        'answer'   => "Absolutely. Many customers send a compact father's day bouquet to an office address in Delhi NCR. Mention the workplace name, floor, and reception details in the delivery notes so our rider can hand it over smoothly.",
+    ],
+    [
+        'question' => "Can I combine a bouquet with a cake for father's day?",
+        'answer'   => "Yes. Pair your bouquet for father's day with a chocolate truffle, butterscotch, or designer cake from our cakes section. Same-day combo delivery is available in many NCR pin codes when ordered before the cut-off time.",
+    ],
+];
+
+$faqs_json = json_encode($faqs, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+$layout_type = 'product_showcase';
+$page_tag = 'sameday';
+$status = 1;
+$short_description = '';
+
+$stmt = $conn->prepare(
+    "INSERT INTO dynamic_pages (
+        title, short_description, slug, content, meta_title, meta_description,
+        meta_keywords, status, layout_type, page_tag, faqs
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+);
+
+$stmt->bind_param(
+    'sssssssisss',
+    $title,
+    $short_description,
+    $slug,
+    $content,
+    $meta_title,
+    $meta_description,
+    $meta_keywords,
+    $status,
+    $layout_type,
+    $page_tag,
+    $faqs_json
+);
+
+if ($stmt->execute()) {
+    echo "Success! Page created: /{$slug} (ID: {$conn->insert_id})\n";
+    echo "Edit in admin: /admin/edit-page.php?id={$conn->insert_id}\n";
+} else {
+    echo "Error: " . $conn->error . "\n";
+    exit(1);
+}

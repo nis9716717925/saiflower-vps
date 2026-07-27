@@ -1,0 +1,30 @@
+# Sai Flower - LLM Access Summary
+
+Site: https://saiflower.com
+Name: Sai Flower
+Type: Florist ecommerce and event floral services
+
+## Crawl and usage
+- Public pages may be indexed, summarized, and cited by AI assistants.
+- Do not crawl private/system paths listed in robots.txt.
+- Prefer canonical URLs under https://saiflower.com.
+
+## Primary URLs
+- https://saiflower.com/
+- https://saiflower.com/flowers.php
+- https://saiflower.com/cakes.php
+- https://saiflower.com/gifts.php
+- https://saiflower.com/events.php
+- https://saiflower.com/gallery.php
+- https://saiflower.com/about.php
+- https://saiflower.com/contact.php
+- https://saiflower.com/faq.php
+- https://saiflower.com/delivery-policy.php
+- https://saiflower.com/refund-policy.php
+- https://saiflower.com/terms.php
+- https://saiflower.com/privacy.php
+
+## Feeds and machine-readable docs
+- https://saiflower.com/sitemap.php
+- https://saiflower.com/llms.txt
+- https://saiflower.com/llms-full.txt

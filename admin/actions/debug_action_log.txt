@@ -1,0 +1,7 @@
+13:39:58 - Script started. Action: add_slide
+13:39:58 - POST Data: Array
+(
+    [action] => add_slide
+    [csrf_token] => c0272748e17a52143c851430bce5a3a68ba82b51e42dd0f0d36f1a691f7de020
+)
+

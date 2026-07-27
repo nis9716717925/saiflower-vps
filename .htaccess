@@ -1,0 +1,126 @@
+# Enable Rewrite Engine
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # 1. Redirect /index.php to root /
+    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /index\.php\ HTTP/
+    RewriteRule ^index\.php$ / [R=301,L]
+
+    # 2. Force extensionless URLs: Redirect .php to extensionless (GET/HEAD only to preserve POST data)
+    RewriteCond %{REQUEST_METHOD} !POST
+    RewriteCond %{THE_REQUEST} \s/+(.+?)\.php[\s?] [NC]
+    RewriteRule ^ /%1 [R=301,L,NE]
+    
+    # Prefer static sitemap.xml when present (GSC-safe); else dynamic PHP generator
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^sitemap\.xml$ sitemap_xml.php [L]
+
+    # Blog Pretty URLs
+    RewriteRule ^blog/([^/]+)/?$ blog-detail.php?slug=$1 [L,QSA]
+
+    # Occasion URLs → canonical slug (SEO: one URL per landing page)
+    RewriteRule ^occasions/([^/]+)/?$ /$1 [R=301,L]
+
+    # Celebrations Calendar landing
+    RewriteRule ^celebration-calendar/?$ celebration-calendar.php [L,QSA]
+    RewriteRule ^celebrations-calendar/?$ /celebration-calendar [R=301,L]
+
+    # Personalised gift landings
+    RewriteRule ^personalized/?$ personalized.php [L,QSA]
+    RewriteRule ^personalised/?$ /personalized [R=301,L]
+    RewriteRule ^personalized/([^/]+)/?$ personalized.php?slug=$1 [L,QSA]
+    RewriteRule ^personalised/([^/]+)/?$ /personalized/$1 [R=301,L]
+
+    # Taxonomy landings (relation / occasion / collection)
+    RewriteRule ^relation/([^/]+)/?$ collection.php?kind=relation&slug=$1 [L,QSA]
+    RewriteRule ^occasion/([^/]+)/?$ collection.php?kind=occasion&slug=$1 [L,QSA]
+    RewriteRule ^collection/([^/]+)/?$ collection.php?kind=collection&slug=$1 [L,QSA]
+
+    # /flowers/{slug} → flower-type landing OR product PDP (router decides)
+    RewriteRule ^flowers/([^/]+)/?$ flower-router.php?slug=$1 [L,QSA]
+    RewriteRule ^cakes/([^/]+)/?$ cake-detail.php?slug=$1 [L,QSA]
+    RewriteRule ^gifts/([^/]+)/?$ gift-detail.php?slug=$1 [L,QSA]
+    RewriteRule ^events/([^/]+)/?$ event-detail.php?slug=$1 [L,QSA]
+
+    # Legacy detail URLs with slug query → canonical prefixed URLs
+    RewriteCond %{QUERY_STRING} ^slug=([^&]+)(&.*)?$ [NC]
+    RewriteRule ^flower-detail$ /flowers/%1? [R=301,L,NE]
+
+    RewriteCond %{QUERY_STRING} ^slug=([^&]+)(&.*)?$ [NC]
+    RewriteRule ^cake-detail$ /cakes/%1? [R=301,L,NE]
+
+    RewriteCond %{QUERY_STRING} ^slug=([^&]+)(&.*)?$ [NC]
+    RewriteRule ^gift-detail$ /gifts/%1? [R=301,L,NE]
+
+    RewriteCond %{QUERY_STRING} ^slug=([^&]+)(&.*)?$ [NC]
+    RewriteRule ^event-detail$ /events/%1? [R=301,L,NE]
+
+    # Handle extensionless PHP files (e.g. /admin/dashboard -> /admin/dashboard.php)
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME}.php -f
+    RewriteRule ^(.*)$ $1.php [L]
+
+    # Dynamic Custom Pages Fallback (Single Slug)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^([^/]+)/?$ page.php?slug=$1 [L,QSA]
+</IfModule>
+
+# Default Index Page
+DirectoryIndex index.php index.html
+
+# Branded 404
+ErrorDocument 404 /404.php
+
+# Protect Sensitive Files (Config, Git, etc.)
+<FilesMatch "^(config\.php|\.env|composer\.lock|\.git|\.htaccess)">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Prevent Directory Listing
+<IfModule mod_autoindex.c>
+    Options -Indexes
+</IfModule>
+
+# Enable GZIP Compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain text/html text/xml text/css application/xml application/xhtml+xml application/rss+xml application/javascript application/x-javascript image/svg+xml
+</IfModule>
+
+# Browser Caching
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/pdf "access plus 1 month"
+    ExpiresByType text/x-javascript "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType application/x-shockwave-flash "access plus 1 month"
+    ExpiresByType image/x-icon "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/ttf "access plus 1 year"
+    ExpiresDefault "access plus 2 days"
+</IfModule>
+
+<IfModule mod_headers.c>
+    <FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|svg|webp|js|css|woff|woff2|ttf|eot)$">
+        Header set Cache-Control "max-age=31536000, public"
+    </FilesMatch>
+    <FilesMatch "\.(html|htm|php)$">
+        Header set Cache-Control "no-cache, must-revalidate"
+    </FilesMatch>
+</IfModule>
+
+FileETag MTime Size
