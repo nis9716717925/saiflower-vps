@@ -1,0 +1,624 @@
+/**
+ * Sai Flower — Homepage mobile polish (≤899px / ≤1023px).
+ * Loaded AFTER homepage-luxe.css. Desktop (≥900 / ≥1024) rules are not overridden
+ * except where explicitly scoped under max-width queries.
+ * Branding, colors, content, and JS hooks preserved.
+ */
+
+/* ============================================================
+   Tokens + base mobile shell
+   ============================================================ */
+@media (max-width: 899.98px) {
+    .homepage-premium {
+        --hp-edge: 1rem;
+        --lx-m-space-1: 0.5rem;   /* 8 */
+        --lx-m-space-2: 0.75rem;  /* 12 */
+        --lx-m-space-3: 1rem;     /* 16 */
+        --lx-m-space-4: 1.25rem;  /* 20 */
+        --lx-m-space-5: 1.5rem;   /* 24 */
+        --lx-m-space-6: 2rem;     /* 32 */
+        --lx-m-space-7: 3rem;     /* 48 */
+        --lx-m-radius: 1.15rem;
+        --lx-m-touch: 48px;
+        background-attachment: scroll; /* avoid mobile paint jank */
+        overflow-x: clip;
+    }
+
+    .homepage-premium .hp-fnp-firstview {
+        --hp-edge: 0.875rem;
+        overflow-x: clip;
+    }
+
+    .homepage-premium img,
+    .homepage-premium video {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .homepage-premium img[loading="lazy"] {
+        content-visibility: auto;
+    }
+
+    /* Typography rhythm */
+    .homepage-premium .lx-section-head,
+    .homepage-premium .hp-section-head {
+        padding-inline: var(--hp-edge);
+        margin-bottom: var(--lx-m-space-4);
+    }
+
+    .homepage-premium h1,
+    .homepage-premium .lx-section-head h2,
+    .homepage-premium .hp-section-title,
+    .homepage-premium .lx-section-head .lx-section-title {
+        font-size: clamp(1.35rem, 5.2vw, 1.75rem);
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+    }
+
+    .homepage-premium .lx-section-head p,
+    .homepage-premium .hp-section-sub {
+        font-size: clamp(0.875rem, 3.6vw, 0.975rem);
+        line-height: 1.55;
+        max-width: 36ch;
+    }
+
+    /* Touch-friendly CTAs */
+    .homepage-premium a.hp-hero-slide__cta,
+    .homepage-premium .lx-promo-card__cta,
+    .homepage-premium .hp-occasion-card__cta,
+    .homepage-premium .product-card a.btn,
+    .homepage-premium .lx-final-cta__actions a,
+    .homepage-premium .lx-about__cta,
+    .homepage-premium .lx-faq__footer a {
+        min-height: var(--lx-m-touch);
+        min-width: var(--lx-m-touch);
+        padding: 0.75rem 1.25rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+
+    .homepage-premium a:active,
+    .homepage-premium button:active {
+        transform: scale(0.98);
+    }
+
+    /* Forms — prevent iOS zoom */
+    .homepage-premium input,
+    .homepage-premium select,
+    .homepage-premium textarea {
+        font-size: 16px;
+        min-height: var(--lx-m-touch);
+        border-radius: 0.9rem;
+    }
+
+    header.sticky input[name="q"] {
+        font-size: 16px;
+        min-height: 48px;
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+}
+
+/* ============================================================
+   320–480: tight phones
+   ============================================================ */
+@media (max-width: 479.98px) {
+    .homepage-premium {
+        --hp-edge: 0.75rem;
+    }
+
+    .homepage-premium .hp-fnp-firstview {
+        --hp-edge: 0.75rem;
+    }
+}
+
+/* ============================================================
+   Category pill nav — header-integrated polish on homepage
+   ============================================================ */
+@media (max-width: 1023.98px) {
+    .homepage-premium .sf-site-header .lx-catnav {
+        padding: 0.4rem var(--hp-edge, 0.75rem) 0.5rem;
+        background: transparent;
+    }
+
+    .homepage-premium .sf-site-header .lx-catnav__list {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        justify-content: flex-start;
+        padding: 0.3rem 0.75rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .homepage-premium .sf-site-header .lx-catnav__link {
+        height: 44px;
+        min-height: 44px;
+        padding: 0 0.85rem;
+        font-size: 0.7rem;
+        letter-spacing: 0.06em;
+    }
+}
+
+/* ============================================================
+   Category icons
+   ============================================================ */
+@media (max-width: 899.98px) {
+    .homepage-premium .hp-fnp-icons {
+        padding: 0.85rem var(--hp-edge) 0.65rem;
+    }
+
+    .homepage-premium .hp-fnp-icons__scroll {
+        gap: 0.75rem;
+        padding-bottom: 0.25rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x proximity;
+        justify-content: flex-start;
+        max-width: 100%;
+    }
+
+    .homepage-premium .hp-fnp-icons__item {
+        scroll-snap-align: start;
+        min-width: 4.5rem;
+        max-width: 5.25rem;
+    }
+
+    .homepage-premium .hp-fnp-icons__img--icon {
+        width: 3.85rem;
+        height: 3.85rem;
+    }
+
+    .homepage-premium .hp-fnp-icons__label {
+        font-size: 0.72rem;
+        line-height: 1.3;
+        min-height: 2.4em;
+    }
+}
+
+/* ============================================================
+   Hero split / carousel — rectangular rounded card on mobile only
+   ============================================================ */
+@media (max-width: 899.98px) {
+    .homepage-premium .lx-hero-split {
+        padding: 0 var(--hp-edge) 0.85rem;
+        max-width: 100%;
+        --lx-hero-h: clamp(13.5rem, 48vw, 17.5rem);
+    }
+
+    .homepage-premium .lx-hero-split .hp-hero-carousel {
+        background: transparent;
+        overflow: visible;
+    }
+
+    .homepage-premium .lx-hero-split .hp-hero-carousel__outer {
+        padding: 0;
+        max-width: 100%;
+    }
+
+    .homepage-premium .lx-hero-split .hp-hero-carousel__wrap,
+    .homepage-premium .lx-hero-split .hp-hero-carousel__viewport {
+        border-radius: 1.15rem;
+        overflow: hidden;
+        isolation: isolate;
+    }
+
+    .homepage-premium .lx-hero-split .hp-hero-carousel__viewport {
+        aspect-ratio: 16 / 9;
+        min-height: var(--lx-hero-h, 14rem);
+        max-height: 18rem;
+        box-shadow: 0 8px 28px rgba(32, 28, 23, 0.1);
+        border: 1px solid rgba(236, 231, 221, 0.9);
+        background: #f4f0e8;
+    }
+
+    .homepage-premium .lx-hero-split .hp-hero-slide__mobile {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+        overflow: hidden;
+    }
+
+    .homepage-premium .lx-hero-split .hp-hero-slide__mobile img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+    }
+
+    .homepage-premium .lx-hero-split .hp-hero-slide__card,
+    .homepage-premium .lx-hero-split .hp-hero-slide__card--cover {
+        border-radius: 0;
+        min-height: 100%;
+    }
+
+    .homepage-premium .lx-hero-split .hp-hero-carousel__nav {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    .homepage-premium .lx-hero-split .hp-hero-carousel__nav--prev {
+        left: 0.45rem;
+    }
+
+    .homepage-premium .lx-hero-split .hp-hero-carousel__nav--next {
+        right: 0.45rem;
+    }
+
+    .homepage-premium .lx-hero-split .hp-hero-slide__title {
+        font-size: clamp(1.2rem, 5.5vw, 1.55rem);
+        line-height: 1.15;
+    }
+
+    .homepage-premium .lx-hero-split .hp-hero-slide__sub {
+        font-size: clamp(0.8rem, 3.4vw, 0.9rem);
+        max-width: 28ch;
+    }
+}
+
+/* ============================================================
+   Trust bar
+   ============================================================ */
+@media (max-width: 899.98px) {
+    .homepage-premium .lx-trustbar {
+        padding: 0.5rem var(--hp-edge) 1.25rem;
+    }
+
+    .homepage-premium .lx-trustbar__inner {
+        gap: 0.65rem;
+    }
+
+    .homepage-premium .lx-trustbar__item {
+        padding: 0.9rem 0.85rem;
+        gap: 0.7rem;
+        border-radius: 1rem;
+        min-height: 4.25rem;
+    }
+
+    .homepage-premium .lx-trustbar__icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 0.8rem;
+        font-size: 0.95rem;
+    }
+
+    .homepage-premium .lx-trustbar__title {
+        font-size: 0.8rem;
+        line-height: 1.3;
+    }
+
+    .homepage-premium .lx-trustbar__sub {
+        font-size: 0.7rem;
+        line-height: 1.35;
+    }
+}
+
+@media (max-width: 359.98px) {
+    .homepage-premium .lx-trustbar__inner {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================================================
+   Promo trio
+   ============================================================ */
+@media (max-width: 767.98px) {
+    .homepage-premium .lx-promo-trio {
+        padding: 0.25rem var(--hp-edge) 1.25rem;
+    }
+
+    .homepage-premium .lx-promo-trio__inner {
+        gap: 0.85rem;
+    }
+
+    .homepage-premium .lx-promo-card {
+        min-height: 9.5rem;
+        padding: 1.25rem 0.85rem 1.25rem 1.2rem;
+        border-radius: var(--lx-m-radius);
+        gap: 0.65rem;
+    }
+
+    .homepage-premium .lx-promo-card__img {
+        width: 38%;
+        max-width: 7.5rem;
+        flex-shrink: 0;
+    }
+
+    .homepage-premium .lx-promo-card__title {
+        font-size: clamp(1rem, 4.4vw, 1.2rem);
+        line-height: 1.2;
+    }
+
+    .homepage-premium .lx-promo-card__cta {
+        margin-top: 0.55rem;
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+    }
+}
+
+@media (max-width: 359.98px) {
+    .homepage-premium .lx-promo-card {
+        flex-direction: column;
+        align-items: flex-start;
+        min-height: 0;
+        padding: 1.15rem 1.1rem 1.1rem;
+    }
+
+    .homepage-premium .lx-promo-card__img {
+        width: 55%;
+        max-width: 9rem;
+        align-self: flex-end;
+    }
+}
+
+/* ============================================================
+   Product / occasion carousels
+   ============================================================ */
+@media (max-width: 899.98px) {
+    .homepage-premium .hp-occasion-track,
+    .homepage-premium .hp-product-track,
+    .homepage-premium .lx-tiles__track,
+    .homepage-premium .lx-testimonials__track {
+        padding-inline: var(--hp-edge);
+        scroll-padding-inline: var(--hp-edge);
+        gap: 0.75rem;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+    }
+
+    .homepage-premium .hp-occasion-card,
+    .homepage-premium .product-card {
+        flex: 0 0 min(72vw, 16.5rem);
+        min-width: 0;
+        border-radius: var(--lx-m-radius);
+    }
+
+    .homepage-premium .hp-occasion-card__cta,
+    .homepage-premium .product-card .buy-btn,
+    .homepage-premium .product-card a[href*="product"] {
+        min-height: 44px;
+    }
+
+    .homepage-premium .hp-occasion-tabs {
+        padding-inline: var(--hp-edge);
+        gap: 0.5rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .homepage-premium .hp-occasion-tab {
+        min-height: 44px;
+        min-width: 5.5rem;
+        padding: 0.55rem 0.85rem;
+        font-size: 0.8rem;
+        touch-action: manipulation;
+    }
+
+    .homepage-premium .hp-section,
+    .homepage-premium section[class*="hp-"],
+    .homepage-premium .lx-tiles,
+    .homepage-premium .lx-testimonials,
+    .homepage-premium .lx-about,
+    .homepage-premium .lx-steps,
+    .homepage-premium .lx-faq,
+    .homepage-premium .lx-final-cta {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .homepage-premium .hp-container,
+    .homepage-premium .lx-tiles .hp-container {
+        padding-inline: var(--hp-edge);
+        max-width: 100%;
+    }
+}
+
+/* ============================================================
+   Testimonials / steps / FAQ / CTA
+   ============================================================ */
+@media (max-width: 899.98px) {
+    .homepage-premium .lx-testimonial {
+        flex: 0 0 min(88vw, 20rem);
+        padding: 1.25rem 1.15rem 1.15rem;
+        border-radius: var(--lx-m-radius);
+    }
+
+    .homepage-premium .lx-testimonials__nav button,
+    .homepage-premium #lxTestimonialsPrev,
+    .homepage-premium #lxTestimonialsNext {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    .homepage-premium .lx-steps {
+        padding: var(--lx-m-space-6) var(--hp-edge);
+    }
+
+    .homepage-premium .lx-steps__grid {
+        gap: 0.85rem;
+    }
+
+    .homepage-premium .lx-step {
+        padding: 1.25rem 1.1rem;
+        border-radius: var(--lx-m-radius);
+    }
+
+    .homepage-premium .lx-faq {
+        padding: var(--lx-m-space-6) var(--hp-edge);
+    }
+
+    .homepage-premium .lx-faq__q {
+        min-height: 52px;
+        padding: 1rem 1.1rem;
+        font-size: 0.9rem;
+        gap: 0.75rem;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .homepage-premium .lx-faq__q::after {
+        width: 1.85rem;
+        height: 1.85rem;
+        font-size: 1.1rem;
+    }
+
+    .homepage-premium .lx-faq__a {
+        padding: 0 1.1rem 1.1rem;
+        font-size: 0.875rem;
+        line-height: 1.55;
+    }
+
+    .homepage-premium .lx-final-cta {
+        padding: var(--lx-m-space-5) var(--hp-edge) var(--lx-m-space-6);
+    }
+
+    .homepage-premium .lx-final-cta__shell {
+        padding: 2rem 1.25rem;
+        border-radius: var(--lx-m-radius);
+    }
+
+    .homepage-premium .lx-final-cta__actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: stretch;
+    }
+
+    .homepage-premium .lx-final-cta__actions a {
+        width: 100%;
+    }
+
+    .homepage-premium .lx-stats {
+        padding: var(--lx-m-space-5) var(--hp-edge);
+    }
+
+    .homepage-premium .lx-stats__value {
+        font-size: clamp(1.25rem, 5vw, 1.6rem);
+    }
+
+    .homepage-premium .lx-stats__label {
+        font-size: 0.68rem;
+    }
+
+    .homepage-premium .hp-finder-shell {
+        margin-inline: var(--hp-edge);
+        border-radius: var(--lx-m-radius);
+        padding: 1.35rem 1.1rem;
+    }
+
+    .homepage-premium .hp-finder-card {
+        min-height: 48px;
+    }
+}
+
+/* ============================================================
+   Mobile footer + bottom nav
+   ============================================================ */
+@media (max-width: 767.98px) {
+    .homepage-premium #mobileFooterLinks {
+        padding: 1.5rem var(--hp-edge) 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .homepage-premium #mobileFooterLinks a {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.35rem 0.25rem;
+    }
+
+    .homepage-premium #mobileBottomNav {
+        padding: 0.55rem 0.5rem calc(0.55rem + env(safe-area-inset-bottom, 0px));
+        background: rgba(255, 255, 255, 0.94);
+        -webkit-backdrop-filter: blur(18px) saturate(160%);
+        backdrop-filter: blur(18px) saturate(160%);
+        border-top: 1px solid rgba(236, 231, 221, 0.95);
+        box-shadow: 0 -8px 28px rgba(32, 28, 23, 0.08);
+    }
+
+    .homepage-premium #mobileBottomNav > .flex {
+        max-width: 32rem;
+        margin: 0 auto;
+    }
+
+    .homepage-premium #mobileBottomNav a {
+        min-width: 48px;
+        min-height: 48px;
+        justify-content: center;
+        padding: 0.25rem;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+
+    .homepage-premium #mobileBottomNav a:active {
+        transform: scale(0.96);
+    }
+
+    .homepage-premium #mobileBottomNavSpacer {
+        height: calc(5.25rem + env(safe-area-inset-bottom, 0px));
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .homepage-premium #mobileBottomNav a div {
+        animation: none !important;
+    }
+}
+
+/* ============================================================
+   Horizontal overflow safety net
+   ============================================================ */
+@media (max-width: 899.98px) {
+    .homepage-premium,
+    .homepage-premium .hp-fnp-firstview,
+    .homepage-premium main,
+    .homepage-premium section {
+        max-width: 100vw;
+    }
+
+    .homepage-premium .lx-promo-card__copy,
+    .homepage-premium .hp-hero-slide__copy,
+    .homepage-premium .product-card h3,
+    .homepage-premium .hp-occasion-card__title {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    /* Lighter scroll reveal on mobile */
+    .homepage-premium .lx-reveal {
+        transform: translateY(10px);
+        transition-duration: 0.45s;
+    }
+}
+
+/* Tablet comfort (768–899) */
+@media (min-width: 768px) and (max-width: 899.98px) {
+    .homepage-premium {
+        --hp-edge: 1.25rem;
+    }
+
+    .homepage-premium .lx-trustbar__inner {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .homepage-premium .lx-promo-trio__inner {
+        grid-template-columns: 1fr;
+    }
+
+    .homepage-premium .hp-occasion-card,
+    .homepage-premium .product-card {
+        flex: 0 0 min(42vw, 15rem);
+    }
+}

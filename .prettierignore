@@ -1,0 +1,16 @@
+node_modules
+dist
+build
+.next
+out
+coverage
+uploads
+assets
+*.min.js
+*.min.css
+package-lock.json
+api/node_modules
+api/dist
+sitemap.xml
+scratch
+tools

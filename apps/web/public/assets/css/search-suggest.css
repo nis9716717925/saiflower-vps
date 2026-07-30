@@ -1,0 +1,79 @@
+/* Live search suggestion dropdown */
+.search-suggestions {
+  border-radius: 1rem !important;
+  box-shadow: 0 18px 40px rgba(28, 24, 20, 0.14) !important;
+  border: 1px solid rgba(28, 24, 20, 0.08) !important;
+  overflow: hidden;
+}
+
+.sf-suggest-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 0.85rem;
+  text-decoration: none;
+  color: inherit;
+  border-bottom: 1px solid #f3f0ea;
+  transition: background 0.15s ease;
+}
+
+.sf-suggest-item:hover,
+.sf-suggest-item.is-active {
+  background: #f4faf6;
+}
+
+.sf-suggest-item img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 0.55rem;
+  background: #f1ece3;
+  flex-shrink: 0;
+}
+
+.sf-suggest-copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.sf-suggest-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1c1814;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sf-suggest-type {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #2f6f4e;
+}
+
+.sf-suggest-msg {
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #6a6258;
+}
+
+.sf-suggest-foot {
+  display: block;
+  padding: 0.75rem 0.9rem;
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #2f6f4e;
+  text-decoration: none;
+  background: #f7faf8;
+  border-top: 1px solid #eef3f0;
+}
+
+.sf-suggest-foot:hover {
+  background: #eef5f0;
+}

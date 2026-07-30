@@ -1,0 +1,67 @@
+import { Router } from 'express';
+import { CHECKOUT_MODE, SITE } from '@saiflower/shared';
+import { successResponse } from '../utils/response';
+import authRoutes from './auth.routes';
+import productRoutes from './product.routes';
+import cartRoutes from './cart.routes';
+import {
+  checkoutRouter,
+  orderRouter,
+  shippingRouter,
+  couponRouter,
+} from './checkout.routes';
+import {
+  wishlistRouter,
+  reviewRouter,
+  categoryRouter,
+  searchRouter,
+  settingsRouter,
+} from './misc.routes';
+
+const router = Router();
+
+router.get('/', (_req, res) => {
+  res.json(
+    successResponse('SaiFlower API', {
+      version: 'v1',
+      phase: 3,
+      checkoutMode: CHECKOUT_MODE,
+      site: SITE.name,
+      resources: [
+        'POST /auth/register',
+        'POST /auth/login',
+        'POST /auth/google',
+        'GET|POST /auth/verify',
+        'POST /auth/refresh',
+        'GET|PATCH /auth/me',
+        'GET /products?type=flower|cake|gift',
+        'GET /products/:type/:slug',
+        'GET /categories',
+        'GET /search?q=',
+        'GET|POST|PATCH|DELETE /cart',
+        'POST /shipping/calculate',
+        'GET /coupons',
+        'POST /checkout/place-order',
+        'GET /orders/mine',
+        'GET|POST /wishlist',
+        'GET|POST /reviews',
+        'GET /settings',
+      ],
+    }),
+  );
+});
+
+router.use('/auth', authRoutes);
+router.use('/products', productRoutes);
+router.use('/categories', categoryRouter);
+router.use('/search', searchRouter);
+router.use('/cart', cartRoutes);
+router.use('/shipping', shippingRouter);
+router.use('/coupons', couponRouter);
+router.use('/checkout', checkoutRouter);
+router.use('/orders', orderRouter);
+router.use('/wishlist', wishlistRouter);
+router.use('/reviews', reviewRouter);
+router.use('/settings', settingsRouter);
+
+export default router;
