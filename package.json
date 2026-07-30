@@ -1,7 +1,41 @@
 {
+  "name": "saiflower",
+  "private": true,
+  "version": "0.1.0",
+  "description": "SaiFlower monorepo — Next.js storefront + Express API + Prisma (pixel-identical migration)",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspaces --if-present",
+    "dev:web": "npm run dev -w @saiflower/web",
+    "dev:server": "npm run dev -w @saiflower/server",
+    "build": "npm run build --workspaces --if-present",
+    "build:web": "npm run build -w @saiflower/web",
+    "build:server": "npm run build -w @saiflower/server",
+    "lint": "npm run lint --workspaces --if-present",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "db:generate": "npm run generate -w @saiflower/prisma",
+    "db:push": "npm run push -w @saiflower/prisma",
+    "db:studio": "npm run studio -w @saiflower/prisma",
+    "db:migrate:deploy": "npm run migrate:deploy -w @saiflower/prisma",
+    "db:migrate:status": "npm run migrate:status -w @saiflower/prisma",
+    "db:load": "node tools/mysql-to-pg/load-to-supabase.mjs",
+    "db:verify": "node tools/mysql-to-pg/verify-counts.mjs",
+    "smoke": "node tools/smoke/smoke.mjs",
+    "smoke:routes": "node tools/smoke/route-inventory.mjs"
+  },
+  "engines": {
+    "node": ">=18.18.0"
+  },
   "devDependencies": {
-    "@tailwindcss/container-queries": "^0.1.1",
-    "@tailwindcss/forms": "^0.5.11",
-    "tailwindcss": "^4.2.2"
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "pg": "^8.22.0"
   }
 }
