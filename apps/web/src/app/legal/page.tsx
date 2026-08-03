@@ -31,6 +31,18 @@ const CARDS = [
     title: 'Refund Policy',
     blurb: 'Our guidelines for order cancellations, replacements, and quality issues.',
   },
+  {
+    href: '/grievnce',
+    icon: 'fa-scale-balanced',
+    title: 'Grievance Redressal',
+    blurb: 'How to reach our Grievance Officer and expected resolution timelines.',
+  },
+  {
+    href: '/faq',
+    icon: 'fa-circle-question',
+    title: 'Help Center / FAQ',
+    blurb: 'Answers about delivery, ordering, payments, and floral services.',
+  },
 ];
 
 export default function LegalHubPage() {

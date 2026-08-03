@@ -51,9 +51,9 @@ export function SiteHeader() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-white border-b border-slate-100 shadow-sm sf-site-header">
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2 sm:gap-3">
+      <header className="sf-site-header">
+        <nav className="sf-site-header__nav">
+          <div className="sf-site-header__brand-row">
             <button
               type="button"
               id="mobileMenuBtn"
@@ -74,42 +74,38 @@ export function SiteHeader() {
               </span>
             </button>
 
-            <Link className="flex items-center gap-2" href="/">
+            <Link className="sf-site-header__logo" href="/">
               <img
                 src="/uploads/logo_transparent.png"
                 alt="Sai Flower logo"
-                width={180}
-                height={64}
-                className="h-10 sm:h-11 w-auto object-contain"
+                width={152}
+                height={44}
+                className="sf-site-header__logo-img"
+                decoding="async"
               />
             </Link>
 
-            <div className="hidden xl:flex items-center gap-7 text-sm font-semibold text-slate-700">
+            <div className="sf-site-header__desktop-nav">
               {NAV_LINKS.map((link) => (
-                <Link key={link.href} className="hover:text-primary transition-colors" href={link.href}>
+                <Link key={link.href} href={link.href}>
                   {link.label}
                 </Link>
               ))}
             </div>
           </div>
 
-          <div className="hidden md:flex flex-1 justify-center">
-            <div className="relative w-full max-w-lg search-wrapper">
-              <form action="/search-results" method="GET" className="relative" role="search">
+          <div className="sf-site-header__search">
+            <div className="sf-site-header__search-inner search-wrapper">
+              <form action="/search-results" method="GET" role="search">
                 <input
                   name="q"
                   id="desktopSearchInput"
                   autoComplete="off"
-                  className="w-full bg-slate-50 border border-slate-200 rounded-full pl-5 pr-12 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/40"
                   placeholder="Search flowers, occasions, gifts..."
                   type="search"
                   enterKeyHint="search"
                 />
-                <button
-                  type="submit"
-                  className="material-icons-outlined absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 text-lg bg-transparent border-none cursor-pointer"
-                  aria-label="Search"
-                >
+                <button type="submit" className="material-icons-outlined" aria-label="Search">
                   search
                 </button>
                 <div
@@ -121,10 +117,10 @@ export function SiteHeader() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="sf-site-header__actions">
             <button
               type="button"
-              className="md:hidden inline-flex items-center justify-center w-12 h-12 rounded-full hover:text-primary hover:bg-slate-50 transition-colors text-gray-700"
+              className="sf-site-header__icon-btn sf-site-header__search-toggle"
               aria-label="Open search"
               aria-expanded={searchOpen}
               aria-controls="mobileSearch"
@@ -137,19 +133,11 @@ export function SiteHeader() {
               <span className="material-icons-outlined text-2xl">search</span>
             </button>
 
-            <Link
-              href="/wishlist"
-              className="inline-flex items-center justify-center w-11 h-11 sm:w-10 sm:h-10 rounded-full border border-slate-200 hover:bg-slate-50 hover:text-primary transition-colors text-gray-700"
-              aria-label="Wishlist"
-            >
+            <Link href="/wishlist" className="sf-site-header__icon-btn" aria-label="Wishlist">
               <span className="material-icons-outlined text-2xl">favorite_border</span>
             </Link>
 
-            <Link
-              href="/cart"
-              className="relative inline-flex items-center justify-center w-11 h-11 sm:w-10 sm:h-10 rounded-full border border-slate-200 hover:bg-slate-50 hover:text-primary transition-colors text-gray-700"
-              aria-label="Cart"
-            >
+            <Link href="/cart" className="sf-site-header__icon-btn" aria-label="Cart" style={{ position: 'relative' }}>
               <span className="material-icons-outlined text-2xl">shopping_cart</span>
               {cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-primary text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
@@ -158,50 +146,30 @@ export function SiteHeader() {
               )}
             </Link>
 
-            <div className="relative group">
-              <Link
-                className="w-10 h-10 rounded-full border border-slate-200 hover:bg-slate-50 flex items-center justify-center transition-colors text-gray-700"
-                href={accountHref}
-                aria-label="Account"
-              >
-                <span className="material-icons-outlined md:text-xl">person_outline</span>
+            <div className="sf-site-header__account">
+              <Link className="sf-site-header__icon-btn" href={accountHref} aria-label="Account">
+                <span className="material-icons-outlined">person_outline</span>
               </Link>
 
-              <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-100 py-2 hidden group-hover:block group-focus-within:block z-50">
+              <div className="sf-site-header__account-menu">
                 {customerName ? (
                   <>
                     <div className="px-4 py-2 border-b border-slate-50">
                       <p className="text-xs text-slate-500">Signed in as</p>
                       <p className="font-bold text-sm truncate">{customerName}</p>
                     </div>
-                    <Link href="/profile" className="block px-4 py-2 text-sm hover:bg-slate-50 font-semibold text-primary">
-                      My Profile
-                    </Link>
-                    <Link href="/profile" className="block px-4 py-2 text-sm hover:bg-slate-50">
-                      My Orders
-                    </Link>
-                    <button
-                      type="button"
-                      className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50"
-                      onClick={() => {
-                        localStorage.removeItem('saiflower_access_token');
-                        localStorage.removeItem('saiflower_refresh_token');
-                        localStorage.removeItem('saiflower_customer');
-                        window.location.href = '/';
-                      }}
-                    >
+                    <Link href="/profile">My Profile</Link>
+                    <Link href="/profile">My Orders</Link>
+                    <Link href="/logout" style={{ color: '#ef4444' }}>
                       Sign Out
-                    </button>
+                    </Link>
                   </>
                 ) : (
                   <>
-                    <Link href="/login" className="block px-4 py-2 text-sm hover:bg-slate-50 font-bold">
+                    <Link href="/login" style={{ fontWeight: 700 }}>
                       Login
                     </Link>
-                    <Link href="/register" className="block px-4 py-2 text-sm hover:bg-slate-50">
-                      Create Account
-                    </Link>
-                    <div className="border-t border-slate-50 my-1" />
+                    <Link href="/register">Create Account</Link>
                   </>
                 )}
               </div>
@@ -266,44 +234,30 @@ export function SiteHeader() {
               <Link className="font-bold text-primary" href="/profile" onClick={closeMenu}>
                 My Profile
               </Link>
-              <button
-                type="button"
-                className="text-red-500"
-                onClick={() => {
-                  localStorage.removeItem('saiflower_access_token');
-                  localStorage.removeItem('saiflower_refresh_token');
-                  localStorage.removeItem('saiflower_customer');
-                  closeMenu();
-                  window.location.href = '/';
-                }}
-              >
+              <Link className="text-red-500" href="/logout" onClick={closeMenu}>
                 Logout
-              </button>
+              </Link>
             </div>
           )}
         </div>
 
         <div
           id="mobileSearch"
-          className={`md:hidden bg-slate-50 border-t border-slate-100 px-4 pb-4 shadow-sm relative z-50${searchOpen ? '' : ' hidden'}`}
+          className={`sf-site-header__mobile-search${searchOpen ? ' is-open' : ''}`}
         >
-          <div className="pt-4 relative search-wrapper">
-            <form action="/search-results" method="GET" className="relative" role="search">
+          <div className="relative search-wrapper">
+            <form action="/search-results" method="GET" className="sf-site-header__search-inner" role="search">
               <input
                 name="q"
                 id="mobileSearchInput"
                 autoComplete="off"
                 enterKeyHint="search"
                 inputMode="search"
-                className="w-full bg-white border border-slate-200 rounded-2xl pl-5 pr-12 py-3 text-base focus:ring-2 focus:ring-primary/40 outline-none"
                 placeholder="Search flowers, occasions, gifts..."
                 type="search"
+                style={{ background: '#fff', borderRadius: '1rem', padding: '0.75rem 3rem 0.75rem 1.25rem' }}
               />
-              <button
-                type="submit"
-                className="material-icons-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 w-11 h-11 inline-flex items-center justify-center"
-                aria-label="Search"
-              >
+              <button type="submit" className="material-icons-outlined" aria-label="Search">
                 search
               </button>
               <div

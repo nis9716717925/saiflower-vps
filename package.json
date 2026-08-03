@@ -2,7 +2,7 @@
   "name": "saiflower",
   "private": true,
   "version": "0.1.0",
-  "description": "SaiFlower monorepo — Next.js storefront + Express API + Prisma (pixel-identical migration)",
+  "description": "SaiFlower monorepo — Next.js storefront + Express API + Prisma",
   "workspaces": [
     "apps/*",
     "packages/*"

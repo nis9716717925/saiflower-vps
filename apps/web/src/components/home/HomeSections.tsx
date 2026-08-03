@@ -1,14 +1,40 @@
 import Link from 'next/link';
+import { HomeOccasionCard } from '@/components/home/HomeProductRail';
+import type { Product } from '@/lib/types';
 
 /** Static homepage sections mirrored from PHP partials (same classes / copy). */
 
 const FAV_FLOWERS = [
-  { title: 'Roses', href: '/flower/roses', img: '/uploads/sections/img_69affbff9fce1_img69a6ad335b957WhatsAppImage20260303at23841PM.webp' },
-  { title: 'Orchids', href: '/flower/orchids', img: '/uploads/sections/img_69b00d7d6b073_img69a6aa4b1d253WhatsAppImage20260303at23112PM.webp' },
-  { title: 'Lilies', href: '/flower/lilies', img: '/uploads/sections/img_69c127d60bae3_img69a6d18fd207dChatGPTImageMar32026054446PM.webp' },
-  { title: 'Tulips', href: '/flower/tulips', img: '/assets/images/hero/main-premium-blooms.jpg' },
-  { title: 'Carnations', href: '/flower/carnations', img: '/assets/images/hero/side-pink-roses.jpg' },
-  { title: 'Mixed', href: '/flowers', img: '/assets/images/hero/main-same-day.jpg' },
+  {
+    title: 'Carnations',
+    href: '/flowers/carnations',
+    img: '/uploads/sections/img_6998729febff3_IMG3579scaled.webp',
+  },
+  {
+    title: 'Orchids',
+    href: '/flowers/orchids',
+    img: '/uploads/sections/img_699872f585703_ob7q8ewBZK1758599912308.webp',
+  },
+  {
+    title: 'Red Roses',
+    href: '/flowers/roses',
+    img: '/uploads/sections/img_699dccd658a6d_Screenshot20250911031911SamsungNotes.webp',
+  },
+  {
+    title: 'Lilies',
+    href: '/flowers/lilies',
+    img: '/uploads/sections/img_699dcd3bc3e78_Screenshot20250906175129SamsungNotes.webp',
+  },
+  {
+    title: 'Sunflower',
+    href: '/flowers/sunflowers',
+    img: '/uploads/sections/img_69b3fc46e7fd4_WhatsAppImage20260313at52923PM.webp',
+  },
+  {
+    title: 'Tulip',
+    href: '/flowers/tulips',
+    img: '/uploads/sections/img_69bbcddb5096e_img69b909c6a9eb8WhatsAppImage20260316at54826PM.webp',
+  },
 ];
 
 const SAME_DAY = [
@@ -229,7 +255,7 @@ export function FavFlowersSection() {
   );
 }
 
-export function TailoredOccasionsSection() {
+export function TailoredOccasionsSection({ products = [] }: { products?: Product[] }) {
   return (
     <section className="hp-section hp-occasions" aria-labelledby="hp-occasions-title" id="hpOccasionsSection">
       <div className="hp-container">
@@ -237,24 +263,69 @@ export function TailoredOccasionsSection() {
           <h2 id="hp-occasions-title" className="hp-section-title">
             Tailored For Your Occasions
           </h2>
-          <p className="hp-section-sub">Handpicked bouquets for every celebration — explore by occasion.</p>
+          <p className="hp-section-sub">Handpicked bouquets for every celebration — switch tabs to explore.</p>
         </div>
         <div className="hp-occasion-tabs hide-scrollbar" role="tablist" aria-label="Occasions">
           {OCCASION_TABS.map((tab, i) => (
-            <Link
+            <button
               key={tab.key}
-              href={tab.href}
+              type="button"
               role="tab"
               className={`hp-occasion-tab${i === 0 ? ' is-active' : ''}`}
+              data-occasion={tab.key}
+              data-cta={`View All ${tab.label} Gifts`}
+              data-link={tab.href}
               aria-selected={i === 0}
+              id={`hp-tab-${tab.key}`}
             >
               <i className={`fas ${tab.icon}`} aria-hidden="true" />
               <span>{tab.label}</span>
-            </Link>
+            </button>
           ))}
         </div>
+
+        <div className="hp-occasion-carousel-wrap">
+          <button
+            type="button"
+            className="hp-occasion-nav hp-occasion-nav--prev"
+            id="hpOccasionPrev"
+            aria-label="Previous products"
+          >
+            <i className="fas fa-chevron-left" aria-hidden="true" />
+          </button>
+          <div className="hp-occasion-track-wrap">
+            <div
+              className="hp-occasion-track hide-scrollbar"
+              id="hpOccasionTrack"
+              role="tabpanel"
+              aria-live="polite"
+            >
+              {products.length > 0 ? (
+                products.map((product) => <HomeOccasionCard key={product.id} product={product} />)
+              ) : (
+                <p className="hp-occasion-empty">
+                  No products found for this occasion yet. <Link href="/flowers">Browse all flowers</Link>.
+                </p>
+              )}
+            </div>
+            <div className="hp-occasion-skeleton" id="hpOccasionSkeleton" hidden aria-hidden="true">
+              {Array.from({ length: 4 }).map((_, s) => (
+                <div key={s} className="hp-skeleton-card" />
+              ))}
+            </div>
+          </div>
+          <button
+            type="button"
+            className="hp-occasion-nav hp-occasion-nav--next"
+            id="hpOccasionNext"
+            aria-label="Next products"
+          >
+            <i className="fas fa-chevron-right" aria-hidden="true" />
+          </button>
+        </div>
+
         <div className="hp-occasion-footer">
-          <Link href="/occasion/birthday" className="hp-occasion-viewall">
+          <Link href="/occasion/birthday" className="hp-occasion-viewall" id="hpOccasionViewAll">
             View All Birthday Gifts <i className="fas fa-arrow-right" aria-hidden="true" />
           </Link>
         </div>
@@ -579,7 +650,8 @@ export function AboutUsSection() {
               Every arrangement is made to order with freshly cut flowers and careful packaging so it arrives looking
               its best. Browse our <Link href="/gallery">floral gallery</Link> for inspiration, read tips on our{' '}
               <Link href="/blog">blog</Link>, or <Link href="/contact">contact us</Link> — we are happy to help with
-              delivery areas, timing, and custom requests.
+              delivery areas, timing, and custom requests. See our <Link href="/delivery-policy">delivery policy</Link>{' '}
+              for full details.
             </p>
           </div>
           <ul className="lx-about__features">
@@ -596,7 +668,113 @@ export function AboutUsSection() {
               <i className="fas fa-check" aria-hidden="true" /> Weddings, Events &amp; Décor
             </li>
           </ul>
+          <Link href="/about" className="lx-btn-gold">
+            Discover More <i className="fas fa-arrow-right" aria-hidden="true" />
+          </Link>
         </div>
+      </div>
+    </section>
+  );
+}
+
+export function HowItWorksSection() {
+  return (
+    <section className="lx-steps" aria-labelledby="lx-steps-title">
+      <div className="lx-steps__inner">
+        <div className="lx-section-head">
+          <span className="lx-kicker">Effortless Gifting</span>
+          <h2 id="lx-steps-title">How It Works</h2>
+          <p>
+            From browsing to their doorstep in three simple steps — most Delhi NCR orders arrive the same day.
+          </p>
+        </div>
+        <div className="lx-steps__grid">
+          <div className="lx-step">
+            <span className="lx-step__num" aria-hidden="true">
+              1
+            </span>
+            <h3 className="lx-step__title">Pick the Perfect Bloom</h3>
+            <p className="lx-step__text">
+              Browse curated bouquets, cakes and hampers — or use the Gift Finder to shop by occasion, recipient or
+              budget.
+            </p>
+          </div>
+          <div className="lx-step">
+            <span className="lx-step__num" aria-hidden="true">
+              2
+            </span>
+            <h3 className="lx-step__title">Checkout Securely</h3>
+            <p className="lx-step__text">
+              Add a personal message, choose your delivery slot and pay safely through trusted payment gateways.
+            </p>
+          </div>
+          <div className="lx-step">
+            <span className="lx-step__num" aria-hidden="true">
+              3
+            </span>
+            <h3 className="lx-step__title">We Handcraft &amp; Deliver</h3>
+            <p className="lx-step__text">
+              Our florists arrange your order with freshly cut flowers and hand-deliver it — same-day, express or
+              midnight.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function FaqSection() {
+  return (
+    <section className="lx-faq" aria-labelledby="lx-faq-title">
+      <div className="lx-faq__inner">
+        <div className="lx-section-head">
+          <span className="lx-kicker">Good to Know</span>
+          <h2 id="lx-faq-title">Frequently Asked Questions</h2>
+        </div>
+        <div className="lx-faq__list">
+          <details className="lx-faq__item">
+            <summary className="lx-faq__q">Do you offer same-day flower delivery in Delhi NCR?</summary>
+            <div className="lx-faq__a">
+              Yes — place your order before 6 PM and we deliver the same day across Delhi NCR. Express and midnight
+              delivery slots are also available on select products.
+            </div>
+          </details>
+          <details className="lx-faq__item">
+            <summary className="lx-faq__q">How do you keep the flowers fresh during delivery?</summary>
+            <div className="lx-faq__a">
+              Every bouquet is made to order with freshly cut blooms, hydrated right up to dispatch and packaged
+              carefully so it arrives looking its best. Freshness is guaranteed on every order.
+            </div>
+          </details>
+          <details className="lx-faq__item">
+            <summary className="lx-faq__q">Can I add a cake, chocolates or a personal note to my order?</summary>
+            <div className="lx-faq__a">
+              Absolutely. You can pair your flowers with <Link href="/cakes">cakes</Link> and{' '}
+              <Link href="/gifts">gift hampers</Link> at checkout, and include a free personalised message card with
+              every order.
+            </div>
+          </details>
+          <details className="lx-faq__item">
+            <summary className="lx-faq__q">Do you handle weddings and event décor?</summary>
+            <div className="lx-faq__a">
+              Yes — Sai Flower specialises in wedding flowers, corporate events and large-scale décor: stage
+              backdrops, centrepieces, bridal bouquets and full venue styling.{' '}
+              <Link href="/contact">Contact us</Link> for a custom quote.
+            </div>
+          </details>
+          <details className="lx-faq__item">
+            <summary className="lx-faq__q">Is online payment safe on your website?</summary>
+            <div className="lx-faq__a">
+              Completely. All payments are processed through secure, trusted payment gateways — we never store your
+              card details.
+            </div>
+          </details>
+        </div>
+        <p className="lx-faq__footer">
+          Still have questions? <Link href="/faq">Read all FAQs</Link> or{' '}
+          <Link href="/contact">talk to our team</Link>.
+        </p>
       </div>
     </section>
   );

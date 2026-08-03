@@ -1,10 +1,13 @@
-import { StubPage } from '@/components/StubPage';
+import type { Metadata } from 'next';
+import { CelebrationCalendarPage } from '@/components/landings/CelebrationCalendarView';
 
-export default function CelebrationCalendarPage() {
-  return (
-    <StubPage
-      title="Celebrations Calendar"
-      description="Full year of celebration dates — content ported from celebrations_calendar_data.php. Interactive calendar UI lands with Phase 7 SEO landings."
-    />
-  );
+export const metadata: Metadata = {
+  title: 'Celebrations Calendar 2026 | Flower Gifting Dates — Sai Flowers',
+  description:
+    'Plan flower gifts for every celebration — Valentine’s, Mother’s Day, festivals, Raksha Bandhan & more. Shop same-day bouquets for Delhi NCR from Sai Flowers.',
+  alternates: { canonical: '/celebration-calendar' },
+};
+
+export default function Page() {
+  return <CelebrationCalendarPage />;
 }

@@ -17,6 +17,9 @@ import {
   searchRouter,
   settingsRouter,
 } from './misc.routes';
+import { blogRouter, faqRouter } from './blog.routes';
+import { galleryRouter, eventsRouter } from './catalog-content.routes';
+import { pagesRouter } from './pages.routes';
 
 const router = Router();
 
@@ -46,6 +49,15 @@ router.get('/', (_req, res) => {
         'GET|POST /wishlist',
         'GET|POST /reviews',
         'GET /settings',
+        'GET /blogs',
+        'GET /blogs/:slug',
+        'GET /faqs?page=',
+        'GET /gallery',
+        'GET /gallery/:id',
+        'GET /events',
+        'GET /events/:slug',
+        'GET /pages',
+        'GET /pages/:slug',
       ],
     }),
   );
@@ -63,5 +75,10 @@ router.use('/orders', orderRouter);
 router.use('/wishlist', wishlistRouter);
 router.use('/reviews', reviewRouter);
 router.use('/settings', settingsRouter);
+router.use('/blogs', blogRouter);
+router.use('/faqs', faqRouter);
+router.use('/gallery', galleryRouter);
+router.use('/events', eventsRouter);
+router.use('/pages', pagesRouter);
 
 export default router;

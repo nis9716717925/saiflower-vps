@@ -251,4 +251,166 @@ export async function fetchProduct(type: string, slug: string): Promise<import('
   return json.data;
 }
 
+export async function fetchCategories(): Promise<import('./types').ShopCategory[]> {
+  const res = await fetch(apiUrl('/categories'), { cache: 'no-store' });
+  const json = (await res.json()) as ApiResponse<import('./types').ShopCategory[]>;
+  if (!res.ok || json.success === false) {
+    throw new ApiError(
+      json.success === false ? json.message : 'Failed to load categories',
+      res.status,
+    );
+  }
+  return json.data ?? [];
+}
+
+export async function fetchBlogs(limit = 100): Promise<import('./types').BlogListItem[]> {
+  const url = new URL(apiUrl('/blogs'));
+  url.searchParams.set('limit', String(limit));
+  const res = await fetch(url.toString(), { cache: 'no-store' });
+  const json = (await res.json()) as ApiResponse<import('./types').BlogListItem[]>;
+  if (!res.ok || json.success === false) {
+    throw new ApiError(
+      json.success === false ? json.message : 'Failed to load blogs',
+      res.status,
+    );
+  }
+  return json.data ?? [];
+}
+
+export async function fetchBlog(slug: string): Promise<import('./types').BlogPost> {
+  const res = await fetch(apiUrl(`/blogs/${encodeURIComponent(slug)}`), { cache: 'no-store' });
+  const json = (await res.json()) as ApiResponse<import('./types').BlogPost>;
+  if (!res.ok || json.success === false) {
+    throw new ApiError(json.success === false ? json.message : 'Blog not found', res.status);
+  }
+  if (!json.data) throw new ApiError('Blog not found', 404);
+  return json.data;
+}
+
+export async function fetchFaqs(
+  page: string,
+  limit = 6,
+): Promise<import('./types').FaqItem[]> {
+  const url = new URL(apiUrl('/faqs'));
+  url.searchParams.set('page', page);
+  url.searchParams.set('limit', String(limit));
+  const res = await fetch(url.toString(), { cache: 'no-store' });
+  const json = (await res.json()) as ApiResponse<import('./types').FaqItem[]>;
+  if (!res.ok || json.success === false) {
+    throw new ApiError(json.success === false ? json.message : 'Failed to load FAQs', res.status);
+  }
+  return json.data ?? [];
+}
+
+export interface GalleryItem {
+  id: number;
+  title: string;
+  tag: string | null;
+  image: string;
+  url: string;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+}
+
+export interface EventItem {
+  id: number;
+  title: string;
+  slug: string;
+  tag: string | null;
+  description?: string;
+  image: string;
+  url: string;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+}
+
+export async function fetchGallery(limit = 100): Promise<GalleryItem[]> {
+  const url = new URL(apiUrl('/gallery'));
+  url.searchParams.set('limit', String(limit));
+  const res = await fetch(url.toString(), { cache: 'no-store' });
+  const json = (await res.json()) as ApiResponse<GalleryItem[]>;
+  if (!res.ok || json.success === false) {
+    throw new ApiError(json.success === false ? json.message : 'Failed to load gallery', res.status);
+  }
+  return json.data ?? [];
+}
+
+export async function fetchGalleryItem(id: number): Promise<GalleryItem> {
+  const res = await fetch(apiUrl(`/gallery/${id}`), { cache: 'no-store' });
+  const json = (await res.json()) as ApiResponse<GalleryItem>;
+  if (!res.ok || json.success === false) {
+    throw new ApiError(json.success === false ? json.message : 'Gallery item not found', res.status);
+  }
+  if (!json.data) throw new ApiError('Gallery item not found', 404);
+  return json.data;
+}
+
+export async function fetchEvents(limit = 100): Promise<EventItem[]> {
+  const url = new URL(apiUrl('/events'));
+  url.searchParams.set('limit', String(limit));
+  const res = await fetch(url.toString(), { cache: 'no-store' });
+  const json = (await res.json()) as ApiResponse<EventItem[]>;
+  if (!res.ok || json.success === false) {
+    throw new ApiError(json.success === false ? json.message : 'Failed to load events', res.status);
+  }
+  return json.data ?? [];
+}
+
+export async function fetchEvent(slug: string): Promise<EventItem> {
+  const res = await fetch(apiUrl(`/events/${encodeURIComponent(slug)}`), { cache: 'no-store' });
+  const json = (await res.json()) as ApiResponse<EventItem>;
+  if (!res.ok || json.success === false) {
+    throw new ApiError(json.success === false ? json.message : 'Event not found', res.status);
+  }
+  if (!json.data) throw new ApiError('Event not found', 404);
+  return json.data;
+}
+
+export interface CmsPage {
+  id: number;
+  title: string;
+  shortDescription?: string | null;
+  slug: string;
+  layoutType: string;
+  pageTag?: string | null;
+  heroImage?: string | null;
+  contentHtml: string;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  metaKeywords?: string | null;
+  url: string;
+}
+
+export interface CmsPageListItem {
+  id: number;
+  title: string;
+  shortDescription?: string | null;
+  slug: string;
+  layoutType: string;
+  pageTag?: string | null;
+  heroImage?: string | null;
+  url: string;
+}
+
+export async function fetchCmsPage(slug: string): Promise<CmsPage> {
+  const res = await fetch(apiUrl(`/pages/${encodeURIComponent(slug)}`), { cache: 'no-store' });
+  const json = (await res.json()) as ApiResponse<CmsPage>;
+  if (!res.ok || json.success === false) {
+    throw new ApiError(json.success === false ? json.message : 'Page not found', res.status);
+  }
+  if (!json.data) throw new ApiError('Page not found', 404);
+  return json.data;
+}
+
+export async function fetchCmsPages(limit = 200): Promise<CmsPageListItem[]> {
+  const url = new URL(apiUrl('/pages'));
+  url.searchParams.set('limit', String(limit));
+  const res = await fetch(url.toString(), { cache: 'no-store' });
+  const json = (await res.json()) as ApiResponse<CmsPageListItem[]>;
+  if (!res.ok || json.success === false) {
+    throw new ApiError(json.success === false ? json.message : 'Failed to load pages', res.status);
+  }
+  return json.data ?? [];
+}
+
 export type { CartData, AuthPayload, CustomerProfile };

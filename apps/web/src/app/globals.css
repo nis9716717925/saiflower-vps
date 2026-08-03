@@ -1,5 +1,4 @@
-/* Phase 2: minimal reset only. Do not invent a new design system.
-   Phase 6 ports existing assets/css/* and PHP markup as-is. */
+/* Minimal reset + site-wide helpers. Page-specific CSS loads via RouteStyles. */
 *,
 *::before,
 *::after {
@@ -10,9 +9,9 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: #fdfbf7;
+  background: #fdfcf9;
   color: #2c3e50;
-  font-family: 'Inter', 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 a {
@@ -72,4 +71,48 @@ code {
 
 #mobileBottomNav {
   padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+}
+
+/* Hero slider dots — mirrored from PHP index.php inline styles */
+.slider-dot {
+  width: 8px;
+  height: 8px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  opacity: 1;
+  transition: background-color 0.3s, opacity 0.3s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.slider-dot:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.slider-dot.active-pill {
+  width: 32px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+}
+
+.slider-dot.active-pill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background-color: #ffffff;
+  border-radius: 12px;
+  animation: progressDot 3s linear forwards;
+}
+
+.faq-item-box summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item-box summary {
+  list-style: none;
 }

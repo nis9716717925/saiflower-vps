@@ -1,0 +1,261 @@
+/* About page — matches about.php */
+.about-page {
+  --about-primary: #2f6f4e;
+  --about-accent: #d4af37;
+  --about-text: #333333;
+  color: var(--about-text);
+  line-height: 1.8;
+  overflow-x: hidden;
+  background: #fff;
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+.about-page .about-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 0 20px;
+}
+
+.about-page .about-section {
+  padding: 80px 0;
+}
+
+.about-page .page-header {
+  text-align: center;
+  margin-bottom: 40px;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    url('https://images.unsplash.com/photo-1490750967868-88aa4486c946?q=80&w=1400');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  padding: 100px 20px;
+  border-radius: 0 0 50px 50px;
+}
+
+.about-page .page-header h1 {
+  font-size: clamp(2.5rem, 8vw, 4rem);
+  margin: 0;
+}
+
+.about-page .page-header p {
+  opacity: 0.9;
+  font-size: 1.1rem;
+  margin: 0.75rem 0 0;
+}
+
+.about-page .philosophy-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.about-page .philosophy-card {
+  background: white;
+  padding: 40px;
+  border-radius: 30px;
+  border-left: 8px solid var(--about-primary);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.about-page .timeline {
+  position: relative;
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px 0;
+}
+
+.about-page .timeline::after {
+  content: '';
+  position: absolute;
+  width: 2px;
+  background: var(--about-accent);
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  margin-left: -1px;
+}
+
+.about-page .timeline-item {
+  padding: 10px 40px;
+  position: relative;
+  width: 50%;
+  box-sizing: border-box;
+}
+
+.about-page .timeline-item::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  right: -10px;
+  background-color: white;
+  border: 4px solid var(--about-primary);
+  top: 15px;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.about-page .timeline-item.left {
+  left: 0;
+  text-align: right;
+}
+
+.about-page .timeline-item.right {
+  left: 50%;
+}
+
+.about-page .timeline-item.right::after {
+  left: -10px;
+}
+
+.about-page .timeline-item .date {
+  font-weight: bold;
+  color: var(--about-primary);
+  font-size: 1.2rem;
+}
+
+.about-page .why-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.about-page .why-box {
+  background: white;
+  padding: 40px 30px;
+  border-radius: 25px;
+  text-align: center;
+  border: 1px solid #f0f0f0;
+  transition: 0.4s;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+}
+
+.about-page .why-icon {
+  width: 60px;
+  height: 60px;
+  background: #f8fcf9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-size: 1.5rem;
+  color: var(--about-primary);
+}
+
+.about-page .faq-wrapper {
+  max-width: 850px;
+  margin: 40px auto 0;
+}
+
+.about-page .faq-item {
+  background: white;
+  border-radius: 15px;
+  margin-bottom: 15px;
+  border: 1px solid #f0f0f0;
+  overflow: hidden;
+  transition: 0.3s;
+}
+
+.about-page .faq-question {
+  padding: 20px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--about-primary);
+  gap: 1rem;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 0;
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.about-page .faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 25px;
+  color: #666;
+  transition: 0.3s ease-out;
+}
+
+.about-page .faq-item.active .faq-answer {
+  max-height: 400px;
+  padding-bottom: 20px;
+}
+
+.about-page .faq-item.active {
+  border-color: var(--about-primary);
+}
+
+.about-page .swipe-indicator {
+  display: none;
+  text-align: center;
+  color: var(--about-accent);
+  font-size: 0.8rem;
+  margin-top: -15px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .about-page .about-section {
+    padding: 50px 0;
+  }
+  .about-page .page-header {
+    padding: 90px 20px 60px;
+    border-radius: 0 0 35px 35px;
+    margin-bottom: 10px;
+  }
+  .about-page .philosophy-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .about-page .philosophy-card {
+    padding: 30px 25px;
+    margin: 0 10px;
+  }
+  .about-page .timeline::after {
+    left: 25px;
+  }
+  .about-page .timeline-item {
+    width: 100%;
+    padding-left: 60px;
+    padding-right: 15px;
+    text-align: left !important;
+    margin-bottom: 25px;
+  }
+  .about-page .timeline-item::after {
+    left: 15px;
+  }
+  .about-page .timeline-item.right {
+    left: 0;
+  }
+  .about-page .why-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 15px;
+    padding: 10px 15px 35px;
+    margin: 0 -20px;
+    scrollbar-width: none;
+  }
+  .about-page .why-grid::-webkit-scrollbar {
+    display: none;
+  }
+  .about-page .why-box {
+    flex: 0 0 85%;
+    scroll-snap-align: center;
+  }
+  .about-page .swipe-indicator {
+    display: block !important;
+  }
+  .about-page {
+    padding-bottom: 1rem;
+  }
+}

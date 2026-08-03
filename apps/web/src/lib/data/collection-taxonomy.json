@@ -1,0 +1,2911 @@
+{
+  "flower": {
+    "roses": {
+      "title": "Roses",
+      "h1": "Fresh Rose Bouquets Online — Delhi NCR Delivery",
+      "short_description": "Timeless red, pink & mixed rose bouquets for love, birthdays and celebrations. Same-day rose delivery across Delhi NCR.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [
+          "rose",
+          "roses"
+        ],
+        "tags": [
+          "rose",
+          "roses",
+          "red rose"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "occasion:love-romance",
+        "relation:girlfriend",
+        "collection:premium-bouquets",
+        "flower:lilies"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for rose bouquets in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day rose bouquets delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for rose bouquets freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for rose bouquets orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with rose bouquets gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Rose Collection",
+      "cta_label": "Shop Now"
+    },
+    "lilies": {
+      "title": "Lilies",
+      "h1": "Elegant Lily Bouquets Online — Fresh Delivery",
+      "short_description": "Graceful white & oriental lily arrangements for sympathy, thank-you and premium gifting.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [
+          "lily",
+          "lilies"
+        ],
+        "tags": [
+          "lily",
+          "lilies"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "occasion:sympathy",
+        "occasion:thank-you",
+        "collection:premium-bouquets",
+        "flower:orchids"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for lily bouquets in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day lily bouquets delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for lily bouquets freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for lily bouquets orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with lily bouquets gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Lilies",
+      "cta_label": "Shop Now"
+    },
+    "sunflowers": {
+      "title": "Sunflowers",
+      "h1": "Bright Sunflower Bouquets — Same-Day Delivery",
+      "short_description": "Cheerful sunflower arrangements that light up birthdays, get-well wishes and friendship days.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [
+          "sunflower",
+          "sunflowers"
+        ],
+        "tags": [
+          "sunflower",
+          "sunflowers"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1597848212624-e593c82eb025?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "occasion:birthday",
+        "relation:friends",
+        "collection:trending-flowers",
+        "flower:gerberas"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for sunflower bouquets in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day sunflower bouquets delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for sunflower bouquets freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for sunflower bouquets orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with sunflower bouquets gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Sunflowers",
+      "cta_label": "Shop Now"
+    },
+    "orchids": {
+      "title": "Orchids",
+      "h1": "Premium Orchid Plants & Arrangements",
+      "short_description": "Luxury orchid gifts for housewarming, corporate gifting and elegant celebrations.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [
+          "orchid",
+          "orchids"
+        ],
+        "tags": [
+          "orchid",
+          "orchids"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1561181286-d3fee7f4415e?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "collection:luxury-flowers",
+        "occasion:congratulations",
+        "flower:roses",
+        "collection:premium-bouquets"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for orchid gifts in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day orchid gifts delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for orchid gifts freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for orchid gifts orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with orchid gifts gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Orchids",
+      "cta_label": "Shop Now"
+    },
+    "carnations": {
+      "title": "Carnations",
+      "h1": "Carnation Bouquets Online — Fresh & Colourful",
+      "short_description": "Long-lasting carnation bunches for Mother's Day, thank-you notes and everyday affection.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [
+          "carnation",
+          "carnations"
+        ],
+        "tags": [
+          "carnation",
+          "carnations"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "relation:mother",
+        "occasion:thank-you",
+        "flower:roses",
+        "collection:budget-flowers"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for carnation bouquets in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day carnation bouquets delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for carnation bouquets freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for carnation bouquets orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with carnation bouquets gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Carnations",
+      "cta_label": "Shop Now"
+    },
+    "gerberas": {
+      "title": "Gerberas",
+      "h1": "Vibrant Gerbera Flower Bouquets",
+      "short_description": "Bold, joyful gerbera arrangements for birthdays, congratulations and brightening any room.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [
+          "gerbera",
+          "gerberas"
+        ],
+        "tags": [
+          "gerbera",
+          "gerberas"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1468327768560-75b778cbb551?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "occasion:birthday",
+        "occasion:congratulations",
+        "flower:sunflowers",
+        "collection:trending-flowers"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for gerbera bouquets in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day gerbera bouquets delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for gerbera bouquets freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for gerbera bouquets orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with gerbera bouquets gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Gerberas",
+      "cta_label": "Shop Now"
+    },
+    "tulips": {
+      "title": "Tulips",
+      "h1": "Premium Tulip Bouquets — Limited Season Picks",
+      "short_description": "Soft pink and colourful tulip hand-bouquets for romance, birthdays and stylish gifting.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [
+          "tulip",
+          "tulips"
+        ],
+        "tags": [
+          "tulip",
+          "tulips"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "occasion:love-romance",
+        "relation:girlfriend",
+        "collection:premium-bouquets",
+        "flower:roses"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for tulip bouquets in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day tulip bouquets delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for tulip bouquets freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for tulip bouquets orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with tulip bouquets gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Tulips",
+      "cta_label": "Shop Now"
+    },
+    "mixed-flowers": {
+      "title": "Mixed Flowers",
+      "h1": "Mixed Flower Bouquets for Every Occasion",
+      "short_description": "Hand-tied mixed blooms — colourful, versatile and perfect when you want a little of everything.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [
+          "mixed",
+          "assorted",
+          "mix"
+        ],
+        "tags": [
+          "mixed",
+          "mixed flowers",
+          "assorted"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "occasion:birthday",
+        "collection:best-sellers",
+        "flower:roses",
+        "collection:budget-flowers"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for mixed flower bouquets in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day mixed flower bouquets delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for mixed flower bouquets freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for mixed flower bouquets orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with mixed flower bouquets gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Mixed Flowers",
+      "cta_label": "Shop Now"
+    },
+    "premium-flowers": {
+      "title": "Premium Flowers",
+      "h1": "Premium Flower Collection — Designer Blooms",
+      "short_description": "Elevated arrangements with rare stems, richer styling and statement presentation.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [
+          "premium",
+          "designer",
+          "luxury",
+          "luxe"
+        ],
+        "tags": [
+          "premium",
+          "luxury",
+          "luxe"
+        ],
+        "match": "any",
+        "price_min": 1999,
+        "sort": "price_high"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "collection:luxury-flowers",
+        "collection:designer-bouquets",
+        "flower:orchids",
+        "occasion:anniversary"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for premium flowers in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day premium flowers delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for premium flowers freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for premium flowers orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with premium flowers gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Premium",
+      "cta_label": "Shop Now"
+    },
+    "luxury-collection": {
+      "title": "Luxury Collection",
+      "h1": "Luxury Flowers & Statement Bouquets",
+      "short_description": "Our most exclusive floral creations for milestones that deserve the extraordinary.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [
+          "luxury",
+          "luxe",
+          "premium",
+          "exclusive"
+        ],
+        "tags": [
+          "luxury",
+          "luxe",
+          "premium"
+        ],
+        "match": "any",
+        "price_min": 2499,
+        "sort": "price_high"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "collection:luxury-flowers",
+        "collection:premium-bouquets",
+        "flower:orchids",
+        "occasion:wedding"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for luxury flowers in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day luxury flowers delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for luxury flowers freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for luxury flowers orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with luxury flowers gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Luxe",
+      "cta_label": "Shop Now"
+    }
+  },
+  "relation": {
+    "mother": {
+      "title": "Mother",
+      "h1": "Gifts for Mother — Flowers, Cakes & Surprises",
+      "short_description": "Thoughtful flowers and gifts curated for Mother. Same-day delivery across Delhi NCR.",
+      "filter": {
+        "tables": [
+          "flowers",
+          "cakes",
+          "gifts"
+        ],
+        "name_keywords": [
+          "mother",
+          "mom",
+          "mummy",
+          "mama"
+        ],
+        "tags": [
+          "mother",
+          "mom",
+          "mothers day"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1487530811176-3780de880c2d?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "occasion:birthday",
+        "occasion:anniversary",
+        "collection:best-sellers",
+        "flower:roses"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for gifts for Mother in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day gifts for Mother delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for gifts for Mother freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for gifts for Mother orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with gifts for Mother gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "For Mother",
+      "cta_label": "Shop Now"
+    },
+    "father": {
+      "title": "Father",
+      "h1": "Gifts for Father — Flowers, Cakes & Surprises",
+      "short_description": "Thoughtful flowers and gifts curated for Father. Same-day delivery across Delhi NCR.",
+      "filter": {
+        "tables": [
+          "flowers",
+          "cakes",
+          "gifts"
+        ],
+        "name_keywords": [
+          "father",
+          "dad",
+          "papa"
+        ],
+        "tags": [
+          "father",
+          "dad",
+          "fathers day"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1487530811176-3780de880c2d?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "occasion:birthday",
+        "occasion:anniversary",
+        "collection:best-sellers",
+        "flower:roses"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for gifts for Father in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day gifts for Father delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for gifts for Father freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for gifts for Father orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with gifts for Father gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "For Father",
+      "cta_label": "Shop Now"
+    },
+    "wife": {
+      "title": "Wife",
+      "h1": "Gifts for Wife — Flowers, Cakes & Surprises",
+      "short_description": "Thoughtful flowers and gifts curated for Wife. Same-day delivery across Delhi NCR.",
+      "filter": {
+        "tables": [
+          "flowers",
+          "cakes",
+          "gifts"
+        ],
+        "name_keywords": [
+          "wife"
+        ],
+        "tags": [
+          "wife",
+          "anniversary",
+          "love"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1487530811176-3780de880c2d?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "occasion:birthday",
+        "occasion:anniversary",
+        "collection:best-sellers",
+        "flower:roses"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for gifts for Wife in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day gifts for Wife delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for gifts for Wife freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for gifts for Wife orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with gifts for Wife gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "For Wife",
+      "cta_label": "Shop Now"
+    },
+    "husband": {
+      "title": "Husband",
+      "h1": "Gifts for Husband — Flowers, Cakes & Surprises",
+      "short_description": "Thoughtful flowers and gifts curated for Husband. Same-day delivery across Delhi NCR.",
+      "filter": {
+        "tables": [
+          "flowers",
+          "cakes",
+          "gifts"
+        ],
+        "name_keywords": [
+          "husband"
+        ],
+        "tags": [
+          "husband",
+          "anniversary"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1487530811176-3780de880c2d?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "occasion:birthday",
+        "occasion:anniversary",
+        "collection:best-sellers",
+        "flower:roses"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for gifts for Husband in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day gifts for Husband delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for gifts for Husband freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for gifts for Husband orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with gifts for Husband gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "For Husband",
+      "cta_label": "Shop Now"
+    },
+    "girlfriend": {
+      "title": "Girlfriend",
+      "h1": "Gifts for Girlfriend — Flowers, Cakes & Surprises",
+      "short_description": "Thoughtful flowers and gifts curated for Girlfriend. Same-day delivery across Delhi NCR.",
+      "filter": {
+        "tables": [
+          "flowers",
+          "cakes",
+          "gifts"
+        ],
+        "name_keywords": [
+          "girlfriend",
+          "gf",
+          "romantic"
+        ],
+        "tags": [
+          "girlfriend",
+          "love",
+          "romance"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1487530811176-3780de880c2d?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "occasion:birthday",
+        "occasion:anniversary",
+        "collection:best-sellers",
+        "flower:roses"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for gifts for Girlfriend in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day gifts for Girlfriend delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for gifts for Girlfriend freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for gifts for Girlfriend orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with gifts for Girlfriend gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "For Girlfriend",
+      "cta_label": "Shop Now"
+    },
+    "boyfriend": {
+      "title": "Boyfriend",
+      "h1": "Gifts for Boyfriend — Flowers, Cakes & Surprises",
+      "short_description": "Thoughtful flowers and gifts curated for Boyfriend. Same-day delivery across Delhi NCR.",
+      "filter": {
+        "tables": [
+          "flowers",
+          "cakes",
+          "gifts"
+        ],
+        "name_keywords": [
+          "boyfriend",
+          "bf"
+        ],
+        "tags": [
+          "boyfriend",
+          "love"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1487530811176-3780de880c2d?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "occasion:birthday",
+        "occasion:anniversary",
+        "collection:best-sellers",
+        "flower:roses"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for gifts for Boyfriend in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day gifts for Boyfriend delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for gifts for Boyfriend freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for gifts for Boyfriend orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with gifts for Boyfriend gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "For Boyfriend",
+      "cta_label": "Shop Now"
+    },
+    "sister": {
+      "title": "Sister",
+      "h1": "Gifts for Sister — Flowers, Cakes & Surprises",
+      "short_description": "Thoughtful flowers and gifts curated for Sister. Same-day delivery across Delhi NCR.",
+      "filter": {
+        "tables": [
+          "flowers",
+          "cakes",
+          "gifts"
+        ],
+        "name_keywords": [
+          "sister",
+          "sis"
+        ],
+        "tags": [
+          "sister",
+          "rakhi"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1487530811176-3780de880c2d?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "occasion:birthday",
+        "occasion:anniversary",
+        "collection:best-sellers",
+        "flower:roses"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for gifts for Sister in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day gifts for Sister delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for gifts for Sister freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for gifts for Sister orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with gifts for Sister gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "For Sister",
+      "cta_label": "Shop Now"
+    },
+    "brother": {
+      "title": "Brother",
+      "h1": "Gifts for Brother — Flowers, Cakes & Surprises",
+      "short_description": "Thoughtful flowers and gifts curated for Brother. Same-day delivery across Delhi NCR.",
+      "filter": {
+        "tables": [
+          "flowers",
+          "cakes",
+          "gifts"
+        ],
+        "name_keywords": [
+          "brother",
+          "bhai"
+        ],
+        "tags": [
+          "brother",
+          "bhai",
+          "rakhi"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1487530811176-3780de880c2d?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "occasion:birthday",
+        "occasion:anniversary",
+        "collection:best-sellers",
+        "flower:roses"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for gifts for Brother in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day gifts for Brother delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for gifts for Brother freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for gifts for Brother orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with gifts for Brother gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "For Brother",
+      "cta_label": "Shop Now"
+    },
+    "daughter": {
+      "title": "Daughter",
+      "h1": "Gifts for Daughter — Flowers, Cakes & Surprises",
+      "short_description": "Thoughtful flowers and gifts curated for Daughter. Same-day delivery across Delhi NCR.",
+      "filter": {
+        "tables": [
+          "flowers",
+          "cakes",
+          "gifts"
+        ],
+        "name_keywords": [
+          "daughter"
+        ],
+        "tags": [
+          "daughter"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1487530811176-3780de880c2d?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "occasion:birthday",
+        "occasion:anniversary",
+        "collection:best-sellers",
+        "flower:roses"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for gifts for Daughter in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day gifts for Daughter delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for gifts for Daughter freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for gifts for Daughter orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with gifts for Daughter gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "For Daughter",
+      "cta_label": "Shop Now"
+    },
+    "son": {
+      "title": "Son",
+      "h1": "Gifts for Son — Flowers, Cakes & Surprises",
+      "short_description": "Thoughtful flowers and gifts curated for Son. Same-day delivery across Delhi NCR.",
+      "filter": {
+        "tables": [
+          "flowers",
+          "cakes",
+          "gifts"
+        ],
+        "name_keywords": [
+          "son"
+        ],
+        "tags": [
+          "son"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1487530811176-3780de880c2d?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "occasion:birthday",
+        "occasion:anniversary",
+        "collection:best-sellers",
+        "flower:roses"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for gifts for Son in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day gifts for Son delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for gifts for Son freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for gifts for Son orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with gifts for Son gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "For Son",
+      "cta_label": "Shop Now"
+    },
+    "grandmother": {
+      "title": "Grandmother",
+      "h1": "Gifts for Grandmother — Flowers, Cakes & Surprises",
+      "short_description": "Thoughtful flowers and gifts curated for Grandmother. Same-day delivery across Delhi NCR.",
+      "filter": {
+        "tables": [
+          "flowers",
+          "cakes",
+          "gifts"
+        ],
+        "name_keywords": [
+          "grandmother",
+          "grandma",
+          "nani",
+          "dadi"
+        ],
+        "tags": [
+          "grandmother",
+          "grandma"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1487530811176-3780de880c2d?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "occasion:birthday",
+        "occasion:anniversary",
+        "collection:best-sellers",
+        "flower:roses"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for gifts for Grandmother in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day gifts for Grandmother delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for gifts for Grandmother freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for gifts for Grandmother orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with gifts for Grandmother gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "For Grandmother",
+      "cta_label": "Shop Now"
+    },
+    "grandfather": {
+      "title": "Grandfather",
+      "h1": "Gifts for Grandfather — Flowers, Cakes & Surprises",
+      "short_description": "Thoughtful flowers and gifts curated for Grandfather. Same-day delivery across Delhi NCR.",
+      "filter": {
+        "tables": [
+          "flowers",
+          "cakes",
+          "gifts"
+        ],
+        "name_keywords": [
+          "grandfather",
+          "grandpa",
+          "nana",
+          "dada"
+        ],
+        "tags": [
+          "grandfather",
+          "grandpa"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1487530811176-3780de880c2d?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "occasion:birthday",
+        "occasion:anniversary",
+        "collection:best-sellers",
+        "flower:roses"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for gifts for Grandfather in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day gifts for Grandfather delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for gifts for Grandfather freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for gifts for Grandfather orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with gifts for Grandfather gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "For Grandfather",
+      "cta_label": "Shop Now"
+    },
+    "parents": {
+      "title": "Parents",
+      "h1": "Gifts for Parents — Flowers, Cakes & Surprises",
+      "short_description": "Thoughtful flowers and gifts curated for Parents. Same-day delivery across Delhi NCR.",
+      "filter": {
+        "tables": [
+          "flowers",
+          "cakes",
+          "gifts"
+        ],
+        "name_keywords": [
+          "parents",
+          "mom & dad",
+          "mother father"
+        ],
+        "tags": [
+          "parents",
+          "mother",
+          "father"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1487530811176-3780de880c2d?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "occasion:birthday",
+        "occasion:anniversary",
+        "collection:best-sellers",
+        "flower:roses"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for gifts for Parents in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day gifts for Parents delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for gifts for Parents freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for gifts for Parents orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with gifts for Parents gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "For Parents",
+      "cta_label": "Shop Now"
+    },
+    "friends": {
+      "title": "Friends",
+      "h1": "Gifts for Friends — Flowers, Cakes & Surprises",
+      "short_description": "Thoughtful flowers and gifts curated for Friends. Same-day delivery across Delhi NCR.",
+      "filter": {
+        "tables": [
+          "flowers",
+          "cakes",
+          "gifts"
+        ],
+        "name_keywords": [
+          "friend",
+          "friends",
+          "buddy"
+        ],
+        "tags": [
+          "friend",
+          "friendship"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1487530811176-3780de880c2d?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "occasion:birthday",
+        "occasion:anniversary",
+        "collection:best-sellers",
+        "flower:roses"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for gifts for Friends in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day gifts for Friends delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for gifts for Friends freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for gifts for Friends orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with gifts for Friends gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "For Friends",
+      "cta_label": "Shop Now"
+    },
+    "colleagues": {
+      "title": "Colleagues",
+      "h1": "Gifts for Colleagues — Flowers, Cakes & Surprises",
+      "short_description": "Thoughtful flowers and gifts curated for Colleagues. Same-day delivery across Delhi NCR.",
+      "filter": {
+        "tables": [
+          "flowers",
+          "cakes",
+          "gifts"
+        ],
+        "name_keywords": [
+          "colleague",
+          "office",
+          "coworker",
+          "corporate"
+        ],
+        "tags": [
+          "colleague",
+          "office",
+          "corporate"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1487530811176-3780de880c2d?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "occasion:birthday",
+        "occasion:anniversary",
+        "collection:best-sellers",
+        "flower:roses"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for gifts for Colleagues in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day gifts for Colleagues delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for gifts for Colleagues freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for gifts for Colleagues orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with gifts for Colleagues gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "For Colleagues",
+      "cta_label": "Shop Now"
+    },
+    "him": {
+      "title": "Him",
+      "h1": "Gifts for Him — Flowers, Cakes & Surprises",
+      "short_description": "Thoughtful flowers and gifts curated for Him. Same-day delivery across Delhi NCR.",
+      "filter": {
+        "tables": [
+          "flowers",
+          "cakes",
+          "gifts"
+        ],
+        "name_keywords": [
+          "him",
+          "men",
+          "gentleman"
+        ],
+        "tags": [
+          "him",
+          "men",
+          "boyfriend",
+          "husband"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1487530811176-3780de880c2d?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "occasion:birthday",
+        "occasion:anniversary",
+        "collection:best-sellers",
+        "flower:roses"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for gifts for Him in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day gifts for Him delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for gifts for Him freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for gifts for Him orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with gifts for Him gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "For Him",
+      "cta_label": "Shop Now"
+    },
+    "her": {
+      "title": "Her",
+      "h1": "Gifts for Her — Flowers, Cakes & Surprises",
+      "short_description": "Thoughtful flowers and gifts curated for Her. Same-day delivery across Delhi NCR.",
+      "filter": {
+        "tables": [
+          "flowers",
+          "cakes",
+          "gifts"
+        ],
+        "name_keywords": [
+          "her",
+          "women",
+          "lady"
+        ],
+        "tags": [
+          "her",
+          "women",
+          "girlfriend",
+          "wife"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1487530811176-3780de880c2d?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "occasion:birthday",
+        "occasion:anniversary",
+        "collection:best-sellers",
+        "flower:roses"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for gifts for Her in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day gifts for Her delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for gifts for Her freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for gifts for Her orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with gifts for Her gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "For Her",
+      "cta_label": "Shop Now"
+    },
+    "kids": {
+      "title": "Kids",
+      "h1": "Gifts for Kids — Flowers, Cakes & Surprises",
+      "short_description": "Thoughtful flowers and gifts curated for Kids. Same-day delivery across Delhi NCR.",
+      "filter": {
+        "tables": [
+          "flowers",
+          "cakes",
+          "gifts"
+        ],
+        "name_keywords": [
+          "kid",
+          "kids",
+          "child",
+          "children"
+        ],
+        "tags": [
+          "kids",
+          "children",
+          "child"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1487530811176-3780de880c2d?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "occasion:birthday",
+        "occasion:anniversary",
+        "collection:best-sellers",
+        "flower:roses"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for gifts for Kids in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day gifts for Kids delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for gifts for Kids freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for gifts for Kids orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with gifts for Kids gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "For Kids",
+      "cta_label": "Shop Now"
+    }
+  },
+  "occasion": {
+    "birthday": {
+      "title": "Birthday",
+      "h1": "Birthday Flowers & Gifts Online — Same-Day Delivery",
+      "short_description": "Celebrate another year with cakes, blooms and surprise combos.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [
+          "birthday"
+        ],
+        "tags": [
+          "birthday"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "relation:her",
+        "flower:roses",
+        "collection:best-sellers",
+        "occasion:congratulations"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for birthday in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day birthday delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for birthday freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for birthday orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with birthday gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Birthday",
+      "cta_label": "Shop Now"
+    },
+    "anniversary": {
+      "title": "Anniversary",
+      "h1": "Anniversary Flowers & Romantic Gifts",
+      "short_description": "Mark your love story with roses, premium bouquets and candlelit combos.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [
+          "anniversary"
+        ],
+        "tags": [
+          "anniversary",
+          "love"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "relation:wife",
+        "relation:husband",
+        "flower:roses",
+        "occasion:love-romance"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for anniversary in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day anniversary delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for anniversary freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for anniversary orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with anniversary gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Anniversary",
+      "cta_label": "Shop Now"
+    },
+    "wedding": {
+      "title": "Wedding",
+      "h1": "Wedding Flowers & Congratulatory Bouquets",
+      "short_description": "Elegant stems and décor-ready bouquets for newlyweds and wedding hosts.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [
+          "wedding",
+          "bridal"
+        ],
+        "tags": [
+          "wedding",
+          "bridal"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "flower:orchids",
+        "collection:luxury-flowers",
+        "occasion:congratulations",
+        "flower:lilies"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for wedding in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day wedding delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for wedding freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for wedding orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with wedding gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Wedding",
+      "cta_label": "Shop Now"
+    },
+    "congratulations": {
+      "title": "Congratulations",
+      "h1": "Congratulations Flowers & Celebration Gifts",
+      "short_description": "Cheer on promotions, launches and big wins with bright, festive arrangements.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [
+          "congratulat",
+          "success"
+        ],
+        "tags": [
+          "congratulations",
+          "congrats"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "flower:gerberas",
+        "flower:sunflowers",
+        "relation:colleagues",
+        "collection:trending-flowers"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for congratulations in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day congratulations delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for congratulations freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for congratulations orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with congratulations gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Congratulations",
+      "cta_label": "Shop Now"
+    },
+    "love-romance": {
+      "title": "Love & Romance",
+      "h1": "Romantic Flowers & Love Gifts Online",
+      "short_description": "Say it with red roses, tulips and intimate premium bouquets.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [
+          "love",
+          "romance",
+          "romantic",
+          "valentine"
+        ],
+        "tags": [
+          "love",
+          "romance",
+          "valentine"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "flower:roses",
+        "flower:tulips",
+        "relation:girlfriend",
+        "occasion:anniversary"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for love & romance in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day love & romance delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for love & romance freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for love & romance orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with love & romance gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Love & Romance",
+      "cta_label": "Shop Now"
+    },
+    "get-well-soon": {
+      "title": "Get Well Soon",
+      "h1": "Get Well Soon Flowers & Cheerful Bouquets",
+      "short_description": "Soft, uplifting blooms to send comfort and recovery wishes.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [
+          "get well",
+          "well soon",
+          "recovery"
+        ],
+        "tags": [
+          "get well",
+          "getwell",
+          "recovery"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "flower:lilies",
+        "flower:sunflowers",
+        "relation:friends",
+        "collection:budget-flowers"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for get well soon in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day get well soon delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for get well soon freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for get well soon orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with get well soon gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Get Well Soon",
+      "cta_label": "Shop Now"
+    },
+    "sympathy": {
+      "title": "Sympathy",
+      "h1": "Sympathy & Condolence Flowers",
+      "short_description": "Graceful white lilies and respectful arrangements for difficult moments.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [
+          "sympathy",
+          "condolence",
+          "funeral"
+        ],
+        "tags": [
+          "sympathy",
+          "condolence"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "flower:lilies",
+        "flower:orchids",
+        "collection:premium-bouquets",
+        "occasion:thank-you"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for sympathy in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day sympathy delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for sympathy freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for sympathy orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with sympathy gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Sympathy",
+      "cta_label": "Shop Now"
+    },
+    "thank-you": {
+      "title": "Thank You",
+      "h1": "Thank You Flowers & Gratitude Gifts",
+      "short_description": "Simple, heartfelt bouquets to say thank you beautifully.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [
+          "thank you",
+          "thanks",
+          "gratitude"
+        ],
+        "tags": [
+          "thank",
+          "thank you",
+          "thanks"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "flower:carnations",
+        "flower:mixed-flowers",
+        "relation:colleagues",
+        "collection:budget-flowers"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for thank you in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day thank you delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for thank you freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for thank you orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with thank you gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Thank You",
+      "cta_label": "Shop Now"
+    },
+    "new-baby": {
+      "title": "New Baby",
+      "h1": "New Baby Flowers & Welcome Gifts",
+      "short_description": "Soft pastel blooms and thoughtful gifts to welcome a newborn.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [
+          "baby",
+          "newborn",
+          "welcome baby"
+        ],
+        "tags": [
+          "baby",
+          "newborn",
+          "new baby"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "relation:daughter",
+        "relation:son",
+        "flower:carnations",
+        "collection:flower-combos"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for new baby in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day new baby delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for new baby freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for new baby orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with new baby gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "New Baby",
+      "cta_label": "Shop Now"
+    },
+    "housewarming": {
+      "title": "Housewarming",
+      "h1": "Housewarming Flowers & Plant Gifts",
+      "short_description": "Stylish arrangements and plants to bless a new home.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [
+          "housewarming",
+          "new home",
+          "plant"
+        ],
+        "tags": [
+          "housewarming",
+          "plants",
+          "plant"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "flower:orchids",
+        "collection:plants",
+        "relation:friends",
+        "occasion:congratulations"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for housewarming in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day housewarming delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for housewarming freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for housewarming orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with housewarming gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Housewarming",
+      "cta_label": "Shop Now"
+    },
+    "graduation": {
+      "title": "Graduation",
+      "h1": "Graduation Flowers & Congrats Gifts",
+      "short_description": "Celebrate academic milestones with cheerful bouquets and combos.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [
+          "graduation",
+          "graduate",
+          "convocation"
+        ],
+        "tags": [
+          "graduation",
+          "graduate"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "occasion:congratulations",
+        "flower:sunflowers",
+        "relation:friends",
+        "collection:trending-flowers"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for graduation in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day graduation delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for graduation freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for graduation orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with graduation gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Graduation",
+      "cta_label": "Shop Now"
+    },
+    "festivals": {
+      "title": "Festivals",
+      "h1": "Festival Flowers & Gift Hampers",
+      "short_description": "Diwali, Christmas, Holi and festive gifting curated for the season.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [
+          "diwali",
+          "christmas",
+          "festival",
+          "holi",
+          "rakhi"
+        ],
+        "tags": [
+          "diwali",
+          "christmas",
+          "festival",
+          "rakhi"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "collection:flower-combos",
+        "relation:brother",
+        "relation:sister",
+        "collection:best-sellers"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for festivals in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day festivals delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for festivals freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for festivals orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with festivals gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Festivals",
+      "cta_label": "Shop Now"
+    },
+    "mothers-day": {
+      "title": "Mother's Day",
+      "h1": "Mother's Day Flowers & Gifts Online",
+      "short_description": "Celebrate Mum with carnations, roses and premium gift combos.",
+      "filter": {
+        "tables": [
+          "flowers",
+          "cakes",
+          "gifts"
+        ],
+        "name_keywords": [
+          "mother",
+          "mom",
+          "mother's day",
+          "mothers day"
+        ],
+        "tags": [
+          "mother",
+          "mothers-day",
+          "mom"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "relation:mother",
+        "flower:carnations",
+        "flower:roses",
+        "collection:best-sellers"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for Mother's Day in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day Mother's Day delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for Mother's Day freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for Mother's Day orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with Mother's Day gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Mother's Day",
+      "cta_label": "Shop Now"
+    },
+    "fathers-day": {
+      "title": "Father's Day",
+      "h1": "Father's Day Flowers & Gifts Online",
+      "short_description": "Surprise Dad with fresh blooms, cakes and thoughtful hampers.",
+      "filter": {
+        "tables": [
+          "flowers",
+          "cakes",
+          "gifts"
+        ],
+        "name_keywords": [
+          "father",
+          "dad",
+          "father's day",
+          "fathers day"
+        ],
+        "tags": [
+          "father",
+          "fathers-day",
+          "dad"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "relation:father",
+        "collection:flower-combos",
+        "flower:mixed-flowers",
+        "collection:best-sellers"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for Father's Day in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day Father's Day delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for Father's Day freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for Father's Day orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with Father's Day gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Father's Day",
+      "cta_label": "Shop Now"
+    },
+    "valentines-day": {
+      "title": "Valentine's Day",
+      "h1": "Valentine's Day Roses & Romantic Gifts",
+      "short_description": "Red roses, premium LUXE bouquets and midnight-ready romance.",
+      "filter": {
+        "tables": [
+          "flowers",
+          "cakes",
+          "gifts"
+        ],
+        "name_keywords": [
+          "valentine",
+          "valentines"
+        ],
+        "tags": [
+          "valentine",
+          "valentines",
+          "love"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1525310072745-f49212b5ac6d?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "flower:roses",
+        "occasion:love-romance",
+        "relation:girlfriend",
+        "collection:luxury-flowers"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for Valentine's Day in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day Valentine's Day delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for Valentine's Day freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for Valentine's Day orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with Valentine's Day gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Valentine's Day",
+      "cta_label": "Shop Now"
+    },
+    "love": {
+      "title": "Love & Romance",
+      "h1": "Romantic Flowers & Love Gifts Online",
+      "short_description": "Say it with red roses, tulips and intimate premium bouquets.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [
+          "love",
+          "romance",
+          "romantic",
+          "valentine"
+        ],
+        "tags": [
+          "love",
+          "romance",
+          "valentine"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "flower:roses",
+        "flower:tulips",
+        "relation:girlfriend",
+        "occasion:anniversary"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for love & romance in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day love & romance delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for love & romance freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for love & romance orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with love & romance gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Love & Romance",
+      "cta_label": "Shop Now"
+    }
+  },
+  "collection": {
+    "best-sellers": {
+      "title": "Best Sellers",
+      "h1": "Best Selling Flowers — Customer Favourites",
+      "short_description": "Our most-loved bouquets, rated highly and ordered again and again.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [],
+        "tags": [],
+        "match": "all",
+        "sort": "rating"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1487530811176-3780de880c2d?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "collection:trending-flowers",
+        "collection:premium-bouquets",
+        "flower:roses",
+        "occasion:birthday"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for best sellers in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day best sellers delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for best sellers freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for best sellers orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with best sellers gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Bestsellers",
+      "cta_label": "Shop Now"
+    },
+    "premium-bouquets": {
+      "title": "Premium Bouquets",
+      "h1": "Premium Bouquets — Designer Flower Arrangements",
+      "short_description": "Elevated styling, richer stems and gift-ready presentation.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [
+          "premium",
+          "designer"
+        ],
+        "tags": [
+          "premium",
+          "designer"
+        ],
+        "match": "any",
+        "price_min": 1999,
+        "sort": "price_high"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "collection:luxury-flowers",
+        "collection:designer-bouquets",
+        "flower:premium-flowers",
+        "occasion:anniversary"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for premium bouquets in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day premium bouquets delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for premium bouquets freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for premium bouquets orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with premium bouquets gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Premium Bouquets",
+      "cta_label": "Shop Now"
+    },
+    "luxury-flowers": {
+      "title": "Luxury Flowers",
+      "h1": "Luxury Flower Delivery — LUXE Collection",
+      "short_description": "Statement arrangements for VIP moments and unforgettable surprises.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [
+          "luxury",
+          "luxe"
+        ],
+        "tags": [
+          "luxury",
+          "luxe"
+        ],
+        "match": "any",
+        "price_min": 2499,
+        "sort": "price_high"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "collection:premium-bouquets",
+        "flower:luxury-collection",
+        "flower:orchids",
+        "occasion:wedding"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for luxury flowers in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day luxury flowers delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for luxury flowers freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for luxury flowers orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with luxury flowers gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "LUXE",
+      "cta_label": "Shop Now"
+    },
+    "same-day-delivery": {
+      "title": "Same Day Delivery",
+      "h1": "Same Day Flower Delivery in Delhi NCR",
+      "short_description": "Order by 6 PM — fresh flowers, cakes and gifts delivered today.",
+      "filter": {
+        "tables": [
+          "flowers",
+          "cakes",
+          "gifts"
+        ],
+        "name_keywords": [
+          "same day",
+          "express"
+        ],
+        "tags": [
+          "same day",
+          "sameday",
+          "express",
+          "on-demand"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "collection:midnight-delivery",
+        "collection:best-sellers",
+        "occasion:birthday",
+        "flower:roses"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for same-day delivery in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day same-day delivery delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for same-day delivery freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for same-day delivery orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with same-day delivery gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Same Day",
+      "cta_label": "Shop Now"
+    },
+    "midnight-delivery": {
+      "title": "Midnight Delivery",
+      "h1": "Midnight Flower Delivery — Surprise After Hours",
+      "short_description": "Selected pin codes for midnight surprises on birthdays, anniversaries and Valentine's.",
+      "filter": {
+        "tables": [
+          "flowers",
+          "cakes",
+          "gifts"
+        ],
+        "name_keywords": [
+          "midnight"
+        ],
+        "tags": [
+          "midnight",
+          "night"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "collection:same-day-delivery",
+        "occasion:birthday",
+        "occasion:anniversary",
+        "occasion:love-romance"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for midnight delivery in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day midnight delivery delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for midnight delivery freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for midnight delivery orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with midnight delivery gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Midnight Delivery",
+      "cta_label": "Shop Now"
+    },
+    "flower-combos": {
+      "title": "Flower Combos",
+      "h1": "Flower Combos — Blooms with Cake & Gifts",
+      "short_description": "Ready-to-wow combos pairing flowers with cakes, chocolates and hampers.",
+      "filter": {
+        "tables": [
+          "gifts",
+          "flowers"
+        ],
+        "name_keywords": [
+          "combo",
+          "hamper",
+          "with cake"
+        ],
+        "tags": [
+          "combo",
+          "hamper"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "collection:best-sellers",
+        "occasion:birthday",
+        "occasion:anniversary",
+        "collection:budget-flowers"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for flower combos in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day flower combos delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for flower combos freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for flower combos orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with flower combos gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Flower Combos",
+      "cta_label": "Shop Now"
+    },
+    "new-arrivals": {
+      "title": "New Arrivals",
+      "h1": "Newly Added Flowers — Fresh From Our Studio",
+      "short_description": "Just launched arrangements and seasonal specials.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [],
+        "tags": [],
+        "match": "all",
+        "sort": "newest"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "collection:trending-flowers",
+        "collection:best-sellers",
+        "flower:tulips",
+        "flower:mixed-flowers"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for new arrivals in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day new arrivals delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for new arrivals freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for new arrivals orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with new arrivals gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "New Arrivals",
+      "cta_label": "Shop Now"
+    },
+    "trending-flowers": {
+      "title": "Trending Flowers",
+      "h1": "Trending Flower Bouquets Right Now",
+      "short_description": "What Delhi NCR is ordering this week — bright, giftable and on-trend.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [],
+        "tags": [],
+        "match": "all",
+        "sort": "rating"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "collection:best-sellers",
+        "collection:new-arrivals",
+        "flower:gerberas",
+        "flower:sunflowers"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for trending flowers in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day trending flowers delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for trending flowers freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for trending flowers orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with trending flowers gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Trending Flowers",
+      "cta_label": "Shop Now"
+    },
+    "budget-flowers": {
+      "title": "Budget Flowers",
+      "h1": "Budget Flower Bouquets Under ₹999",
+      "short_description": "Beautiful, affordable blooms for everyday affection without the stretch.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [],
+        "tags": [],
+        "match": "all",
+        "price_max": 999,
+        "sort": "price_low"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "collection:best-sellers",
+        "flower:carnations",
+        "flower:mixed-flowers",
+        "occasion:thank-you"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for budget flowers in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day budget flowers delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for budget flowers freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for budget flowers orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with budget flowers gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Budget Flowers",
+      "cta_label": "Shop Now"
+    },
+    "designer-bouquets": {
+      "title": "Designer Bouquets",
+      "h1": "Designer Flower Bouquets — Artisan Arrangements",
+      "short_description": "Studio-styled designer pieces with distinctive colour stories and silhouettes.",
+      "filter": {
+        "tables": [
+          "flowers"
+        ],
+        "name_keywords": [
+          "designer",
+          "signature",
+          "studio"
+        ],
+        "tags": [
+          "designer",
+          "signature"
+        ],
+        "match": "any",
+        "price_min": 1799,
+        "sort": "price_high"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "collection:premium-bouquets",
+        "collection:luxury-flowers",
+        "flower:orchids",
+        "flower:tulips"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for designer bouquets in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day designer bouquets delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for designer bouquets freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for designer bouquets orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with designer bouquets gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Designer Bouquets",
+      "cta_label": "Shop Now"
+    },
+    "plants": {
+      "title": "Plants",
+      "h1": "Indoor Plants & Green Gifts Online",
+      "short_description": "Long-lasting plant gifts for desks, homes and housewarmings.",
+      "filter": {
+        "tables": [
+          "flowers",
+          "gifts"
+        ],
+        "name_keywords": [
+          "plant",
+          "succulent",
+          "money plant",
+          "jade"
+        ],
+        "tags": [
+          "plants",
+          "plant"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "occasion:housewarming",
+        "relation:colleagues",
+        "collection:budget-flowers",
+        "flower:orchids"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for plants in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day plants delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for plants freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for plants orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with plants gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Plants",
+      "cta_label": "Shop Now"
+    },
+    "hampers": {
+      "title": "Gift Hampers",
+      "h1": "Curated Gift Hampers with Flowers & Treats",
+      "short_description": "Beautifully boxed hampers for corporate and personal celebrations.",
+      "filter": {
+        "tables": [
+          "gifts"
+        ],
+        "name_keywords": [
+          "hamper",
+          "box",
+          "basket"
+        ],
+        "tags": [
+          "hamper",
+          "gift box"
+        ],
+        "match": "any"
+      },
+      "hero_image": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1600&q=80",
+      "related": [
+        "collection:flower-combos",
+        "occasion:festivals",
+        "relation:colleagues",
+        "collection:luxury-flowers"
+      ],
+      "faqs": [
+        {
+          "q": "Can I get same-day delivery for gift hampers in Delhi NCR?",
+          "a": "Yes. Order before our daily cut-off for same-day gift hampers delivery across Delhi, Gurgaon, Noida and nearby NCR areas. WhatsApp us if you need express help."
+        },
+        {
+          "q": "Are the flowers for gift hampers freshly arranged?",
+          "a": "Every bouquet is handcrafted with daily-fresh blooms by our florists. We guarantee freshness and careful packaging for doorstep delivery."
+        },
+        {
+          "q": "What payment methods do you accept for gift hampers orders?",
+          "a": "We accept UPI, credit/debit cards, and secure online wallets at checkout. Your payment details are encrypted and never stored on our servers."
+        },
+        {
+          "q": "Can I add a personal message with gift hampers gifts?",
+          "a": "Absolutely. Add a free message card at checkout, or mention special instructions on WhatsApp and our team will include them with your order."
+        },
+        {
+          "q": "What is your return or replacement policy?",
+          "a": "If your order arrives damaged or incorrect, contact us within the window in our refund policy. We will arrange a replacement or refund as applicable."
+        }
+      ],
+      "badge": "Gift Hampers",
+      "cta_label": "Shop Now"
+    }
+  }
+}

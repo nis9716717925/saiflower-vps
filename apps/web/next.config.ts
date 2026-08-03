@@ -1,20 +1,19 @@
 import type { NextConfig } from 'next';
 
 /**
- * URL parity with production `.htaccess`.
- * Do not change destinations without adding 301 redirects — SEO critical.
+ * URL parity helpers + rewrites for the Next.js storefront.
+ * Admin UI is reverse-proxied to ADMIN_ORIGIN (default: production).
  */
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   transpilePackages: ['@saiflower/shared'],
   images: {
-    // Phase 6+: optimize while keeping same visual dimensions / URLs where possible
     remotePatterns: [
       { protocol: 'https', hostname: 'saiflower.com' },
       { protocol: 'https', hostname: 'www.saiflower.com' },
     ],
-    unoptimized: true, // keep pixel parity until explicit image-pipeline pass
+    unoptimized: true,
   },
   async redirects() {
     return [
@@ -23,8 +22,17 @@ const nextConfig: NextConfig = {
       { source: '/celebrations-calendar', destination: '/celebration-calendar', permanent: true },
       { source: '/personalised', destination: '/personalized', permanent: true },
       { source: '/personalised/:slug', destination: '/personalized/:slug', permanent: true },
-      // Extensionless: Next serves App Router paths; strip .php for bookmarks
-      { source: '/:path*.php', destination: '/:path*', permanent: true },
+      // PHP typo path is canonical
+      { source: '/grievance', destination: '/grievnce', permanent: true },
+      { source: '/custompages', destination: '/custom-pages', permanent: true },
+      // Pretty gallery id → PHP query URL
+      { source: '/gallery/:id(\\d+)', destination: '/gallery-detail?id=:id', permanent: false },
+      // Do NOT strip .php under /admin or /ajax
+      {
+        source: '/:path((?!ajax/|admin/).*)\\.php',
+        destination: '/:path',
+        permanent: true,
+      },
     ];
   },
   async rewrites() {
@@ -32,13 +40,28 @@ const nextConfig: NextConfig = {
     const mediaBase = process.env.NEXT_PUBLIC_MEDIA_ORIGIN ?? 'https://saiflower.com';
 
     return [
-      // Proxy REST API during local/dev (Phase 7 will harden)
       { source: '/api/v1/:path*', destination: `${apiBase}/api/v1/:path*` },
       { source: '/health', destination: `${apiBase}/health` },
-      // Legacy search-suggest.js still calls /ajax_search.php
       { source: '/ajax_search.php', destination: `${apiBase}/api/v1/search` },
-      // Keep /uploads/* working without breaking existing image URLs
+      { source: '/ajax/homepage-occasion.php', destination: '/ajax/homepage-occasion' },
+      { source: '/sitemap.xml', destination: '/api/sitemap' },
       { source: '/uploads/:path*', destination: `${mediaBase}/uploads/:path*` },
+    ];
+  },
+  async headers() {
+    return [
+      {
+        source: '/assets/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=604800, stale-while-revalidate=86400' }],
+      },
+      {
+        source: '/celebrations/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=2592000, stale-while-revalidate=86400' }],
+      },
+      {
+        source: '/favicon.png',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=2592000' }],
+      },
     ];
   },
 };

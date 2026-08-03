@@ -120,6 +120,8 @@ export function SiteFooter() {
                 <li><Link className="hover:text-primary transition-colors" href="/events">Events & Workshops</Link></li>
                 <li><Link className="hover:text-primary transition-colors" href="/gallery">Floral Gallery</Link></li>
                 <li><Link className="hover:text-primary transition-colors" href="/blog">Our Blog</Link></li>
+                <li><Link className="hover:text-primary transition-colors" href="/custom-pages">Custom Pages</Link></li>
+                <li><Link className="hover:text-primary transition-colors" href="/sitemap">Full Sitemap</Link></li>
               </ul>
             </div>
 
@@ -128,10 +130,13 @@ export function SiteFooter() {
               <ul className="space-y-4 text-sm text-slate-500 text-center md:text-left">
                 <li><Link className="hover:text-primary transition-colors" href="/about">Our Story</Link></li>
                 <li><Link className="hover:text-primary transition-colors" href="/contact">Contact Us</Link></li>
+                <li><Link className="hover:text-primary transition-colors" href="/faq">Help Center</Link></li>
                 <li><Link className="hover:text-primary transition-colors" href="/legal">Help & Legal</Link></li>
                 <li><Link className="hover:text-primary transition-colors" href="/privacy">Privacy Policy</Link></li>
                 <li><Link className="hover:text-primary transition-colors" href="/terms">Terms of Use</Link></li>
                 <li><Link className="hover:text-primary transition-colors" href="/delivery-policy">Delivery Info</Link></li>
+                <li><Link className="hover:text-primary transition-colors" href="/refund-policy">Refunds</Link></li>
+                <li><Link className="hover:text-primary transition-colors" href="/grievnce">Grievance</Link></li>
               </ul>
             </div>
 

@@ -1,5 +1,5 @@
 import { ShopListing } from '@/components/shop/ShopListing';
-import { fetchProducts } from '@/lib/api';
+import { fetchCategories, fetchProducts } from '@/lib/api';
 
 interface PageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -10,30 +10,61 @@ function param(value: string | string[] | undefined, fallback = ''): string {
   return value ?? fallback;
 }
 
-async function loadListing(
-  type: 'flower' | 'cake' | 'gift',
-  searchParams: Record<string, string | string[] | undefined>,
-) {
-  const sort = param(searchParams.sort, 'bestseller');
-  const priceMin = param(searchParams.price_min);
-  const priceMax = param(searchParams.price_max);
-  const { items, meta } = await fetchProducts({
-    type,
-    sort,
-    limit: 48,
-    price_min: priceMin || undefined,
-    price_max: priceMax || undefined,
-  });
-  return { items, total: meta?.total ?? items.length, sort, priceMin, priceMax };
-}
+const FLOWER_FAQS = [
+  {
+    question: 'Do you offer same-day flower delivery in Delhi NCR?',
+    answer:
+      'Yes — place your order before 6 PM and we deliver the same day across Delhi NCR. Express and midnight delivery slots are also available on select products.',
+  },
+  {
+    question: 'How do you keep the flowers fresh during delivery?',
+    answer:
+      'Every bouquet is made to order with freshly cut blooms, hydrated right up to dispatch and packaged carefully so it arrives looking its best. Freshness is guaranteed on every order.',
+  },
+  {
+    question: 'Can I customise a bouquet or add a personal message?',
+    answer:
+      'Absolutely. Many arrangements can be customised, and every order includes a free personalised message card. Contact us for larger custom or wedding requests.',
+  },
+  {
+    question: 'What payment methods do you accept?',
+    answer:
+      'We accept all major UPI apps, cards and net banking through secure payment gateways. You can also confirm orders via WhatsApp after checkout.',
+  },
+];
 
 export default async function FlowersPage({ searchParams }: PageProps) {
   const params = await searchParams;
-  let listing = { items: [] as Awaited<ReturnType<typeof loadListing>>['items'], total: 0, sort: 'bestseller', priceMin: '', priceMax: '' };
+  const sort = param(params.sort, 'bestseller');
+  const priceMin = param(params.price_min);
+  const priceMax = param(params.price_max);
+  const category = param(params.category);
+
+  let items: Awaited<ReturnType<typeof fetchProducts>>['items'] = [];
+  let total = 0;
+  let categories: Awaited<ReturnType<typeof fetchCategories>> = [];
+
   try {
-    listing = await loadListing('flower', params);
+    const [listing, cats] = await Promise.all([
+      fetchProducts({
+        type: 'flower',
+        sort,
+        limit: 200,
+        price_min: priceMin || undefined,
+        price_max: priceMax || undefined,
+        category: category || undefined,
+      }),
+      fetchCategories(),
+    ]);
+    items = listing.items;
+    total = listing.meta?.total ?? items.length;
+    categories = cats;
   } catch {
-    listing = { items: [], total: 0, sort: param(params.sort, 'bestseller'), priceMin: param(params.price_min), priceMax: param(params.price_max) };
+    try {
+      categories = await fetchCategories();
+    } catch {
+      categories = [];
+    }
   }
 
   return (
@@ -41,12 +72,15 @@ export default async function FlowersPage({ searchParams }: PageProps) {
       title="Shop All Flowers"
       subtitle="Found {count} bouquets · Flowers first, décor last"
       type="flower"
-      products={listing.items}
-      total={listing.total}
-      sort={listing.sort}
-      priceMin={listing.priceMin}
-      priceMax={listing.priceMax}
+      products={items}
+      total={total}
+      sort={sort}
+      priceMin={priceMin}
+      priceMax={priceMax}
+      categoryId={category}
+      categories={categories}
       basePath="/flowers"
+      faqs={FLOWER_FAQS}
     />
   );
 }

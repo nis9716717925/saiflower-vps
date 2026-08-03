@@ -1,0 +1,243 @@
+/* Blog list — matches blog.php */
+.blog-section {
+  max-width: 1200px;
+  margin: auto;
+  padding: 30px 20px 4rem;
+}
+
+.blog-page-title {
+  text-align: center;
+  margin: 0 0 40px;
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 700;
+  color: #1d1914;
+}
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+a.blog-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background: #fff;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+}
+
+a.blog-card:hover {
+  transform: translateY(-5px);
+}
+
+.blog-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+  background: #efe8dc;
+}
+
+.blog-content {
+  padding: 20px;
+}
+
+.blog-content h3 {
+  margin: 0 0 10px;
+  font-size: 1.15rem;
+  line-height: 1.35;
+  color: #1d1914;
+}
+
+.blog-content p {
+  margin: 0;
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.read-more-btn {
+  font-weight: 700;
+  display: inline-block;
+  margin-top: 15px;
+  font-size: 0.875rem;
+  color: #2f6f4e;
+  opacity: 0.9;
+}
+
+.blog-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  color: #777;
+}
+
+@media (max-width: 992px) {
+  .blog-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .blog-section {
+    padding: 24px 16px 5.5rem;
+  }
+  .blog-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  .blog-card img {
+    height: 200px;
+  }
+}
+
+/* Blog detail */
+.blog-detail {
+  background: #f8fafc;
+  color: #334155;
+  padding: 2rem 0 4rem;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+.blog-detail .serif {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+.blog-detail__hero {
+  max-width: 56rem;
+  margin: 0 auto 2.5rem;
+  padding: 0 1rem;
+  text-align: center;
+}
+
+.blog-detail__badge {
+  display: inline-block;
+  padding: 0.25rem 1rem;
+  background: #dcfce7;
+  color: #166534;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  margin-bottom: 1rem;
+}
+
+.blog-detail__title {
+  font-size: clamp(1.75rem, 5vw, 3.25rem);
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.15;
+  margin: 0 0 1.25rem;
+}
+
+.blog-detail__meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  color: #64748b;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.blog-detail__layout {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: grid;
+  gap: 2.5rem;
+}
+
+@media (min-width: 1024px) {
+  .blog-detail__layout {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: 2.5rem;
+  }
+}
+
+.blog-detail__img {
+  max-height: 500px;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  background: #e2e8f0;
+}
+
+.blog-detail__article {
+  background: #fff;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f1f5f9;
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+@media (min-width: 768px) {
+  .blog-detail__article {
+    padding: 3rem;
+  }
+}
+
+.blog-detail__article p {
+  margin: 0 0 1.5rem;
+}
+
+.blog-detail__article a {
+  color: #2f6f4e;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.blog-detail__side {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.blog-detail__card {
+  background: #fff;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f1f5f9;
+}
+
+.blog-detail__card h3 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 1rem;
+}
+
+.blog-detail__card p {
+  color: #475569;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  margin: 0 0 1.25rem;
+}
+
+.blog-detail__card a {
+  color: #2f6f4e;
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+@media (max-width: 767px) {
+  .blog-detail {
+    padding-bottom: 5.5rem;
+  }
+  .blog-detail__article {
+    padding: 1.25rem;
+    border-radius: 1.15rem;
+  }
+}

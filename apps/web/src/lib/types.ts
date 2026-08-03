@@ -13,6 +13,7 @@ export interface Product {
   inStock: boolean;
   status?: number;
   tag?: string;
+  categoryIds?: string;
   metaTitle?: string | null;
   metaDescription?: string | null;
   faqs?: string | null;
@@ -22,6 +23,40 @@ export interface Product {
   related?: Product[];
   url?: string;
   deliverySameday?: boolean;
+  deliveryNextday?: boolean;
+}
+
+export interface ShopCategory {
+  id: number;
+  name: string;
+  slug?: string | null;
+  image?: string | null;
+  sortOrder?: number;
+  status?: number;
+}
+
+export interface BlogListItem {
+  id: number;
+  title: string;
+  slug: string;
+  image: string;
+  excerpt: string;
+  createdAt?: string | null;
+  url: string;
+}
+
+export interface BlogPost extends BlogListItem {
+  content: string;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  metaKeywords?: string | null;
+}
+
+export interface FaqItem {
+  id: number;
+  question: string;
+  answer: string;
+  page?: string | null;
 }
 
 export interface CartItem {

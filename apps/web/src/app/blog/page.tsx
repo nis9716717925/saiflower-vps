@@ -1,10 +1,21 @@
-import { StubPage } from '@/components/StubPage';
+import type { Metadata } from 'next';
+import { BlogListingView } from '@/components/blog/BlogListingView';
+import { fetchBlogs } from '@/lib/api';
 
-export default function BlogPage() {
-  return (
-    <StubPage
-      title="Our Blog"
-      description="Tips, gifting guides and floral inspiration from the Sai Flower team."
-    />
-  );
+export const metadata: Metadata = {
+  title: 'Blog | Floral Tips & Updates — Sai Flowers',
+  description:
+    'Latest floral tips, gifting ideas and Sai Flowers updates for Delhi NCR.',
+  alternates: { canonical: '/blog' },
+};
+
+export default async function BlogPage() {
+  let blogs: Awaited<ReturnType<typeof fetchBlogs>> = [];
+  try {
+    blogs = await fetchBlogs(100);
+  } catch {
+    blogs = [];
+  }
+
+  return <BlogListingView blogs={blogs} />;
 }

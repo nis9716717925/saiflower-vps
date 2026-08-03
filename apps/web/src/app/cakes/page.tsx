@@ -1,5 +1,6 @@
-import { ShopListing } from '@/components/shop/ShopListing';
+import { CategoryShopListing } from '@/components/shop/CategoryShopListing';
 import { fetchProducts } from '@/lib/api';
+import { fetchLandingBouquets } from '@/lib/bouquet';
 
 interface PageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -12,36 +13,49 @@ function param(value: string | string[] | undefined, fallback = ''): string {
 
 export default async function CakesPage({ searchParams }: PageProps) {
   const params = await searchParams;
-  const sort = param(params.sort, 'bestseller');
+  const sortRaw = param(params.sort, 'new');
+  const sort = sortRaw === 'bestseller' || sortRaw === 'newest' ? 'new' : sortRaw;
   const priceMin = param(params.price_min);
   const priceMax = param(params.price_max);
+
   let items: Awaited<ReturnType<typeof fetchProducts>>['items'] = [];
-  let total = 0;
+  let recommend: Awaited<ReturnType<typeof fetchLandingBouquets>> = [];
+
   try {
-    const data = await fetchProducts({
-      type: 'cake',
-      sort,
-      limit: 48,
-      price_min: priceMin || undefined,
-      price_max: priceMax || undefined,
-    });
-    items = data.items;
-    total = data.meta?.total ?? items.length;
+    const [cakes, flowers] = await Promise.all([
+      fetchProducts({
+        type: 'cake',
+        sort,
+        limit: 100,
+        price_min: priceMin || undefined,
+        price_max: priceMax || undefined,
+      }),
+      fetchLandingBouquets({ sort: 'bestseller', limit: 12, search: 'birthday' }),
+    ]);
+    items = cakes.items;
+    recommend = flowers;
   } catch {
     items = [];
   }
 
   return (
-    <ShopListing
-      title="Shop All Cakes"
-      subtitle="Found {count} cakes · Perfect for every celebration"
-      type="cake"
+    <CategoryShopListing
+      pageKey="cakes"
+      badge="Cakes"
+      title="Celebration Cakes"
+      description="Birthday, anniversary and party cakes — when stock is limited, our flower bouquets are always ready for same-day gifting."
+      heroImage="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1600&q=80"
       products={items}
-      total={total}
       sort={sort}
-      priceMin={priceMin}
-      priceMax={priceMax}
-      basePath="/cakes"
+      recommendProducts={recommend}
+      recommendTitle="Bouquet recommendations"
+      recommendSub="Fresh flower bouquets ready for same-day gifting across Delhi NCR."
+      chips={[
+        { label: 'All Cakes', href: '/cakes', active: true },
+        { label: 'Birthday', href: '/occasion/birthday' },
+        { label: 'Anniversary', href: '/occasion/anniversary' },
+        { label: 'Flowers', href: '/flowers' },
+      ]}
     />
   );
 }

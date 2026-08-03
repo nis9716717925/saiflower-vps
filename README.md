@@ -1,19 +1,20 @@
 # SaiFlower monorepo
 
-Modern stack migration of [saiflower.com](https://saiflower.com) with **pixel-identical UI** and **behavior-preserving** business logic.
+Next.js storefront + Express API + Prisma for [saiflower.com](https://saiflower.com).
 
 ## Structure
 
 ```
 apps/
-  web/       Next.js 15 (App Router) + React 19 — storefront
-  server/    Express REST API — PHP logic port
+  web/       Next.js (App Router) — storefront (+ admin reverse-proxy)
+  server/    Express REST API
 packages/
   shared/    Types, URL helpers, constants
-  prisma/    Prisma → Supabase PostgreSQL (legacy tables)
+  prisma/    Prisma → Supabase PostgreSQL
+assets/      Shared CSS / JS / images (linked into apps/web/public/assets)
 ```
 
-Legacy PHP site remains at the repo root until cutover. The old `api/` folder is deprecated (see `api/DEPRECATED.md`).
+Admin UI is served via reverse-proxy to `ADMIN_ORIGIN` (production by default). There is no local PHP stack.
 
 ## Quick start
 
@@ -21,28 +22,21 @@ Legacy PHP site remains at the repo root until cutover. The old `api/` folder is
 npm install
 cp apps/server/.env.example apps/server/.env
 cp apps/web/.env.example apps/web/.env.local
-cp packages/prisma/.env.example packages/prisma/.env   # after creating it
+cp packages/prisma/.env.example packages/prisma/.env
 npm run db:generate
 npm run dev:server   # :4000
 npm run dev:web      # :3000
 ```
 
-## Migration phases
+## Scripts
 
-| Phase | Status |
-|-------|--------|
-| 1 Audit | Done |
-| 2 Architecture | Done — see `docs/MIGRATION_PHASE_2.md` |
-| 3 Express business logic | Done — see `docs/MIGRATION_PHASE_3.md` |
-| 4 Prisma from legacy MySQL | Done — see `docs/MIGRATION_PHASE_4.md` |
-| 5 Supabase data move | Done — see `docs/MIGRATION_PHASE_5.md` |
-| 6 Next.js page ports | Core storefront done — see `docs/MIGRATION_PHASE_6.md` |
-| 7 Wire FE↔API | Done — see `docs/MIGRATION_PHASE_7.md` |
-| 8 QA / cutover | Soft-launch ready — see `docs/MIGRATION_PHASE_8.md` + `docs/CUTOVER_RUNBOOK.md` |
+| Script | Purpose |
+|--------|---------|
+| `npm run smoke` | Hit core routes against a running web server |
+| `npm run db:load` / `db:verify` | MySQL→Postgres helpers under `tools/mysql-to-pg` |
 
-## Non-negotiables
+## Notes
 
-- No UI redesign
-- Same URLs (or 301 redirects)
-- Checkout stays WhatsApp-confirm until explicitly approved otherwise
-- Prisma models must mirror legacy tables — not the old `api_*` schema
+- Storefront URLs match the former PHP paths (rewrites / redirects in `apps/web`).
+- Checkout stays WhatsApp-confirm until explicitly changed.
+- Media often loads from `NEXT_PUBLIC_MEDIA_ORIGIN` (production CDN/host).

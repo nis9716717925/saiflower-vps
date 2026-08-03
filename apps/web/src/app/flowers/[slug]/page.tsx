@@ -1,6 +1,12 @@
 import type { Metadata } from 'next';
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
+import { CollectionLandingView } from '@/components/landings/CollectionLandingView';
 import { ProductDetailView } from '@/components/shop/ProductDetailView';
+import {
+  collectionFetchProducts,
+  collectionGet,
+  collectionIsFlowerTypeSlug,
+} from '@/lib/collection';
 import { fetchProduct } from '@/lib/api';
 
 interface PageProps {
@@ -8,8 +14,18 @@ interface PageProps {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  if (collectionIsFlowerTypeSlug(slug)) {
+    const entry = collectionGet('flower', slug);
+    if (entry) {
+      return {
+        title: `${entry.h1} | Sai Flower`,
+        description: entry.short_description,
+        alternates: { canonical: entry.canonical_path },
+      };
+    }
+  }
   try {
-    const { slug } = await params;
     const product = await fetchProduct('flower', slug);
     return {
       title: product.metaTitle ?? `${product.name} | Sai Flower`,
@@ -20,17 +36,22 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-export default async function FlowerDetailPage({ params }: PageProps) {
+export default async function FlowerSlugPage({ params }: PageProps) {
   const { slug } = await params;
+
+  // PHP flower-router.php: taxonomy landing wins over PDP for type slugs
+  if (collectionIsFlowerTypeSlug(slug)) {
+    const entry = collectionGet('flower', slug);
+    if (entry) {
+      const products = await collectionFetchProducts(entry, 40);
+      return <CollectionLandingView entry={entry} products={products} />;
+    }
+  }
+
   try {
     const product = await fetchProduct('flower', slug);
     return <ProductDetailView product={product} listLabel="Flowers" listHref="/flowers" />;
   } catch {
-    // Soft-launch: type/occasion-ish slugs (e.g. /flowers/roses) fall back to search
-    // instead of a hard 404 while SEO landings remain on PHP.
-    if (slug && !slug.includes('.')) {
-      redirect(`/search-results?q=${encodeURIComponent(slug.replace(/-/g, ' '))}`);
-    }
     notFound();
   }
 }

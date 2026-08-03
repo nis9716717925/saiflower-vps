@@ -13,7 +13,8 @@
     radial-gradient(1200px 500px at 10% -10%, rgba(47, 111, 78, 0.08), transparent 60%),
     radial-gradient(900px 400px at 100% 0%, rgba(194, 160, 90, 0.12), transparent 55%),
     var(--cl-bg);
-  padding-bottom: calc(7.5rem + env(safe-area-inset-bottom, 0px));
+  /* Space for site mobile bottom nav only (no sticky Shop Now / WhatsApp bar) */
+  padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
   overflow-x: hidden;
 }
 
@@ -727,44 +728,102 @@
   }
 }
 
-/* Mobile shop CTA above site bottom nav — no WhatsApp */
+/* Sticky Shop Now / WhatsApp bar removed — footer bottom nav covers mobile actions */
 .cl-mobile-cta {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: calc(4.6rem + env(safe-area-inset-bottom, 0px));
-  z-index: 90;
-  display: grid;
-  grid-template-columns: 1fr;
-  padding: 0.45rem 0.75rem;
-  background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(10px);
-  border-top: 1px solid var(--cl-line);
-  box-shadow: 0 -6px 18px rgba(0, 0, 0, 0.06);
-}
-.cl-mobile-cta a {
-  min-height: 44px;
-  display: grid;
-  place-items: center;
-  border-radius: 999px;
-  text-decoration: none;
-  font-weight: 800;
-  font-size: 0.86rem;
-  background: var(--cl-primary, #2f6f4e);
-  color: #fff;
-  padding: 0 1rem;
-  text-align: center;
+  display: none !important;
 }
 @media (min-width: 900px) {
-  .cl-mobile-cta { display: none; }
   .cl-page { padding-bottom: 1.5rem; }
 }
 
 .cl-page #mobileBottomNav { z-index: 100; }
+
+/* Extra mobile / desktop polish (no sticky Shop Now / WhatsApp bar) */
+@media (max-width: 639.98px) {
+  .cl-section { padding: 1.25rem 0; }
+  .cl-section__head { margin-bottom: 0.75rem; }
+  .cl-card__body { padding: 0.65rem 0.7rem 0.8rem; }
+  .cl-card__name {
+    font-size: 0.78rem;
+    line-height: 1.3;
+    min-height: 2.1em;
+  }
+  .cl-card__price { font-size: 0.88rem; }
+  .cl-slider__nav { display: none !important; }
+  .cl-slider__track {
+    padding-inline: 0.15rem;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .cl-slider__item { scroll-snap-align: start; }
+  .cl-link-columns {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem 0.75rem;
+  }
+  .cl-final-cta__inner {
+    padding: 1.25rem 1rem;
+    text-align: center;
+  }
+  .cl-final-cta .cl-hero__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .cl-final-cta .cl-btn { width: 100%; justify-content: center; }
+  .cl-why-grid { gap: 0.75rem; }
+  .cl-reviews { gap: 0.75rem; }
+  .cl-chip-grid { gap: 0.45rem; }
+  .cl-chip { font-size: 0.72rem; padding: 0.4rem 0.7rem; }
+  .cl-secure__inner {
+    flex-direction: column;
+    gap: 0.65rem;
+    text-align: center;
+  }
+  .cl-split {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  /* Never show desktop float on small screens */
+  .cl-wa-float { display: none !important; }
+}
+
+@media (min-width: 980px) {
+  .cl-section { padding: 2.1rem 0; }
+  .cl-card__body { padding: 0.85rem 0.95rem 1rem; }
+  .cl-wa-float {
+    right: 1.5rem;
+    bottom: 1.75rem;
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .cl-card:hover {
+    transform: none;
+    box-shadow: var(--cl-shadow);
+  }
+  .cl-card:hover .cl-card__media img { transform: none; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .cl-card,
   .cl-btn,
   .cl-card__media img,
   .cl-wa-float { transition: none; animation: none; }
+}
+
+/* Beat homepage CSS bleed if body still has homepage-premium briefly */
+.cl-page .cl-hero__title {
+  font-size: clamp(1.65rem, 5.4vw, 3rem) !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.01em;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+@media (max-width: 639.98px) {
+  .cl-page .cl-hero__title {
+    font-size: clamp(1.55rem, 7.2vw, 2.1rem) !important;
+  }
+}
+@media (min-width: 980px) {
+  .cl-page .cl-hero__title {
+    font-size: clamp(2.35rem, 3.2vw, 3.05rem) !important;
+  }
 }
