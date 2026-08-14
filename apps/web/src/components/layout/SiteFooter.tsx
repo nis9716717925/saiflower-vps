@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { MobileBottomNav } from '@/components/layout/MobileBottomNav';
 
 const WA_HREF = 'https://wa.me/918802004527';
 const TEL_HREF = 'tel:918802004527';
@@ -226,43 +227,7 @@ export function SiteFooter() {
         </div>
       </div>
 
-      <div
-        id="mobileBottomNav"
-        className="md:hidden fixed bottom-0 left-0 w-full bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 z-[100] px-2 py-3"
-      >
-        <div className="flex items-center justify-around">
-          <Link href="/" className="flex flex-col items-center gap-1 text-slate-500 hover:text-primary transition-all">
-            <span className="material-icons-outlined text-xl">home</span>
-            <span className="text-[10px] font-bold uppercase tracking-tighter">Home</span>
-          </Link>
-          <Link href="/flowers" className="flex flex-col items-center gap-1 text-slate-500 hover:text-primary transition-all">
-            <span className="material-icons-outlined text-xl">shopping_cart</span>
-            <span className="text-[10px] font-bold uppercase tracking-tighter">Shop</span>
-          </Link>
-          <a
-            href={WA_HREF}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex flex-col items-center -mt-8"
-            aria-label="WhatsApp Sai Flowers"
-          >
-            <div className="w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-xl border-4 border-white dark:border-slate-900 scale-110 sf-wa-pulse">
-              <i className="fab fa-whatsapp text-2xl" />
-            </div>
-            <span className="text-[10px] font-black text-[#25D366] uppercase mt-1">WhatsApp</span>
-          </a>
-          <a href={TEL_HREF} className="flex flex-col items-center gap-1 text-slate-500 hover:text-primary transition-all">
-            <span className="material-icons-outlined text-xl">call</span>
-            <span className="text-[10px] font-bold uppercase tracking-tighter">Call</span>
-          </a>
-          <Link href="/contact" className="flex flex-col items-center gap-1 text-slate-500 hover:text-primary transition-all">
-            <span className="material-icons-outlined text-xl">location_on</span>
-            <span className="text-[10px] font-bold uppercase tracking-tighter">Visit</span>
-          </Link>
-        </div>
-      </div>
-
-      <div id="mobileBottomNavSpacer" className="md:hidden h-20" />
+      <MobileBottomNav />
     </>
   );
 }

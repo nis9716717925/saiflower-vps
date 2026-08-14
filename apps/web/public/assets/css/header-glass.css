@@ -1,0 +1,155 @@
+/**
+ * Apple-style "liquid glass" header.
+ * Loaded after catnav.css so it can override the solid white chrome.
+ */
+.sf-site-header {
+    position: sticky;
+    top: 0;
+    background: rgba(255, 255, 255, 0.55);
+    -webkit-backdrop-filter: saturate(190%) blur(22px);
+    backdrop-filter: saturate(190%) blur(22px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 1px 0 rgba(32, 28, 23, 0.06), 0 14px 34px rgba(32, 28, 23, 0.05);
+    transition: background 0.28s ease, box-shadow 0.28s ease, -webkit-backdrop-filter 0.28s ease,
+        backdrop-filter 0.28s ease;
+}
+
+/* Specular sheen across the top edge — the "liquid" highlight. */
+.sf-site-header::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.95) 22%,
+        rgba(255, 255, 255, 0.95) 78%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    pointer-events: none;
+}
+
+/* Soft vertical falloff so the glass reads thicker at the top. */
+.sf-site-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.05));
+    pointer-events: none;
+    z-index: -1;
+}
+
+.sf-site-header.is-scrolled {
+    background: rgba(255, 255, 255, 0.76);
+    box-shadow: 0 1px 0 rgba(32, 28, 23, 0.08), 0 18px 42px rgba(32, 28, 23, 0.08);
+}
+
+.sf-site-header__nav,
+.lx-catnav,
+.sf-site-header__mobile-search {
+    position: relative;
+    z-index: 1;
+}
+
+/* Category bar sits inside the same pane of glass. */
+.lx-catnav {
+    background: transparent;
+    border-top: 1px solid rgba(255, 255, 255, 0.55);
+}
+
+.lx-catnav__list {
+    background: rgba(255, 255, 255, 0.5);
+    -webkit-backdrop-filter: saturate(170%) blur(14px);
+    backdrop-filter: saturate(170%) blur(14px);
+    border-color: rgba(194, 160, 90, 0.34);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 6px 18px rgba(163, 130, 62, 0.08);
+}
+
+.lx-catnav__item:hover .lx-catnav__link,
+.lx-catnav__item.is-open .lx-catnav__link,
+.lx-catnav__item:focus-within .lx-catnav__link {
+    background: rgba(255, 255, 255, 0.85);
+}
+
+/* Mega panels stay near-opaque so the copy inside stays legible. */
+.lx-catnav__mega {
+    background: rgba(255, 255, 255, 0.92);
+    -webkit-backdrop-filter: saturate(180%) blur(26px);
+    backdrop-filter: saturate(180%) blur(26px);
+}
+
+.sf-site-header__icon-btn {
+    background: rgba(255, 255, 255, 0.55);
+    border-color: rgba(255, 255, 255, 0.7);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+.sf-site-header__icon-btn:hover {
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.sf-site-header__search input[type='search'],
+.sf-site-header__mobile-search input[type='search'] {
+    background: rgba(255, 255, 255, 0.55);
+    border-color: rgba(255, 255, 255, 0.72);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+.sf-site-header__search input[type='search']:focus,
+.sf-site-header__mobile-search input[type='search']:focus {
+    background: rgba(255, 255, 255, 0.92);
+}
+
+.sf-site-header__account-menu {
+    background: rgba(255, 255, 255, 0.92);
+    -webkit-backdrop-filter: saturate(180%) blur(22px);
+    backdrop-filter: saturate(180%) blur(22px);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+@media (max-width: 1023.98px) {
+    /* Lighter blur on phones: cheaper to repaint while scrolling. */
+    .sf-site-header {
+        background: rgba(255, 255, 255, 0.62);
+        -webkit-backdrop-filter: saturate(180%) blur(16px);
+        backdrop-filter: saturate(180%) blur(16px);
+        box-shadow: 0 1px 0 rgba(32, 28, 23, 0.05), 0 8px 22px rgba(32, 28, 23, 0.04);
+    }
+
+    .sf-site-header.is-scrolled {
+        background: rgba(255, 255, 255, 0.82);
+        box-shadow: 0 1px 0 rgba(32, 28, 23, 0.07), 0 12px 28px rgba(32, 28, 23, 0.07);
+    }
+
+    .lx-catnav__list {
+        background: rgba(255, 255, 255, 0.58);
+    }
+
+    .sf-site-header__mobile-search {
+        background: transparent;
+        border-top: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 8px 20px rgba(32, 28, 23, 0.05);
+    }
+}
+
+/* Browsers without backdrop-filter get the original opaque chrome. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .sf-site-header,
+    .sf-site-header.is-scrolled,
+    .lx-catnav__list,
+    .sf-site-header__icon-btn,
+    .sf-site-header__search input[type='search'],
+    .sf-site-header__mobile-search,
+    .sf-site-header__mobile-search input[type='search'] {
+        background: #fff;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sf-site-header {
+        transition: none;
+    }
+}

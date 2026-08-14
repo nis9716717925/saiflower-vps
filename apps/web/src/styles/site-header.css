@@ -66,14 +66,16 @@
   line-height: 0;
 }
 
+/* Artwork is edge-trimmed and transparent, so the box hugs the glyphs. */
 .sf-site-header__logo img,
 .sf-site-header__logo-img {
-  height: 2.5rem !important;
+  height: 1.4rem !important;
   width: auto !important;
   max-width: 9.5rem !important;
-  max-height: 2.5rem !important;
+  max-height: 1.4rem !important;
   object-fit: contain !important;
   display: block;
+  background: transparent;
   border-radius: 0;
 }
 
@@ -83,8 +85,8 @@
   }
   .sf-site-header__logo img,
   .sf-site-header__logo-img {
-    height: 2.75rem !important;
-    max-height: 2.75rem !important;
+    height: 1.8rem !important;
+    max-height: 1.8rem !important;
     max-width: 10.5rem !important;
   }
 }

@@ -69,8 +69,97 @@ code {
   }
 }
 
-#mobileBottomNav {
+#mobileBottomNav,
+.sf-bottom-nav {
   padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+}
+
+.sf-bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.96);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border-top: 1px solid rgba(20, 38, 28, 0.1);
+  box-shadow: 0 -8px 28px rgba(20, 38, 28, 0.08);
+  transform: translate3d(0, 0, 0);
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.28s ease;
+  will-change: transform;
+}
+
+.sf-bottom-nav.is-hidden {
+  transform: translate3d(0, calc(100% + 12px), 0);
+  opacity: 0.96;
+  pointer-events: none;
+}
+
+.sf-bottom-nav__inner {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  padding: 0.55rem 0.35rem 0.15rem;
+}
+
+.sf-bottom-nav__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  min-width: 3.25rem;
+  color: #6b7670;
+  text-decoration: none;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: color 0.15s ease;
+}
+
+.sf-bottom-nav__item .material-icons-outlined {
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.sf-bottom-nav__item:active,
+.sf-bottom-nav__item:hover {
+  color: #1f6a4a;
+}
+
+.sf-bottom-nav__wa {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -1.65rem;
+  text-decoration: none;
+  color: #25d366;
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.sf-bottom-nav__wa-btn {
+  width: 3.4rem;
+  height: 3.4rem;
+  border-radius: 999px;
+  background: #25d366;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid #fff;
+  box-shadow: 0 10px 24px rgba(37, 211, 102, 0.35);
+  font-size: 1.45rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sf-bottom-nav {
+    transition: none;
+  }
 }
 
 /* Hero slider dots — mirrored from PHP index.php inline styles */

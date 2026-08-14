@@ -72,9 +72,17 @@ export function HomeProductRail({
     <section className="hp-section hp-product-slider-section" aria-labelledby={`hp-slider-${sliderKey}`}>
       <div className="hp-container">
         <div className="hp-section-head">
-          <h2 id={`hp-slider-${sliderKey}`} className="hp-section-title">
-            {title}
-          </h2>
+          <div className="hp-section-head-row">
+            <h2 id={`hp-slider-${sliderKey}`} className="hp-section-title">
+              {title}
+            </h2>
+            {viewAllHref ? (
+              <Link href={viewAllHref} className="hp-occasion-viewall hp-occasion-viewall--head">
+                {viewAllLabel ?? 'View all'}
+                <i className="fas fa-arrow-right" aria-hidden="true" />
+              </Link>
+            ) : null}
+          </div>
           {subtitle ? <p className="hp-section-sub">{subtitle}</p> : null}
         </div>
 
@@ -101,15 +109,6 @@ export function HomeProductRail({
             <i className="fas fa-chevron-right" aria-hidden="true" />
           </button>
         </div>
-
-        {viewAllHref ? (
-          <div className="hp-product-slider-footer">
-            <Link href={viewAllHref} className="hp-occasion-viewall">
-              {viewAllLabel ?? `View all ${title}`}
-              <i className="fas fa-arrow-right" aria-hidden="true" />
-            </Link>
-          </div>
-        ) : null}
       </div>
     </section>
   );

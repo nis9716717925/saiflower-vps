@@ -31,12 +31,13 @@ export function isDecorationProduct(product: Product): boolean {
 export function FlowerShopCard({ product }: { product: Product }) {
   const { refreshCart } = useCart();
   const [adding, setAdding] = useState(false);
+  const [added, setAdded] = useState(false);
   const [wished, setWished] = useState(false);
 
   const href = product.url ?? productHref(product.type, product.slug);
   const img = resolveImageSrc(product.image);
   const discount = discountPercent(product.price, product.originalPrice);
-  const rating = product.rating ?? 5;
+  const rating = product.rating && product.rating > 0 ? product.rating : 4.8;
   const inStock = product.inStock !== false;
   const sameDay = product.deliverySameday !== false;
   const nextDay = product.deliveryNextday === true;
@@ -76,6 +77,8 @@ export function FlowerShopCard({ product }: { product: Product }) {
         image: product.image,
       });
       await refreshCart();
+      setAdded(true);
+      window.setTimeout(() => setAdded(false), 1600);
     } catch (err) {
       alert(err instanceof Error ? err.message : 'Could not add to cart');
     } finally {
@@ -84,24 +87,26 @@ export function FlowerShopCard({ product }: { product: Product }) {
   }
 
   return (
-    <div className="group bg-white rounded-2xl overflow-hidden border border-slate-100 hover:border-primary/20 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full">
-      <div className="relative overflow-hidden aspect-[4/5] bg-slate-100 group-hover:opacity-90 transition-opacity">
+    <article className="sf-pcard group">
+      <div className="sf-pcard__media">
         <button
           type="button"
           onClick={handleWishlist}
-          className={`absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur rounded-full flex items-center justify-center shadow-sm transition-colors z-10 ${
-            wished ? 'text-red-500' : 'text-gray-400 hover:text-red-500'
-          }`}
+          className={`sf-pcard__wish${wished ? ' is-on' : ''}`}
           aria-label={wished ? 'Remove from wishlist' : 'Add to wishlist'}
+          aria-pressed={wished}
         >
-          <span className="material-icons-outlined text-lg">
-            {wished ? 'favorite' : 'favorite_border'}
-          </span>
+          <i className={`${wished ? 'fas' : 'far'} fa-heart`} aria-hidden="true" />
         </button>
 
-        <Link href={href}>
+        {discount > 0 ? (
+          <span className="sf-pcard__badge sf-pcard__badge--sale">{discount}% OFF</span>
+        ) : isDecor ? (
+          <span className="sf-pcard__badge sf-pcard__badge--decor">Decor</span>
+        ) : null}
+
+        <Link href={href} className="sf-pcard__img-link" title={product.name}>
           <img
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             src={img}
             width={400}
             height={500}
@@ -109,91 +114,53 @@ export function FlowerShopCard({ product }: { product: Product }) {
             decoding="async"
             alt={product.name}
           />
-          {isDecor ? (
-            <div className="absolute top-3 left-3 bg-slate-800/90 backdrop-blur text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
-              Decor
-            </div>
-          ) : !inStock ? (
-            <div className="absolute top-3 left-3 bg-red-500/90 backdrop-blur text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
-              Out of Stock
-            </div>
-          ) : null}
         </Link>
+
+        {!inStock ? <span className="sf-pcard__oos">Out of stock</span> : null}
+      </div>
+
+      <div className="sf-pcard__body">
+        <div className="sf-pcard__meta">
+          <span className="sf-pcard__rating" aria-label={`Rated ${rating.toFixed(1)}`}>
+            <i className="fas fa-star" aria-hidden="true" /> {rating.toFixed(1)}
+          </span>
+          {sameDay && inStock ? (
+            <span className="sf-pcard__eta sf-pcard__eta--fast">
+              <i className="fas fa-bolt" aria-hidden="true" /> Same day
+            </span>
+          ) : nextDay ? (
+            <span className="sf-pcard__eta">
+              <i className="fas fa-truck" aria-hidden="true" /> Next day
+            </span>
+          ) : null}
+        </div>
+
+        <h3 className="sf-pcard__title">
+          <Link href={href}>{product.name}</Link>
+        </h3>
+
+        <div className="sf-pcard__price-row">
+          <span className="sf-pcard__price">{formatInr(product.price)}</span>
+          {discount > 0 && product.originalPrice != null ? (
+            <span className="sf-pcard__mrp">{formatInr(product.originalPrice)}</span>
+          ) : null}
+        </div>
 
         {inStock ? (
           <button
             type="button"
             onClick={handleAddToCart}
             disabled={adding}
-            className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0 duration-300 w-10 h-10 bg-white hover:bg-primary hover:text-white text-slate-900 rounded-full shadow-lg flex items-center justify-center transition-colors"
-            aria-label="Add to cart"
+            className={`sf-pcard__add${added ? ' is-added' : ''}`}
           >
-            <span className="material-icons-outlined text-lg">add_shopping_cart</span>
+            {adding ? 'Buying…' : added ? 'Added ✓' : 'BUY'}
           </button>
-        ) : null}
+        ) : (
+          <button type="button" className="sf-pcard__add is-disabled" disabled>
+            Sold out
+          </button>
+        )}
       </div>
-
-      <div className="p-3 md:p-5 flex flex-col flex-grow">
-        <h3 className="font-bold text-sm md:text-base mb-1 text-slate-900 group-hover:text-primary transition-colors line-clamp-2 h-10 md:h-12">
-          <Link href={href}>{product.name}</Link>
-        </h3>
-
-        <div className="flex items-center gap-1 text-yellow-400 text-xs mb-2">
-          <i className="fas fa-star" />
-          <span className="text-slate-500 font-bold ml-1">{rating.toFixed(1)}</span>
-        </div>
-
-        <div className="flex flex-col gap-1 mb-2 text-[10px] font-medium text-slate-500">
-          {sameDay && inStock ? (
-            <div className="flex items-center gap-1 text-green-600">
-              <span className="material-icons-outlined text-[12px]">local_shipping</span> Same Day
-              Delivery
-            </div>
-          ) : nextDay ? (
-            <div className="flex items-center gap-1 text-blue-600">
-              <span className="material-icons-outlined text-[12px]">event_available</span> Next Day
-              Delivery
-            </div>
-          ) : null}
-        </div>
-
-        <div className="flex flex-wrap items-center gap-1 mb-2 mt-auto min-w-0">
-          {discount > 0 && product.originalPrice != null ? (
-            <>
-              <p className="font-bold text-slate-400 text-xs line-through shrink-0">
-                {formatInr(product.originalPrice)}
-              </p>
-              <p className="font-bold text-primary text-lg shrink-0">{formatInr(product.price)}</p>
-              <span className="bg-red-50 text-red-500 text-[10px] font-bold px-1.5 py-0.5 rounded border border-red-100 shrink-0">
-                {discount}% OFF
-              </span>
-            </>
-          ) : (
-            <p className="font-bold text-primary text-lg">{formatInr(product.price)}</p>
-          )}
-        </div>
-
-        <div className="mt-auto md:hidden">
-          {inStock ? (
-            <button
-              type="button"
-              onClick={handleAddToCart}
-              disabled={adding}
-              className="w-full bg-[#d4af37] text-white font-bold text-xs py-2.5 rounded-[8px] shadow-md hover:bg-[#c5a028] hover:shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2"
-            >
-              {adding ? 'Adding…' : 'Buy Now'}
-            </button>
-          ) : (
-            <button
-              type="button"
-              disabled
-              className="w-full bg-slate-100 text-slate-400 font-bold text-xs py-3 rounded-xl cursor-not-allowed"
-            >
-              Sold Out
-            </button>
-          )}
-        </div>
-      </div>
-    </div>
+    </article>
   );
 }

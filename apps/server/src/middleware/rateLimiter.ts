@@ -7,4 +7,6 @@ export const globalRateLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   message: { success: false, message: 'Too many requests, please try again later.' },
+  // Local/dev homepage fires many parallel product fetches — don't throttle.
+  skip: () => !config.isProduction,
 });

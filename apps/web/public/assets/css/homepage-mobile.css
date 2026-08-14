@@ -9,6 +9,11 @@
    Tokens + base mobile shell
    ============================================================ */
 @media (max-width: 899.98px) {
+    /* Mobile-only perks block (see homepage-luxe.css — hidden on desktop) */
+    .homepage-premium .hp-flow--trust-mobile {
+        display: block;
+    }
+
     .homepage-premium {
         --hp-edge: 1rem;
         --lx-m-space-1: 0.5rem;   /* 8 */
@@ -44,6 +49,11 @@
     .homepage-premium .hp-section-head {
         padding-inline: var(--hp-edge);
         margin-bottom: var(--lx-m-space-4);
+    }
+
+    .homepage-premium .hp-occasion-viewall--head {
+        padding: 0.4rem 0.7rem;
+        font-size: 0.6875rem;
     }
 
     .homepage-premium h1,
@@ -265,6 +275,25 @@
     }
 }
 
+/* Full-bleed botanical hero */
+@media (max-width: 899.98px) {
+    .homepage-premium .sf-shop__grid {
+        padding-bottom: 0.65rem;
+    }
+
+    .homepage-premium .sf-trust--shop {
+        padding-bottom: 1rem;
+    }
+
+    .homepage-premium .sf-moments {
+        padding-top: 1.1rem;
+    }
+
+    .homepage-premium .sf-moments__title {
+        font-size: clamp(1.55rem, 6vw, 2rem);
+    }
+}
+
 /* ============================================================
    Trust bar
    ============================================================ */
@@ -373,6 +402,12 @@
         gap: 0.75rem;
         -webkit-overflow-scrolling: touch;
         overscroll-behavior-x: contain;
+    }
+
+    .homepage-premium .hp-product-sliders .hp-occasion-card {
+        flex: 0 0 min(57.6vw, 13.2rem);
+        min-width: 0;
+        border-radius: var(--lx-m-radius);
     }
 
     .homepage-premium .hp-occasion-card,
