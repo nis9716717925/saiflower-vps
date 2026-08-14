@@ -34,7 +34,6 @@ Thumbs.db
 # Prisma
 packages/prisma/generated/
 tools/mysql-to-pg/migration-output/
-tools/mysql-to-pg/02_data_postgresql.sql
 tools/mysql-to-pg/saiflower_*_full.sql
 
 # Test / coverage

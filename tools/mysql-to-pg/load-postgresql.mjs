@@ -5,7 +5,7 @@
  * Usage:
  *   node tools/mysql-to-pg/load-postgresql.mjs [path-to-sql]
  *
- * Defaults to migration-output/02_data_postgresql.sql so the normal flow is:
+ * Defaults to tools/mysql-to-pg/02_data_postgresql.sql so the normal flow is:
  * Prisma migration first, converted production data second.
  */
 import fs from 'fs';
@@ -44,7 +44,7 @@ async function main() {
 
   const sqlPath = process.argv[2]
     ? path.resolve(process.argv[2])
-    : path.resolve(__dirname, 'migration-output', '02_data_postgresql.sql');
+    : path.resolve(__dirname, '02_data_postgresql.sql');
 
   if (!fs.existsSync(sqlPath)) {
     throw new Error(`SQL file not found: ${sqlPath}`);
