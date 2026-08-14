@@ -1,22 +1,19 @@
 #!/usr/bin/env python3
 """
-Convert SaiFlower MySQL dump → PostgreSQL (Supabase) + Prisma schema + migration.
+Convert a SaiFlower MySQL/MariaDB dump to PostgreSQL SQL.
 Preserves table names, integer IDs, indexes, FKs, and row data.
 """
 
 from __future__ import annotations
 
+import argparse
 import re
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
 
-ROOT = Path(__file__).resolve().parents[2]
-MYSQL_DUMP = Path(r"c:\Users\Nishant Singh\Downloads\u977002836_Saiflower999 (2).sql")
 OUT_DIR = Path(__file__).resolve().parent
-PRISMA_DIR = ROOT / "packages" / "prisma"
-MIGRATION_DIR = PRISMA_DIR / "migrations" / "20260728000000_init_legacy_schema"
 
 # ---------------------------------------------------------------------------
 # Metadata from dump ALTER TABLE / AUTO_INCREMENT / CONSTRAINT sections
@@ -31,7 +28,8 @@ AUTO_INCREMENT: dict[str, int] = {
     "cake_variants": 10,
     "categories": 23,
     "comments": 13,
-    "customers": 22,
+    "customers": 23,
+    "customer_addresses": 1,
     "dynamic_pages": 211,
     "events": 8,
     "faqs": 16,
@@ -47,7 +45,7 @@ AUTO_INCREMENT: dict[str, int] = {
     "homepage_slides": 16,
     "leads": 111,
     "occasions": 5,
-    "orders": 31,
+    "orders": 37,
     "pricing_log": 9,
     "products": 7,
     "product_occasions": 269,
@@ -56,13 +54,13 @@ AUTO_INCREMENT: dict[str, int] = {
     "seo_meta": 5,
     "settings": 2,
     "tags": 66,
-    "wishlist": 11,
+    "wishlist": 14,
     # global_pricing has PK but no AUTO_INCREMENT in dump — still use identity
 }
 
 PRIMARY_KEYS: dict[str, list[str]] = {t: ["id"] for t in [
     "addons", "admin_tokens", "admin_users", "blogs", "cakes", "cake_variants",
-    "categories", "comments", "customers", "dynamic_pages", "events", "faqs",
+    "categories", "comments", "customers", "customer_addresses", "dynamic_pages", "events", "faqs",
     "flowers", "flower_images", "flower_variants", "gallery", "gifts",
     "gift_variants", "global_pricing", "homepage_circles", "homepage_sections",
     "homepage_section_items", "homepage_slides", "leads", "occasions", "orders",
@@ -91,6 +89,7 @@ INDEXES: list[tuple[str, str, list[str]]] = [
     ("admin_tokens", "admin_tokens_admin_id_idx", ["admin_id"]),
     ("admin_tokens", "admin_tokens_token_idx", ["token"]),
     ("cake_variants", "cake_variants_cake_id_idx", ["cake_id"]),
+    ("customer_addresses", "customer_addresses_customer_id_idx", ["customer_id"]),
     ("flower_images", "flower_images_flower_id_idx", ["flower_id"]),
     ("flower_variants", "flower_variants_flower_id_idx", ["flower_id"]),
     ("gift_variants", "gift_variants_gift_id_idx", ["gift_id"]),
@@ -101,6 +100,7 @@ INDEXES: list[tuple[str, str, list[str]]] = [
 FOREIGN_KEYS: list[tuple[str, str, str, str, str, Optional[str]]] = [
     # (table, constraint, column, ref_table, ref_column, on_delete)
     ("cake_variants", "cake_variants_ibfk_1", "cake_id", "cakes", "id", "CASCADE"),
+    ("customer_addresses", "customer_addresses_customer_id_fkey", "customer_id", "customers", "id", "CASCADE"),
     ("gift_variants", "gift_variants_ibfk_1", "gift_id", "gifts", "id", "CASCADE"),
     ("homepage_section_items", "homepage_section_items_ibfk_1", "section_id", "homepage_sections", "id", "CASCADE"),
     # Indexed in MySQL without formal FK — enforced in Postgres for Prisma
@@ -119,6 +119,7 @@ ENUM_DEFS: dict[str, list[str]] = {
     "product_occasions_product_type": ["flower", "cake", "gift"],
     "promo_codes_discount_type": ["percentage", "flat"],
     "promo_codes_type": ["percentage", "flat"],
+    "customer_address_type": ["Home", "Work", "Other"],
 }
 
 
@@ -211,8 +212,8 @@ def parse_column(line: str, table: str) -> Optional[Column]:
     # Strip attributes to leave type
     type_part = rest
     type_part = re.sub(r"\bNOT NULL\b", "", type_part, flags=re.I)
-    type_part = re.sub(r"\bNULL\b", "", type_part, flags=re.I)
     type_part = re.sub(r"DEFAULT\s+(?:current_timestamp\(\)|NULL|'[^']*'|\"[^\"]*\"|-?\d+(?:\.\d+)?)", "", type_part, flags=re.I)
+    type_part = re.sub(r"\bNULL\b", "", type_part, flags=re.I)
     type_part = re.sub(r"ON UPDATE\s+current_timestamp\(\)", "", type_part, flags=re.I)
     type_part = re.sub(r"\bAUTO_INCREMENT\b", "", type_part, flags=re.I)
     type_part = re.sub(r"\bCOMMENT\s+'[^']*'", "", type_part, flags=re.I)
@@ -223,7 +224,11 @@ def parse_column(line: str, table: str) -> Optional[Column]:
     em = re.match(r"enum\((.+)\)", type_part, re.I)
     if em:
         enum_values = re.findall(r"'([^']*)'", em.group(1))
-        enum_name = f"{table}_{name}"
+        enum_name = (
+            "customer_address_type"
+            if table == "customer_addresses" and name == "address_type"
+            else f"{table}_{name}"
+        )
         type_part = f"ENUM:{enum_name}"
 
     return Column(
@@ -332,7 +337,7 @@ def quote_ident(name: str) -> str:
 def emit_schema_sql(tables: list[Table]) -> str:
     lines: list[str] = [
         "-- =============================================================================",
-        "-- SaiFlower → PostgreSQL (Supabase)",
+        "-- SaiFlower → PostgreSQL on Hostinger VPS",
         "-- Converted from MySQL dump: u977002836_Saiflower999",
         "-- Preserves: tables, PKs, unique keys, indexes, FKs, integer IDs, data semantics",
         "-- =============================================================================",
@@ -392,9 +397,11 @@ def emit_schema_sql(tables: list[Table]) -> str:
     lines.append("-- Foreign keys")
     for tname, cname, col, rt, rc, on_delete in FOREIGN_KEYS:
         od = f" ON DELETE {on_delete}" if on_delete else ""
+        ou = " ON UPDATE CASCADE" if cname == "customer_addresses_customer_id_fkey" else ""
         lines.append(
             f"ALTER TABLE {quote_ident(tname)} ADD CONSTRAINT {quote_ident(cname)} "
-            f"FOREIGN KEY ({quote_ident(col)}) REFERENCES {quote_ident(rt)} ({quote_ident(rc)}){od};"
+            f"FOREIGN KEY ({quote_ident(col)}) REFERENCES {quote_ident(rt)} ({quote_ident(rc)})"
+            f"{od}{ou} DEFERRABLE INITIALLY DEFERRED;"
         )
 
     lines.append("")
@@ -549,20 +556,58 @@ def convert_mysql_values(vals: str) -> str:
     return vals
 
 
+def count_value_rows(values: str) -> int:
+    """Count top-level row tuples in a MySQL VALUES clause."""
+    count = 0
+    depth = 0
+    in_str = False
+    i = 0
+    while i < len(values):
+        ch = values[i]
+        if in_str:
+            if ch == "\\" and i + 1 < len(values):
+                i += 2
+                continue
+            if ch == "'":
+                if i + 1 < len(values) and values[i + 1] == "'":
+                    i += 2
+                    continue
+                in_str = False
+            i += 1
+            continue
+        if ch == "'":
+            in_str = True
+        elif ch == "(":
+            if depth == 0:
+                count += 1
+            depth += 1
+        elif ch == ")":
+            depth -= 1
+        i += 1
+    if in_str or depth != 0:
+        raise ValueError("Unbalanced string or parentheses in INSERT values")
+    return count
+
+
 def extract_and_convert_data(dump: str, tables: list[Table]) -> str:
     lines_out: list[str] = [
         "-- =============================================================================",
-        "-- SaiFlower data load (PostgreSQL / Supabase)",
+        "-- SaiFlower data load (PostgreSQL)",
         "-- =============================================================================",
         "",
         "BEGIN;",
         "",
-        "-- Disable FK checks during bulk load (restore after)",
-        "SET session_replication_role = 'replica';",
+        "-- Defer foreign-key checks until the transaction commits.",
+        "SET CONSTRAINTS ALL DEFERRED;",
         "",
     ]
 
-    for tname, cols_raw, values in find_insert_statements(dump):
+    inserts = find_insert_statements(dump)
+    expected_counts = {table.name: 0 for table in tables}
+    for tname, cols_raw, values in inserts:
+        if tname not in expected_counts:
+            raise ValueError(f"INSERT references unknown table: {tname}")
+        expected_counts[tname] += count_value_rows(values)
         cols = re.findall(r"`([^`]+)`", cols_raw)
         col_list = ", ".join(quote_ident(c) for c in cols)
         vals = convert_mysql_values(values)
@@ -575,11 +620,21 @@ def extract_and_convert_data(dump: str, tables: list[Table]) -> str:
     for tname in PRIMARY_KEYS:
         lines_out.append(
             f"SELECT setval(pg_get_serial_sequence('{tname}', 'id'), "
-            f"COALESCE((SELECT MAX(id) FROM {quote_ident(tname)}), 1), true);"
+            f"COALESCE(MAX(id), 1), MAX(id) IS NOT NULL) FROM {quote_ident(tname)};"
         )
 
     lines_out.append("")
-    lines_out.append("SET session_replication_role = 'origin';")
+    lines_out.append("-- Abort the transaction if any converted row count is incomplete.")
+    lines_out.append("DO $migration_verify$")
+    lines_out.append("BEGIN")
+    for tname, expected in expected_counts.items():
+        lines_out.append(
+            f"  IF (SELECT COUNT(*) FROM {quote_ident(tname)}) <> {expected} THEN "
+            f"RAISE EXCEPTION 'Row-count mismatch for {tname}: expected {expected}'; END IF;"
+        )
+    lines_out.append("END")
+    lines_out.append("$migration_verify$;")
+    lines_out.append("")
     lines_out.append("COMMIT;")
     lines_out.append("")
     return "\n".join(lines_out)
@@ -604,6 +659,9 @@ def mysql_to_prisma_field(col: Column, is_pk: bool, has_identity: bool) -> tuple
         prisma_type = enum_prisma
         extras.append(col.enum_name)
     elif t.startswith("tinyint(1)") or t.startswith("tinyint"):
+        prisma_type = "Int"
+        attrs.append("@db.SmallInt")
+    elif t.startswith("smallint"):
         prisma_type = "Int"
         attrs.append("@db.SmallInt")
     elif t.startswith("int") or t.startswith("mediumint"):
@@ -734,7 +792,7 @@ def emit_prisma_schema(tables: list[Table]) -> str:
 
     lines: list[str] = [
         "// =============================================================================",
-        "// SaiFlower Prisma schema — legacy MySQL tables on Supabase PostgreSQL",
+        "// SaiFlower Prisma schema — legacy tables on PostgreSQL",
         "// Generated from: u977002836_Saiflower999 MySQL dump",
         "// Preserves: table names (@@map), integer IDs, relations, constraints",
         "// =============================================================================",
@@ -841,107 +899,68 @@ def emit_prisma_schema(tables: list[Table]) -> str:
     return "\n".join(lines)
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Convert a SaiFlower MySQL/MariaDB dump to PostgreSQL SQL.",
+    )
+    parser.add_argument("dump", type=Path, help="Path to the source MySQL SQL dump")
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=OUT_DIR / "migration-output",
+        help="Directory for generated SQL (default: ignored migration-output folder)",
+    )
+    parser.add_argument(
+        "--schema-file",
+        type=Path,
+        help="Write only PostgreSQL DDL to this file (no customer data output)",
+    )
+    return parser.parse_args()
+
+
 def main() -> int:
-    if not MYSQL_DUMP.exists():
-        print(f"Dump not found: {MYSQL_DUMP}", file=sys.stderr)
+    args = parse_args()
+    mysql_dump = args.dump.resolve()
+    output_dir = args.output_dir.resolve()
+
+    if not mysql_dump.exists():
+        print(f"Dump not found: {mysql_dump}", file=sys.stderr)
         return 1
 
-    print(f"Reading {MYSQL_DUMP} ...")
-    dump = MYSQL_DUMP.read_text(encoding="utf-8", errors="replace")
+    print(f"Reading {mysql_dump} ...")
+    dump = mysql_dump.read_text(encoding="utf-8", errors="replace")
 
     tables = parse_tables(dump)
+    table_names = {table.name for table in tables}
     print(f"Parsed {len(tables)} tables: {', '.join(t.name for t in tables)}")
-
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
-    MIGRATION_DIR.mkdir(parents=True, exist_ok=True)
+    if "customer_addresses" not in table_names:
+        print("Dump is missing required table: customer_addresses", file=sys.stderr)
+        return 1
 
     schema_sql = emit_schema_sql(tables)
-    schema_path = OUT_DIR / "01_schema_postgresql.sql"
+    schema_path = args.schema_file.resolve() if args.schema_file else output_dir / "01_schema_postgresql.sql"
+    schema_path.parent.mkdir(parents=True, exist_ok=True)
     schema_path.write_text(schema_sql, encoding="utf-8")
     print(f"Wrote {schema_path}")
 
+    if args.schema_file:
+        print("Done. Schema-only output contains no customer data.")
+        return 0
+
+    output_dir.mkdir(parents=True, exist_ok=True)
     data_sql = extract_and_convert_data(dump, tables)
-    data_path = OUT_DIR / "02_data_postgresql.sql"
+    data_path = output_dir / "02_data_postgresql.sql"
     data_path.write_text(data_sql, encoding="utf-8")
     print(f"Wrote {data_path} ({len(data_sql):,} chars)")
 
-    combined = (
-        schema_sql.replace("COMMIT;\n", "")  # keep single transaction in combined? better separate
-    )
-    # Full migration SQL for Prisma migrate: schema only (data via seed)
-    migration_sql = schema_sql
-    # Prisma migrations should not wrap in BEGIN/COMMIT sometimes — keep it
-    (MIGRATION_DIR / "migration.sql").write_text(migration_sql, encoding="utf-8")
-    print(f"Wrote {MIGRATION_DIR / 'migration.sql'}")
-
-    # Combined load script for Supabase SQL editor / psql
-    full_path = OUT_DIR / "saiflower_supabase_full.sql"
+    full_path = output_dir / "saiflower_postgresql_full.sql"
     full_path.write_text(
         schema_sql.rstrip() + "\n\n" + data_sql + "\n",
         encoding="utf-8",
     )
     print(f"Wrote {full_path}")
 
-    prisma = emit_prisma_schema(tables)
-    prisma_path = PRISMA_DIR / "schema.prisma"
-    prisma_path.write_text(prisma, encoding="utf-8")
-    print(f"Wrote {prisma_path}")
-
-    # migration_lock.toml
-    lock = PRISMA_DIR / "migrations" / "migration_lock.toml"
-    lock.write_text('#{ This is an auto-generated Prisma-level file. Do not edit. }\nprovider = "postgresql"\n', encoding="utf-8")
-
-    # Seed script note
-    seed_path = PRISMA_DIR / "seed.sql"
-    seed_path.write_text(
-        "-- Load converted dump data into Supabase/Postgres after migrate:\n"
-        "--   psql \"$DATABASE_URL\" -f tools/mysql-to-pg/02_data_postgresql.sql\n"
-        "-- Or run tools/mysql-to-pg/saiflower_supabase_full.sql for schema+data.\n",
-        encoding="utf-8",
-    )
-
-    readme = OUT_DIR / "README.md"
-    readme.write_text(
-        """# MySQL → PostgreSQL (Supabase) conversion
-
-Source dump: `u977002836_Saiflower999 (2).sql` (35 tables).
-
-## Outputs
-
-| File | Purpose |
-|------|---------|
-| `01_schema_postgresql.sql` | DDL: enums, tables, PKs, uniques, indexes, FKs, identity |
-| `02_data_postgresql.sql` | All INSERT data + sequence sync |
-| `saiflower_supabase_full.sql` | Schema + data (one-shot load) |
-| `../../packages/prisma/schema.prisma` | Prisma models mapped to legacy tables |
-| `../../packages/prisma/migrations/20260728000000_init_legacy_schema/migration.sql` | Prisma migration |
-
-## Apply to Supabase
-
-```bash
-# Option A — one shot
-psql "$DATABASE_URL" -f tools/mysql-to-pg/saiflower_supabase_full.sql
-
-# Option B — Prisma migrate then data
-cd packages/prisma
-npx prisma migrate deploy
-psql "$DATABASE_URL" -f ../../tools/mysql-to-pg/02_data_postgresql.sql
-npx prisma generate
-```
-
-## Preserved
-
-- All 35 table names and columns
-- Integer primary keys + identity sequences at MySQL AUTO_INCREMENT values
-- Unique constraints and secondary indexes
-- Foreign keys: `cake_variants`, `gift_variants`, `homepage_section_items`
-- Soft Prisma relations: `flower_images`, `flower_variants`, `admin_tokens`, `wishlist`
-- Row data from the dump
-""",
-        encoding="utf-8",
-    )
-    print(f"Wrote {readme}")
-    print("Done.")
+    print("Done. Generated data files may contain private customer information; do not commit them.")
     return 0
 
 

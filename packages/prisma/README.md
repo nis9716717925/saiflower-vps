@@ -1,35 +1,28 @@
 # @saiflower/prisma
 
-Prisma package for SaiFlower — legacy MySQL catalog on **Supabase PostgreSQL**.
+Prisma client for SaiFlower’s local **PostgreSQL** database on the Hostinger VPS.
+Legacy table and column names are preserved.
 
-## Status
+## Setup
 
-Schema and initial migration generated from production dump
-`u977002836_Saiflower999` (35 tables). Integer IDs, table names, indexes,
-uniques, and foreign keys are preserved.
+1. Copy `.env.example` → `.env`
+2. Set `DATABASE_URL` for the PostgreSQL database:
 
-## Apply
-
-```bash
-# From repo root — one-shot schema + data into Supabase
-psql "$DATABASE_URL" -f tools/mysql-to-pg/saiflower_supabase_full.sql
-
-# Or: Prisma migrate (schema) then data
-cd packages/prisma
-npx prisma migrate deploy
-psql "$DATABASE_URL" -f ../../tools/mysql-to-pg/02_data_postgresql.sql
-npx prisma generate
+```env
+DATABASE_URL="postgresql://saiflower_app:PASSWORD@127.0.0.1:5432/saiflower?schema=public"
 ```
 
-## Scripts
+Keep PostgreSQL bound to localhost when the API runs on the same VPS. Do not
+expose port 5432 publicly.
 
-| Script | Purpose |
-|--------|---------|
-| `npm run generate -w @saiflower/prisma` | Generate Prisma Client |
-| `npm run migrate:deploy -w @saiflower/prisma` | Apply migrations |
-| `npm run studio -w @saiflower/prisma` | Prisma Studio |
+3. Apply migrations and generate the client:
 
-## Do not
+```bash
+npm run migrate:deploy -w @saiflower/prisma
+npm run generate -w @saiflower/prisma
+```
 
-- Import or revive `api/prisma/schema.prisma` (`api_*` greenfield models).
-- Redesign to a unified `Product` model during migration.
+## Notes
+
+- Use committed migrations for production; do not use `prisma db push`.
+- The initial production data load is handled by `tools/mysql-to-pg`.

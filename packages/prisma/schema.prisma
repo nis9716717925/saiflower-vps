@@ -1,5 +1,5 @@
 // =============================================================================
-// SaiFlower Prisma schema Gùù Hostinger MySQL (legacy tables)
+// SaiFlower Prisma schema ‚Äî local PostgreSQL on Hostinger VPS (legacy tables)
 // Generated from: u977002836_Saiflower999 MySQL dump
 // Preserves: table names (@@map), integer IDs, relations, constraints
 // =============================================================================
@@ -9,13 +9,14 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 enum CommentsStatus {
   APPROVED @map("approved")
-  PENDING @map("pending")
+  PENDING  @map("pending")
+
   @@map("comments_status")
 }
 
@@ -23,129 +24,141 @@ enum OrdersStatus {
   Pending
   Completed
   Cancelled
+
   @@map("orders_status")
 }
 
 enum ProductOccasionsProductType {
   FLOWER @map("flower")
-  CAKE @map("cake")
-  GIFT @map("gift")
+  CAKE   @map("cake")
+  GIFT   @map("gift")
+
   @@map("product_occasions_product_type")
 }
 
 enum PromoCodesDiscountType {
   PERCENTAGE @map("percentage")
-  FLAT @map("flat")
+  FLAT       @map("flat")
+
   @@map("promo_codes_discount_type")
 }
 
 enum PromoCodesType {
   PERCENTAGE @map("percentage")
-  FLAT @map("flat")
+  FLAT       @map("flat")
+
   @@map("promo_codes_type")
 }
 
 model Addons {
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(255)
-  price Decimal @db.Decimal(10, 2)
-  originalPrice Decimal? @db.Decimal(10, 2) @map("original_price")
-  icon String? @db.VarChar(50) @default("fa-gift")
-  status Int? @db.SmallInt @default(1)
+  id            Int      @id @default(autoincrement())
+  name          String   @db.VarChar(255)
+  price         Decimal  @db.Decimal(10, 2)
+  originalPrice Decimal? @map("original_price") @db.Decimal(10, 2)
+  icon          String?  @default("fa-gift") @db.VarChar(50)
+  status        Int?     @default(1) @db.SmallInt
+
   @@map("addons")
 }
 
 model AdminTokens {
-  id Int @id @default(autoincrement())
-  adminId Int @map("admin_id")
-  token String @db.VarChar(64)
-  expiry DateTime @db.DateTime(0)
-  admin AdminUsers @relation("admin_tokens_admin_id_fkey", fields: [adminId], references: [id], onDelete: Cascade)
+  id      Int        @id @default(autoincrement())
+  adminId Int        @map("admin_id")
+  token   String     @db.VarChar(64)
+  expiry  DateTime   @db.Timestamptz(6)
+  admin   AdminUsers @relation("admin_tokens_admin_id_fkey", fields: [adminId], references: [id], onDelete: Cascade)
+
   @@index([adminId], map: "admin_tokens_admin_id_idx")
   @@index([token], map: "admin_tokens_token_idx")
   @@map("admin_tokens")
 }
 
 model AdminUsers {
-  id Int @id @default(autoincrement())
-  username String @db.VarChar(50)
-  password String @db.VarChar(255)
-  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
+  id          Int           @id @default(autoincrement())
+  username    String        @db.VarChar(50)
+  password    String        @db.VarChar(255)
+  createdAt   DateTime?     @default(now()) @map("created_at") @db.Timestamptz(6)
   adminTokens AdminTokens[] @relation("admin_tokens_admin_id_fkey")
+
   @@unique([username], map: "admin_users_username_key")
   @@map("admin_users")
 }
 
 model Blogs {
-  id Int @id @default(autoincrement())
-  title String @db.VarChar(255)
-  slug String? @db.VarChar(255)
-  content String @db.Text
-  image String @db.VarChar(255)
-  status Int? @db.SmallInt @default(1)
-  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
-  metaTitle String? @db.VarChar(255) @map("meta_title")
-  metaDescription String? @db.Text @map("meta_description")
-  metaKeywords String? @db.Text @map("meta_keywords")
-  imagesGallery String? @db.Text @map("images_gallery")
+  id              Int       @id @default(autoincrement())
+  title           String    @db.VarChar(255)
+  slug            String?   @db.VarChar(255)
+  content         String    @db.Text
+  image           String    @db.VarChar(255)
+  status          Int?      @default(1) @db.SmallInt
+  createdAt       DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  metaTitle       String?   @map("meta_title") @db.VarChar(255)
+  metaDescription String?   @map("meta_description") @db.Text
+  metaKeywords    String?   @map("meta_keywords") @db.Text
+  imagesGallery   String?   @map("images_gallery") @db.Text
+
   @@unique([slug], map: "blogs_slug_key")
   @@map("blogs")
 }
 
 model Cakes {
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(255)
-  slug String @db.VarChar(255)
-  description String? @db.Text
-  price Decimal @db.Decimal(10, 2) @default(0.00)
-  originalPrice Decimal? @db.Decimal(10, 2) @default(0.00) @map("original_price")
-  image String? @db.VarChar(255)
-  inStock Int? @db.SmallInt @default(1) @map("in_stock")
-  status Int? @db.SmallInt @default(1)
-  metaTitle String? @db.VarChar(255) @map("meta_title")
-  metaDescription String? @db.Text @map("meta_description")
-  metaKeywords String? @db.Text @map("meta_keywords")
-  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
-  rating Decimal @db.Decimal(2, 1) @default(5.0)
-  deliverySameday Int @db.SmallInt @default(1) @map("delivery_sameday")
-  deliveryNextday Int @db.SmallInt @default(1) @map("delivery_nextday")
-  tag String? @db.VarChar(255)
-  model3d String? @db.VarChar(255) @map("model_3d")
-  imagesGallery String? @db.Text @map("images_gallery")
-  cakeVariants CakeVariants[] @relation("cake_variants_ibfk_1")
+  id              Int            @id @default(autoincrement())
+  name            String         @db.VarChar(255)
+  slug            String         @db.VarChar(255)
+  description     String?        @db.Text
+  price           Decimal        @default(0.00) @db.Decimal(10, 2)
+  originalPrice   Decimal?       @default(0.00) @map("original_price") @db.Decimal(10, 2)
+  image           String?        @db.VarChar(255)
+  inStock         Int?           @default(1) @map("in_stock") @db.SmallInt
+  status          Int?           @default(1) @db.SmallInt
+  metaTitle       String?        @map("meta_title") @db.VarChar(255)
+  metaDescription String?        @map("meta_description") @db.Text
+  metaKeywords    String?        @map("meta_keywords") @db.Text
+  createdAt       DateTime?      @default(now()) @map("created_at") @db.Timestamptz(6)
+  rating          Decimal        @default(5.0) @db.Decimal(2, 1)
+  deliverySameday Int            @default(1) @map("delivery_sameday") @db.SmallInt
+  deliveryNextday Int            @default(1) @map("delivery_nextday") @db.SmallInt
+  tag             String?        @db.VarChar(255)
+  model3d         String?        @map("model_3d") @db.VarChar(255)
+  imagesGallery   String?        @map("images_gallery") @db.Text
+  cakeVariants    CakeVariants[] @relation("cake_variants_ibfk_1")
+
   @@unique([slug], map: "cakes_slug_key")
   @@map("cakes")
 }
 
 model CakeVariants {
-  id Int @id @default(autoincrement())
-  cakeId Int @map("cake_id")
-  name String @db.VarChar(255)
-  price Decimal @db.Decimal(10, 2)
-  originalPrice Decimal? @db.Decimal(10, 2) @map("original_price")
-  cake Cakes @relation("cake_variants_ibfk_1", fields: [cakeId], references: [id], onDelete: Cascade)
+  id            Int      @id @default(autoincrement())
+  cakeId        Int      @map("cake_id")
+  name          String   @db.VarChar(255)
+  price         Decimal  @db.Decimal(10, 2)
+  originalPrice Decimal? @map("original_price") @db.Decimal(10, 2)
+  cake          Cakes    @relation("cake_variants_ibfk_1", fields: [cakeId], references: [id], onDelete: Cascade)
+
   @@index([cakeId], map: "cake_variants_cake_id_idx")
   @@map("cake_variants")
 }
 
 model Categories {
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(255)
-  image String? @db.VarChar(255)
-  status Int? @db.SmallInt @default(1)
-  sortOrder Int? @default(0) @map("sort_order")
-  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
+  id        Int       @id @default(autoincrement())
+  name      String    @db.VarChar(255)
+  image     String?   @db.VarChar(255)
+  status    Int?      @default(1) @db.SmallInt
+  sortOrder Int?      @default(0) @map("sort_order")
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+
   @@map("categories")
 }
 
 model Comments {
-  id Int @id @default(autoincrement())
-  postSlug String @db.VarChar(255) @map("post_slug")
-  name String @db.VarChar(100)
-  email String @db.VarChar(100)
-  comment String @db.Text
-  status CommentsStatus? @default(APPROVED)
-  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
+  id        Int             @id @default(autoincrement())
+  postSlug  String          @map("post_slug") @db.VarChar(255)
+  name      String          @db.VarChar(100)
+  email     String          @db.VarChar(100)
+  comment   String          @db.Text
+  status    CommentsStatus? @default(APPROVED)
+  createdAt DateTime?       @default(now()) @map("created_at") @db.Timestamptz(6)
+
   @@map("comments")
 }
 
@@ -153,403 +166,432 @@ enum CustomerAddressType {
   Home
   Work
   Other
+
   @@map("customer_address_type")
 }
 
 model Customers {
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(100)
-  email String @db.VarChar(100)
-  phone String? @db.VarChar(20)
-  password String @db.VarChar(255)
-  address String? @db.Text
-  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
-  city String? @db.VarChar(100)
-  pincode String? @db.VarChar(10)
-  updatedAt DateTime? @db.DateTime(0) @default(now()) @updatedAt @map("updated_at")
-  isVerified Int? @db.SmallInt @default(0) @map("is_verified")
-  verificationToken String? @db.VarChar(255) @map("verification_token")
-  googleId String? @db.VarChar(255) @map("google_id")
-  authProvider String @db.VarChar(32) @default("local") @map("auth_provider")
-  avatarUrl String? @db.VarChar(512) @map("avatar_url")
-  wishlist Wishlist[] @relation("wishlist_user_id_fkey")
-  addresses CustomerAddress[] @relation("customer_addresses_customer_id_fkey")
+  id                Int               @id @default(autoincrement())
+  name              String            @db.VarChar(100)
+  email             String            @db.VarChar(100)
+  phone             String?           @db.VarChar(20)
+  password          String            @db.VarChar(255)
+  address           String?           @db.Text
+  createdAt         DateTime?         @default(now()) @map("created_at") @db.Timestamptz(6)
+  city              String?           @db.VarChar(100)
+  pincode           String?           @db.VarChar(10)
+  updatedAt         DateTime?         @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  isVerified        Int?              @default(0) @map("is_verified") @db.SmallInt
+  verificationToken String?           @map("verification_token") @db.VarChar(255)
+  googleId          String?           @map("google_id") @db.VarChar(255)
+  authProvider      String            @default("local") @map("auth_provider") @db.VarChar(32)
+  avatarUrl         String?           @map("avatar_url") @db.VarChar(512)
+  wishlist          Wishlist[]        @relation("wishlist_user_id_fkey")
+  addresses         CustomerAddress[] @relation("customer_addresses_customer_id_fkey")
+
   @@unique([email], map: "customers_email_key")
   @@unique([googleId], map: "uniq_customers_google_id")
   @@map("customers")
 }
 
 model CustomerAddress {
-  id Int @id @default(autoincrement())
-  customerId Int @map("customer_id")
-  recipientName String @db.VarChar(100) @map("recipient_name")
-  mobile String @db.VarChar(20)
-  email String? @db.VarChar(100)
-  flatHouseNo String @db.VarChar(100) @map("flat_house_no")
-  apartmentStreetLocality String @db.VarChar(255) @map("apartment_street_locality")
-  pincode String @db.VarChar(10)
-  addressType CustomerAddressType @default(Home) @map("address_type")
-  isDefault Int @db.SmallInt @default(0) @map("is_default")
-  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
-  updatedAt DateTime? @db.DateTime(0) @default(now()) @updatedAt @map("updated_at")
-  customer Customers @relation("customer_addresses_customer_id_fkey", fields: [customerId], references: [id], onDelete: Cascade)
+  id                      Int                 @id @default(autoincrement())
+  customerId              Int                 @map("customer_id")
+  recipientName           String              @map("recipient_name") @db.VarChar(100)
+  mobile                  String              @db.VarChar(20)
+  email                   String?             @db.VarChar(100)
+  flatHouseNo             String              @map("flat_house_no") @db.VarChar(100)
+  apartmentStreetLocality String              @map("apartment_street_locality") @db.VarChar(255)
+  pincode                 String              @db.VarChar(10)
+  addressType             CustomerAddressType @default(Home) @map("address_type")
+  isDefault               Int                 @default(0) @map("is_default") @db.SmallInt
+  createdAt               DateTime?           @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt               DateTime?           @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  customer                Customers           @relation("customer_addresses_customer_id_fkey", fields: [customerId], references: [id], onDelete: Cascade)
+
   @@index([customerId], map: "customer_addresses_customer_id_idx")
   @@map("customer_addresses")
 }
 
 model DynamicPages {
-  id Int @id @default(autoincrement())
-  title String @db.VarChar(255)
-  shortDescription String? @db.Text @map("short_description")
-  slug String @db.VarChar(255)
-  layoutType String? @db.VarChar(50) @default("event_info") @map("layout_type")
-  pageTag String? @db.VarChar(100) @map("page_tag")
-  heroImage String? @db.VarChar(255) @map("hero_image")
-  extraImages String? @db.Text @map("extra_images")
-  content String? @db.Text
-  metaTitle String? @db.VarChar(255) @map("meta_title")
-  metaDescription String? @db.Text @map("meta_description")
-  metaKeywords String? @db.Text @map("meta_keywords")
-  status Int? @db.SmallInt @default(1)
-  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
-  updatedAt DateTime? @db.DateTime(0) @default(now()) @updatedAt @map("updated_at")
-  faqs String? @db.Text
-  midgridImage String? @db.VarChar(255) @map("midgrid_image")
-  midgridImageAlt String? @db.VarChar(255) @map("midgrid_image_alt")
+  id               Int       @id @default(autoincrement())
+  title            String    @db.VarChar(255)
+  shortDescription String?   @map("short_description") @db.Text
+  slug             String    @db.VarChar(255)
+  layoutType       String?   @default("event_info") @map("layout_type") @db.VarChar(50)
+  pageTag          String?   @map("page_tag") @db.VarChar(100)
+  heroImage        String?   @map("hero_image") @db.VarChar(255)
+  extraImages      String?   @map("extra_images") @db.Text
+  content          String?   @db.Text
+  metaTitle        String?   @map("meta_title") @db.VarChar(255)
+  metaDescription  String?   @map("meta_description") @db.Text
+  metaKeywords     String?   @map("meta_keywords") @db.Text
+  status           Int?      @default(1) @db.SmallInt
+  createdAt        DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  faqs             String?   @db.Text
+  midgridImage     String?   @map("midgrid_image") @db.VarChar(255)
+  midgridImageAlt  String?   @map("midgrid_image_alt") @db.VarChar(255)
+
   @@unique([slug], map: "dynamic_pages_slug_key")
   @@map("dynamic_pages")
 }
 
 model Events {
-  id Int @id @default(autoincrement())
-  title String @db.VarChar(255)
-  slug String? @db.VarChar(255)
-  tag String? @db.VarChar(255)
-  description String @db.Text
-  coverImage String @db.VarChar(255) @map("cover_image")
-  status Int? @db.SmallInt @default(1)
-  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
-  metaTitle String? @db.VarChar(255) @map("meta_title")
-  metaDescription String? @db.Text @map("meta_description")
-  metaKeywords String? @db.Text @map("meta_keywords")
+  id              Int       @id @default(autoincrement())
+  title           String    @db.VarChar(255)
+  slug            String?   @db.VarChar(255)
+  tag             String?   @db.VarChar(255)
+  description     String    @db.Text
+  coverImage      String    @map("cover_image") @db.VarChar(255)
+  status          Int?      @default(1) @db.SmallInt
+  createdAt       DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  metaTitle       String?   @map("meta_title") @db.VarChar(255)
+  metaDescription String?   @map("meta_description") @db.Text
+  metaKeywords    String?   @map("meta_keywords") @db.Text
+
   @@unique([slug], map: "events_slug_key")
   @@map("events")
 }
 
 model Faqs {
-  id Int @id @default(autoincrement())
-  question String @db.Text
-  answer String @db.Text
-  page String? @db.VarChar(100) @default("general")
-  status Int? @db.SmallInt @default(1)
+  id       Int     @id @default(autoincrement())
+  question String  @db.Text
+  answer   String  @db.Text
+  page     String? @default("general") @db.VarChar(100)
+  status   Int?    @default(1) @db.SmallInt
+
   @@map("faqs")
 }
 
 model Flowers {
-  id Int @id @default(autoincrement())
-  categoryIds String? @db.Text @map("category_ids")
-  name String @db.VarChar(255)
-  slug String? @db.VarChar(255)
-  price Decimal @db.Decimal(10, 2)
-  originalPrice Decimal? @db.Decimal(10, 2) @map("original_price")
-  description String? @db.Text
-  image String @db.VarChar(255)
-  model3d String? @db.VarChar(255) @map("model_3d")
-  inStock Int? @db.SmallInt @default(1) @map("in_stock")
-  status Int? @db.SmallInt @default(1)
-  metaTitle String? @db.VarChar(255) @map("meta_title")
-  metaDescription String? @db.Text @map("meta_description")
-  metaKeywords String? @db.VarChar(255) @map("meta_keywords")
-  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
-  rating Decimal @db.Decimal(2, 1) @default(5.0)
-  deliverySameday Int @db.SmallInt @default(1) @map("delivery_sameday")
-  deliveryNextday Int @db.SmallInt @default(1) @map("delivery_nextday")
-  tag String? @db.VarChar(255)
-  imagesGallery String? @db.Text @map("images_gallery")
-  faqs String? @db.Text
-  imageAlt String? @db.VarChar(255) @map("image_alt")
-  flowerImages FlowerImages[] @relation("flower_images_flower_id_fkey")
-  flowerVariants FlowerVariants[] @relation("flower_variants_flower_id_fkey")
+  id              Int              @id @default(autoincrement())
+  categoryIds     String?          @map("category_ids") @db.Text
+  name            String           @db.VarChar(255)
+  slug            String?          @db.VarChar(255)
+  price           Decimal          @db.Decimal(10, 2)
+  originalPrice   Decimal?         @map("original_price") @db.Decimal(10, 2)
+  description     String?          @db.Text
+  image           String           @db.VarChar(255)
+  model3d         String?          @map("model_3d") @db.VarChar(255)
+  inStock         Int?             @default(1) @map("in_stock") @db.SmallInt
+  status          Int?             @default(1) @db.SmallInt
+  metaTitle       String?          @map("meta_title") @db.VarChar(255)
+  metaDescription String?          @map("meta_description") @db.Text
+  metaKeywords    String?          @map("meta_keywords") @db.VarChar(255)
+  createdAt       DateTime?        @default(now()) @map("created_at") @db.Timestamptz(6)
+  rating          Decimal          @default(5.0) @db.Decimal(2, 1)
+  deliverySameday Int              @default(1) @map("delivery_sameday") @db.SmallInt
+  deliveryNextday Int              @default(1) @map("delivery_nextday") @db.SmallInt
+  tag             String?          @db.VarChar(255)
+  imagesGallery   String?          @map("images_gallery") @db.Text
+  faqs            String?          @db.Text
+  imageAlt        String?          @map("image_alt") @db.VarChar(255)
+  flowerImages    FlowerImages[]   @relation("flower_images_flower_id_fkey")
+  flowerVariants  FlowerVariants[] @relation("flower_variants_flower_id_fkey")
+
   @@map("flowers")
 }
 
 model FlowerImages {
-  id Int @id @default(autoincrement())
-  flowerId Int @map("flower_id")
-  imagePath String @db.VarChar(255) @map("image_path")
-  flower Flowers @relation("flower_images_flower_id_fkey", fields: [flowerId], references: [id], onDelete: Cascade)
+  id        Int     @id @default(autoincrement())
+  flowerId  Int     @map("flower_id")
+  imagePath String  @map("image_path") @db.VarChar(255)
+  flower    Flowers @relation("flower_images_flower_id_fkey", fields: [flowerId], references: [id], onDelete: Cascade)
+
   @@index([flowerId], map: "flower_images_flower_id_idx")
   @@map("flower_images")
 }
 
 model FlowerVariants {
-  id Int @id @default(autoincrement())
-  flowerId Int @map("flower_id")
-  name String @db.VarChar(255)
-  price Decimal @db.Decimal(10, 2)
-  originalPrice Decimal? @db.Decimal(10, 2) @map("original_price")
-  flower Flowers @relation("flower_variants_flower_id_fkey", fields: [flowerId], references: [id], onDelete: Cascade)
+  id            Int      @id @default(autoincrement())
+  flowerId      Int      @map("flower_id")
+  name          String   @db.VarChar(255)
+  price         Decimal  @db.Decimal(10, 2)
+  originalPrice Decimal? @map("original_price") @db.Decimal(10, 2)
+  flower        Flowers  @relation("flower_variants_flower_id_fkey", fields: [flowerId], references: [id], onDelete: Cascade)
+
   @@index([flowerId], map: "flower_variants_flower_id_idx")
   @@map("flower_variants")
 }
 
 model Gallery {
-  id Int @id @default(autoincrement())
-  title String @db.VarChar(255)
-  tag String? @db.VarChar(255)
-  image String @db.VarChar(255)
-  status Int? @db.SmallInt @default(1)
-  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
-  metaTitle String? @db.VarChar(255) @map("meta_title")
-  metaDescription String? @db.Text @map("meta_description")
-  metaKeywords String? @db.Text @map("meta_keywords")
+  id              Int       @id @default(autoincrement())
+  title           String    @db.VarChar(255)
+  tag             String?   @db.VarChar(255)
+  image           String    @db.VarChar(255)
+  status          Int?      @default(1) @db.SmallInt
+  createdAt       DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  metaTitle       String?   @map("meta_title") @db.VarChar(255)
+  metaDescription String?   @map("meta_description") @db.Text
+  metaKeywords    String?   @map("meta_keywords") @db.Text
+
   @@map("gallery")
 }
 
 model Gifts {
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(255)
-  slug String @db.VarChar(255)
-  description String? @db.Text
-  price Decimal @db.Decimal(10, 2) @default(0.00)
-  originalPrice Decimal? @db.Decimal(10, 2) @default(0.00) @map("original_price")
-  image String? @db.VarChar(255)
-  inStock Int? @db.SmallInt @default(1) @map("in_stock")
-  status Int? @db.SmallInt @default(1)
-  metaTitle String? @db.VarChar(255) @map("meta_title")
-  metaDescription String? @db.Text @map("meta_description")
-  metaKeywords String? @db.Text @map("meta_keywords")
-  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
-  rating Decimal @db.Decimal(2, 1) @default(5.0)
-  deliverySameday Int @db.SmallInt @default(1) @map("delivery_sameday")
-  deliveryNextday Int @db.SmallInt @default(1) @map("delivery_nextday")
-  tag String? @db.VarChar(255)
-  model3d String? @db.VarChar(255) @map("model_3d")
-  imagesGallery String? @db.Text @map("images_gallery")
-  giftVariants GiftVariants[] @relation("gift_variants_ibfk_1")
+  id              Int            @id @default(autoincrement())
+  name            String         @db.VarChar(255)
+  slug            String         @db.VarChar(255)
+  description     String?        @db.Text
+  price           Decimal        @default(0.00) @db.Decimal(10, 2)
+  originalPrice   Decimal?       @default(0.00) @map("original_price") @db.Decimal(10, 2)
+  image           String?        @db.VarChar(255)
+  inStock         Int?           @default(1) @map("in_stock") @db.SmallInt
+  status          Int?           @default(1) @db.SmallInt
+  metaTitle       String?        @map("meta_title") @db.VarChar(255)
+  metaDescription String?        @map("meta_description") @db.Text
+  metaKeywords    String?        @map("meta_keywords") @db.Text
+  createdAt       DateTime?      @default(now()) @map("created_at") @db.Timestamptz(6)
+  rating          Decimal        @default(5.0) @db.Decimal(2, 1)
+  deliverySameday Int            @default(1) @map("delivery_sameday") @db.SmallInt
+  deliveryNextday Int            @default(1) @map("delivery_nextday") @db.SmallInt
+  tag             String?        @db.VarChar(255)
+  model3d         String?        @map("model_3d") @db.VarChar(255)
+  imagesGallery   String?        @map("images_gallery") @db.Text
+  giftVariants    GiftVariants[] @relation("gift_variants_ibfk_1")
+
   @@unique([slug], map: "gifts_slug_key")
   @@map("gifts")
 }
 
 model GiftVariants {
-  id Int @id @default(autoincrement())
-  giftId Int @map("gift_id")
-  name String @db.VarChar(255)
-  price Decimal @db.Decimal(10, 2)
-  originalPrice Decimal? @db.Decimal(10, 2) @map("original_price")
-  gift Gifts @relation("gift_variants_ibfk_1", fields: [giftId], references: [id], onDelete: Cascade)
+  id            Int      @id @default(autoincrement())
+  giftId        Int      @map("gift_id")
+  name          String   @db.VarChar(255)
+  price         Decimal  @db.Decimal(10, 2)
+  originalPrice Decimal? @map("original_price") @db.Decimal(10, 2)
+  gift          Gifts    @relation("gift_variants_ibfk_1", fields: [giftId], references: [id], onDelete: Cascade)
+
   @@index([giftId], map: "gift_variants_gift_id_idx")
   @@map("gift_variants")
 }
 
 model GlobalPricing {
-  id Int @id @default(autoincrement())
-  surgePercentage Decimal @db.Decimal(5, 2) @default(0.00) @map("surge_percentage")
-  flowerSurge Decimal @db.Decimal(5, 2) @default(0.00) @map("flower_surge")
-  cakeSurge Decimal @db.Decimal(5, 2) @default(0.00) @map("cake_surge")
-  giftSurge Decimal @db.Decimal(5, 2) @default(0.00) @map("gift_surge")
+  id              Int     @id @default(autoincrement())
+  surgePercentage Decimal @default(0.00) @map("surge_percentage") @db.Decimal(5, 2)
+  flowerSurge     Decimal @default(0.00) @map("flower_surge") @db.Decimal(5, 2)
+  cakeSurge       Decimal @default(0.00) @map("cake_surge") @db.Decimal(5, 2)
+  giftSurge       Decimal @default(0.00) @map("gift_surge") @db.Decimal(5, 2)
+
   @@map("global_pricing")
 }
 
 model HomepageCircles {
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(100)
-  image String @db.VarChar(255)
-  link String? @db.VarChar(255)
-  sortOrder Int? @default(0) @map("sort_order")
-  status Int? @db.SmallInt @default(1)
+  id        Int     @id @default(autoincrement())
+  name      String  @db.VarChar(100)
+  image     String  @db.VarChar(255)
+  link      String? @db.VarChar(255)
+  sortOrder Int?    @default(0) @map("sort_order")
+  status    Int?    @default(1) @db.SmallInt
+
   @@map("homepage_circles")
 }
 
 model HomepageSections {
-  id Int @id @default(autoincrement())
-  title String @db.VarChar(255)
-  subtitle String? @db.VarChar(255)
-  type String @db.VarChar(50) @default("")
-  sortOrder Int? @default(0) @map("sort_order")
-  status Int? @db.SmallInt @default(1)
+  id                   Int                    @id @default(autoincrement())
+  title                String                 @db.VarChar(255)
+  subtitle             String?                @db.VarChar(255)
+  type                 String                 @default("") @db.VarChar(50)
+  sortOrder            Int?                   @default(0) @map("sort_order")
+  status               Int?                   @default(1) @db.SmallInt
   homepageSectionItems HomepageSectionItems[] @relation("homepage_section_items_ibfk_1")
+
   @@map("homepage_sections")
 }
 
 model HomepageSectionItems {
-  id Int @id @default(autoincrement())
-  sectionId Int @map("section_id")
-  image String? @db.VarChar(255)
-  title String? @db.VarChar(255)
-  subtitle String? @db.VarChar(255)
-  price String? @db.VarChar(50)
-  link String? @db.VarChar(255)
-  sortOrder Int? @default(0) @map("sort_order")
-  topBadgeText String? @db.VarChar(255) @map("top_badge_text")
-  badgeText String? @db.VarChar(255) @map("badge_text")
-  rating String? @db.VarChar(50)
-  deliveryInfo String? @db.VarChar(255) @map("delivery_info")
-  originalPrice String? @db.VarChar(50) @map("original_price")
-  discountLabel String? @db.VarChar(50) @map("discount_label")
-  section HomepageSections @relation("homepage_section_items_ibfk_1", fields: [sectionId], references: [id], onDelete: Cascade)
+  id            Int              @id @default(autoincrement())
+  sectionId     Int              @map("section_id")
+  image         String?          @db.VarChar(255)
+  title         String?          @db.VarChar(255)
+  subtitle      String?          @db.VarChar(255)
+  price         String?          @db.VarChar(50)
+  link          String?          @db.VarChar(255)
+  sortOrder     Int?             @default(0) @map("sort_order")
+  topBadgeText  String?          @map("top_badge_text") @db.VarChar(255)
+  badgeText     String?          @map("badge_text") @db.VarChar(255)
+  rating        String?          @db.VarChar(50)
+  deliveryInfo  String?          @map("delivery_info") @db.VarChar(255)
+  originalPrice String?          @map("original_price") @db.VarChar(50)
+  discountLabel String?          @map("discount_label") @db.VarChar(50)
+  section       HomepageSections @relation("homepage_section_items_ibfk_1", fields: [sectionId], references: [id], onDelete: Cascade)
+
   @@index([sectionId], map: "homepage_section_items_section_id_idx")
   @@map("homepage_section_items")
 }
 
 model HomepageSlides {
-  id Int @id @default(autoincrement())
-  image String @db.VarChar(255)
-  mobileImage String? @db.VarChar(255) @map("mobile_image")
-  link String? @db.VarChar(255)
-  sortOrder Int? @default(0) @map("sort_order")
-  status Int? @db.SmallInt @default(1)
+  id          Int     @id @default(autoincrement())
+  image       String  @db.VarChar(255)
+  mobileImage String? @map("mobile_image") @db.VarChar(255)
+  link        String? @db.VarChar(255)
+  sortOrder   Int?    @default(0) @map("sort_order")
+  status      Int?    @default(1) @db.SmallInt
+
   @@map("homepage_slides")
 }
 
 model Leads {
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(100)
-  phone String @db.VarChar(20)
-  email String? @db.VarChar(100)
-  message String? @db.Text
-  status String? @db.VarChar(20) @default("New")
-  service String? @db.VarChar(100)
-  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
+  id        Int       @id @default(autoincrement())
+  name      String    @db.VarChar(100)
+  phone     String    @db.VarChar(20)
+  email     String?   @db.VarChar(100)
+  message   String?   @db.Text
+  status    String?   @default("New") @db.VarChar(20)
+  service   String?   @db.VarChar(100)
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+
   @@map("leads")
 }
 
 model Occasions {
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(255)
-  icon String? @db.VarChar(100) @default("fas fa-gift")
-  status Int? @db.SmallInt @default(1)
-  sortOrder Int? @default(0) @map("sort_order")
-  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
+  id        Int       @id @default(autoincrement())
+  name      String    @db.VarChar(255)
+  icon      String?   @default("fas fa-gift") @db.VarChar(100)
+  status    Int?      @default(1) @db.SmallInt
+  sortOrder Int?      @default(0) @map("sort_order")
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+
   @@unique([name], map: "occasions_name_key")
   @@map("occasions")
 }
 
 model Orders {
-  id Int @id @default(autoincrement())
-  customerName String @db.VarChar(255) @map("customer_name")
-  customerPhone String? @db.VarChar(50) @map("customer_phone")
-  customerEmail String? @db.VarChar(255) @map("customer_email")
-  deliveryAddress String @db.Text @map("delivery_address")
-  deliveryDate DateTime? @db.Date @map("delivery_date")
-  orderItems String @db.Text @map("order_items")
-  totalAmount Decimal @db.Decimal(10, 2) @default(0.00) @map("total_amount")
-  status OrdersStatus? @default(Pending)
-  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
-  couponCode String? @db.VarChar(50) @map("coupon_code")
+  id              Int           @id @default(autoincrement())
+  customerName    String        @map("customer_name") @db.VarChar(255)
+  customerPhone   String?       @map("customer_phone") @db.VarChar(50)
+  customerEmail   String?       @map("customer_email") @db.VarChar(255)
+  deliveryAddress String        @map("delivery_address") @db.Text
+  deliveryDate    DateTime?     @map("delivery_date") @db.Date
+  orderItems      String        @map("order_items") @db.Text
+  totalAmount     Decimal       @default(0.00) @map("total_amount") @db.Decimal(10, 2)
+  status          OrdersStatus? @default(Pending)
+  createdAt       DateTime?     @default(now()) @map("created_at") @db.Timestamptz(6)
+  couponCode      String?       @map("coupon_code") @db.VarChar(50)
+
   @@map("orders")
 }
 
 model PricingLog {
-  id Int @id @default(autoincrement())
-  category String @db.VarChar(50)
-  percentage Decimal @db.Decimal(5, 2)
-  action String @db.VarChar(50)
-  createdAt DateTime @db.DateTime(0) @default(now()) @map("created_at")
+  id         Int      @id @default(autoincrement())
+  category   String   @db.VarChar(50)
+  percentage Decimal  @db.Decimal(5, 2)
+  action     String   @db.VarChar(50)
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
   @@map("pricing_log")
 }
 
 model Products {
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(255)
-  price Decimal @db.Decimal(10, 2)
-  image String? @db.VarChar(255) @default("default.jpg")
-  description String? @db.Text
-  category String? @db.VarChar(100)
-  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
+  id          Int       @id @default(autoincrement())
+  name        String    @db.VarChar(255)
+  price       Decimal   @db.Decimal(10, 2)
+  image       String?   @default("default.jpg") @db.VarChar(255)
+  description String?   @db.Text
+  category    String?   @db.VarChar(100)
+  createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+
   @@map("products")
 }
 
 model ProductOccasions {
-  id Int @id @default(autoincrement())
-  productType ProductOccasionsProductType @map("product_type")
-  productId Int @map("product_id")
-  occasionName String @db.VarChar(100) @map("occasion_name")
-  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
+  id           Int                         @id @default(autoincrement())
+  productType  ProductOccasionsProductType @map("product_type")
+  productId    Int                         @map("product_id")
+  occasionName String                      @map("occasion_name") @db.VarChar(100)
+  createdAt    DateTime?                   @default(now()) @map("created_at") @db.Timestamptz(6)
+
   @@unique([productType, productId, occasionName], map: "unique_product_occasion")
   @@index([occasionName], map: "idx_occasion")
   @@map("product_occasions")
 }
 
 model PromoCodes {
-  id Int @id @default(autoincrement())
-  code String @db.VarChar(50)
-  discountType PromoCodesDiscountType @map("discount_type")
-  discountValue Decimal @db.Decimal(10, 2) @map("discount_value")
-  minOrderAmount Decimal? @db.Decimal(10, 2) @map("min_order_amount")
-  discountText String? @db.VarChar(255) @map("discount_text")
-  description String? @db.Text
-  status Int? @db.SmallInt @default(1)
-  isFeatured Int? @db.SmallInt @default(0) @map("is_featured")
-  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
-  type PromoCodesType? @default(PERCENTAGE)
-  value Decimal? @db.Decimal(10, 2) @default(0.00)
-  showOnCakes Int? @db.SmallInt @default(0) @map("show_on_cakes")
-  showOnGifts Int? @db.SmallInt @default(0) @map("show_on_gifts")
-  showOnFlowers Int? @db.SmallInt @default(0) @map("show_on_flowers")
-  expiryDate DateTime? @db.Date @map("expiry_date")
-  usageLimit Int? @map("usage_limit")
+  id             Int                    @id @default(autoincrement())
+  code           String                 @db.VarChar(50)
+  discountType   PromoCodesDiscountType @map("discount_type")
+  discountValue  Decimal                @map("discount_value") @db.Decimal(10, 2)
+  minOrderAmount Decimal?               @map("min_order_amount") @db.Decimal(10, 2)
+  discountText   String?                @map("discount_text") @db.VarChar(255)
+  description    String?                @db.Text
+  status         Int?                   @default(1) @db.SmallInt
+  isFeatured     Int?                   @default(0) @map("is_featured") @db.SmallInt
+  createdAt      DateTime?              @default(now()) @map("created_at") @db.Timestamptz(6)
+  type           PromoCodesType?        @default(PERCENTAGE)
+  value          Decimal?               @default(0.00) @db.Decimal(10, 2)
+  showOnCakes    Int?                   @default(0) @map("show_on_cakes") @db.SmallInt
+  showOnGifts    Int?                   @default(0) @map("show_on_gifts") @db.SmallInt
+  showOnFlowers  Int?                   @default(0) @map("show_on_flowers") @db.SmallInt
+  expiryDate     DateTime?              @map("expiry_date") @db.Date
+  usageLimit     Int?                   @map("usage_limit")
+
   @@unique([code], map: "promo_codes_code_key")
   @@map("promo_codes")
 }
 
 model Reviews {
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(100)
-  reviewText String @db.Text @map("review_text")
-  rating Int? @default(5)
-  platform String? @db.VarChar(50) @default("Google")
-  status Int? @db.SmallInt @default(1)
-  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
+  id         Int       @id @default(autoincrement())
+  name       String    @db.VarChar(100)
+  reviewText String    @map("review_text") @db.Text
+  rating     Int?      @default(5)
+  platform   String?   @default("Google") @db.VarChar(50)
+  status     Int?      @default(1) @db.SmallInt
+  createdAt  DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+
   @@map("reviews")
 }
 
 model SeoMeta {
-  id Int @id @default(autoincrement())
-  pageIdentifier String @db.VarChar(100) @map("page_identifier")
-  title String? @db.VarChar(255)
-  description String? @db.Text
-  keywords String? @db.Text
+  id             Int     @id @default(autoincrement())
+  pageIdentifier String  @map("page_identifier") @db.VarChar(100)
+  title          String? @db.VarChar(255)
+  description    String? @db.Text
+  keywords       String? @db.Text
+
   @@unique([pageIdentifier], map: "seo_meta_page_identifier_key")
   @@map("seo_meta")
 }
 
 model Settings {
-  id Int @id @default(autoincrement())
-  siteTitle String? @db.VarChar(255) @default("Sai Flowers") @map("site_title")
-  tagline String? @db.VarChar(255)
-  logo String? @db.VarChar(255)
-  phone String? @db.VarChar(50)
-  whatsapp String? @db.VarChar(50)
-  email String? @db.VarChar(100)
-  address String? @db.Text
-  themePrimary String? @db.VarChar(20) @default("#2f6f4e") @map("theme_primary")
-  themeSecondary String? @db.VarChar(20) @default("#d4af37") @map("theme_secondary")
-  heroTitle String? @db.VarChar(255) @map("hero_title")
-  heroSubtitle String? @db.VarChar(255) @map("hero_subtitle")
-  heroImage String? @db.VarChar(255) @map("hero_image")
-  logoWidth Int? @default(150) @map("logo_width")
-  maintenanceMode Int? @db.SmallInt @default(0) @map("maintenance_mode")
-  footerAbout String? @db.Text @map("footer_about")
-  newsletterText String? @db.Text @map("newsletter_text")
+  id              Int     @id @default(autoincrement())
+  siteTitle       String? @default("Sai Flowers") @map("site_title") @db.VarChar(255)
+  tagline         String? @db.VarChar(255)
+  logo            String? @db.VarChar(255)
+  phone           String? @db.VarChar(50)
+  whatsapp        String? @db.VarChar(50)
+  email           String? @db.VarChar(100)
+  address         String? @db.Text
+  themePrimary    String? @default("#2f6f4e") @map("theme_primary") @db.VarChar(20)
+  themeSecondary  String? @default("#d4af37") @map("theme_secondary") @db.VarChar(20)
+  heroTitle       String? @map("hero_title") @db.VarChar(255)
+  heroSubtitle    String? @map("hero_subtitle") @db.VarChar(255)
+  heroImage       String? @map("hero_image") @db.VarChar(255)
+  logoWidth       Int?    @default(150) @map("logo_width")
+  maintenanceMode Int?    @default(0) @map("maintenance_mode") @db.SmallInt
+  footerAbout     String? @map("footer_about") @db.Text
+  newsletterText  String? @map("newsletter_text") @db.Text
+
   @@map("settings")
 }
 
 model Tags {
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(255)
-  status Int? @db.SmallInt @default(1)
-  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
+  id        Int       @id @default(autoincrement())
+  name      String    @db.VarChar(255)
+  status    Int?      @default(1) @db.SmallInt
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+
   @@map("tags")
 }
 
 model Wishlist {
-  id Int @id @default(autoincrement())
-  userId Int @map("user_id")
-  productId Int @map("product_id")
-  type String? @db.VarChar(50) @default("flower")
-  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
-  user Customers @relation("wishlist_user_id_fkey", fields: [userId], references: [id], onDelete: Cascade)
+  id        Int       @id @default(autoincrement())
+  userId    Int       @map("user_id")
+  productId Int       @map("product_id")
+  type      String?   @default("flower") @db.VarChar(50)
+  createdAt DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  user      Customers @relation("wishlist_user_id_fkey", fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([userId, productId, type], map: "unique_wishlist")
   @@map("wishlist")
 }

@@ -1,5 +1,5 @@
 -- =============================================================================
--- SaiFlower → PostgreSQL (Supabase)
+-- SaiFlower → PostgreSQL on Hostinger VPS
 -- Converted from MySQL dump: u977002836_Saiflower999
 -- Preserves: tables, PKs, unique keys, indexes, FKs, integer IDs, data semantics
 -- =============================================================================
@@ -12,6 +12,7 @@ CREATE TYPE "orders_status" AS ENUM ('Pending', 'Completed', 'Cancelled');
 CREATE TYPE "product_occasions_product_type" AS ENUM ('flower', 'cake', 'gift');
 CREATE TYPE "promo_codes_discount_type" AS ENUM ('percentage', 'flat');
 CREATE TYPE "promo_codes_type" AS ENUM ('percentage', 'flat');
+CREATE TYPE "customer_address_type" AS ENUM ('Home', 'Work', 'Other');
 
 -- Tables
 CREATE TABLE "addons" (
@@ -116,6 +117,21 @@ CREATE TABLE "customers" (
   "google_id" varchar(255) DEFAULT NULL,
   "auth_provider" varchar(32) NOT NULL DEFAULT 'local',
   "avatar_url" varchar(512) DEFAULT NULL
+);
+
+CREATE TABLE "customer_addresses" (
+  "id" integer NOT NULL,
+  "customer_id" integer NOT NULL,
+  "recipient_name" varchar(100) NOT NULL,
+  "mobile" varchar(20) NOT NULL,
+  "email" varchar(100) DEFAULT NULL,
+  "flat_house_no" varchar(100) NOT NULL,
+  "apartment_street_locality" varchar(255) NOT NULL,
+  "pincode" varchar(10) NOT NULL,
+  "address_type" customer_address_type NOT NULL DEFAULT 'Home'::customer_address_type,
+  "is_default" smallint NOT NULL DEFAULT 0,
+  "created_at" timestamptz DEFAULT CURRENT_TIMESTAMP,
+  "updated_at" timestamptz DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "dynamic_pages" (
@@ -437,6 +453,7 @@ ALTER TABLE "cake_variants" ADD CONSTRAINT "cake_variants_pkey" PRIMARY KEY ("id
 ALTER TABLE "categories" ADD CONSTRAINT "categories_pkey" PRIMARY KEY ("id");
 ALTER TABLE "comments" ADD CONSTRAINT "comments_pkey" PRIMARY KEY ("id");
 ALTER TABLE "customers" ADD CONSTRAINT "customers_pkey" PRIMARY KEY ("id");
+ALTER TABLE "customer_addresses" ADD CONSTRAINT "customer_addresses_pkey" PRIMARY KEY ("id");
 ALTER TABLE "dynamic_pages" ADD CONSTRAINT "dynamic_pages_pkey" PRIMARY KEY ("id");
 ALTER TABLE "events" ADD CONSTRAINT "events_pkey" PRIMARY KEY ("id");
 ALTER TABLE "faqs" ADD CONSTRAINT "faqs_pkey" PRIMARY KEY ("id");
@@ -483,6 +500,7 @@ ALTER TABLE "wishlist" ADD CONSTRAINT "unique_wishlist" UNIQUE ("user_id", "prod
 CREATE INDEX "admin_tokens_admin_id_idx" ON "admin_tokens" ("admin_id");
 CREATE INDEX "admin_tokens_token_idx" ON "admin_tokens" ("token");
 CREATE INDEX "cake_variants_cake_id_idx" ON "cake_variants" ("cake_id");
+CREATE INDEX "customer_addresses_customer_id_idx" ON "customer_addresses" ("customer_id");
 CREATE INDEX "flower_images_flower_id_idx" ON "flower_images" ("flower_id");
 CREATE INDEX "flower_variants_flower_id_idx" ON "flower_variants" ("flower_id");
 CREATE INDEX "gift_variants_gift_id_idx" ON "gift_variants" ("gift_id");
@@ -490,13 +508,14 @@ CREATE INDEX "homepage_section_items_section_id_idx" ON "homepage_section_items"
 CREATE INDEX "idx_occasion" ON "product_occasions" ("occasion_name");
 
 -- Foreign keys
-ALTER TABLE "cake_variants" ADD CONSTRAINT "cake_variants_ibfk_1" FOREIGN KEY ("cake_id") REFERENCES "cakes" ("id") ON DELETE CASCADE;
-ALTER TABLE "gift_variants" ADD CONSTRAINT "gift_variants_ibfk_1" FOREIGN KEY ("gift_id") REFERENCES "gifts" ("id") ON DELETE CASCADE;
-ALTER TABLE "homepage_section_items" ADD CONSTRAINT "homepage_section_items_ibfk_1" FOREIGN KEY ("section_id") REFERENCES "homepage_sections" ("id") ON DELETE CASCADE;
-ALTER TABLE "flower_images" ADD CONSTRAINT "flower_images_flower_id_fkey" FOREIGN KEY ("flower_id") REFERENCES "flowers" ("id") ON DELETE CASCADE;
-ALTER TABLE "flower_variants" ADD CONSTRAINT "flower_variants_flower_id_fkey" FOREIGN KEY ("flower_id") REFERENCES "flowers" ("id") ON DELETE CASCADE;
-ALTER TABLE "admin_tokens" ADD CONSTRAINT "admin_tokens_admin_id_fkey" FOREIGN KEY ("admin_id") REFERENCES "admin_users" ("id") ON DELETE CASCADE;
-ALTER TABLE "wishlist" ADD CONSTRAINT "wishlist_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "customers" ("id") ON DELETE CASCADE;
+ALTER TABLE "cake_variants" ADD CONSTRAINT "cake_variants_ibfk_1" FOREIGN KEY ("cake_id") REFERENCES "cakes" ("id") ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE "customer_addresses" ADD CONSTRAINT "customer_addresses_customer_id_fkey" FOREIGN KEY ("customer_id") REFERENCES "customers" ("id") ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE "gift_variants" ADD CONSTRAINT "gift_variants_ibfk_1" FOREIGN KEY ("gift_id") REFERENCES "gifts" ("id") ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE "homepage_section_items" ADD CONSTRAINT "homepage_section_items_ibfk_1" FOREIGN KEY ("section_id") REFERENCES "homepage_sections" ("id") ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE "flower_images" ADD CONSTRAINT "flower_images_flower_id_fkey" FOREIGN KEY ("flower_id") REFERENCES "flowers" ("id") ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE "flower_variants" ADD CONSTRAINT "flower_variants_flower_id_fkey" FOREIGN KEY ("flower_id") REFERENCES "flowers" ("id") ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE "admin_tokens" ADD CONSTRAINT "admin_tokens_admin_id_fkey" FOREIGN KEY ("admin_id") REFERENCES "admin_users" ("id") ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE "wishlist" ADD CONSTRAINT "wishlist_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "customers" ("id") ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED;
 
 -- Identity / sequences (preserve MySQL AUTO_INCREMENT next values)
 ALTER TABLE "addons" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (INCREMENT BY 1 START WITH 15);
@@ -507,7 +526,8 @@ ALTER TABLE "cakes" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (INCR
 ALTER TABLE "cake_variants" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (INCREMENT BY 1 START WITH 10);
 ALTER TABLE "categories" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (INCREMENT BY 1 START WITH 23);
 ALTER TABLE "comments" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (INCREMENT BY 1 START WITH 13);
-ALTER TABLE "customers" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (INCREMENT BY 1 START WITH 22);
+ALTER TABLE "customers" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (INCREMENT BY 1 START WITH 23);
+ALTER TABLE "customer_addresses" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (INCREMENT BY 1 START WITH 1);
 ALTER TABLE "dynamic_pages" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (INCREMENT BY 1 START WITH 211);
 ALTER TABLE "events" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (INCREMENT BY 1 START WITH 8);
 ALTER TABLE "faqs" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (INCREMENT BY 1 START WITH 16);
@@ -523,7 +543,7 @@ ALTER TABLE "homepage_section_items" ALTER COLUMN "id" ADD GENERATED BY DEFAULT 
 ALTER TABLE "homepage_slides" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (INCREMENT BY 1 START WITH 16);
 ALTER TABLE "leads" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (INCREMENT BY 1 START WITH 111);
 ALTER TABLE "occasions" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (INCREMENT BY 1 START WITH 5);
-ALTER TABLE "orders" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (INCREMENT BY 1 START WITH 31);
+ALTER TABLE "orders" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (INCREMENT BY 1 START WITH 37);
 ALTER TABLE "pricing_log" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (INCREMENT BY 1 START WITH 9);
 ALTER TABLE "products" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (INCREMENT BY 1 START WITH 7);
 ALTER TABLE "product_occasions" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (INCREMENT BY 1 START WITH 269);
@@ -532,7 +552,7 @@ ALTER TABLE "reviews" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (IN
 ALTER TABLE "seo_meta" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (INCREMENT BY 1 START WITH 5);
 ALTER TABLE "settings" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (INCREMENT BY 1 START WITH 2);
 ALTER TABLE "tags" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (INCREMENT BY 1 START WITH 66);
-ALTER TABLE "wishlist" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (INCREMENT BY 1 START WITH 11);
+ALTER TABLE "wishlist" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (INCREMENT BY 1 START WITH 14);
 ALTER TABLE "global_pricing" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (INCREMENT BY 1 START WITH 1);
 
 COMMIT;

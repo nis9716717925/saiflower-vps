@@ -2,18 +2,30 @@
   "name": "@saiflower/shared",
   "version": "0.1.0",
   "private": true,
-
+  "description": "Shared types, URL helpers, and constants",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-
+  "files": [
+    "dist"
+  ],
   "exports": {
-    ".": "./dist/index.js",
-    "./urls": "./dist/urls.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./urls": {
+      "types": "./dist/urls.d.ts",
+      "require": "./dist/urls.js",
+      "default": "./dist/urls.js"
+    }
   },
-
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.2"
   }
 }

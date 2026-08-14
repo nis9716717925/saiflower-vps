@@ -1,13 +1,20 @@
 #!/usr/bin/env python3
+import argparse
 import re
 from pathlib import Path
 
-dump = Path(r"c:\Users\Nishant Singh\Downloads\u977002836_Saiflower999 (2).sql").read_text(
-    encoding="utf-8", errors="replace"
+parser = argparse.ArgumentParser(description="Compare source and converted INSERT statements.")
+parser.add_argument("dump", type=Path)
+parser.add_argument(
+    "data",
+    type=Path,
+    nargs="?",
+    default=Path(__file__).resolve().parent / "migration-output" / "02_data_postgresql.sql",
 )
-data = Path(r"C:\Users\Nishant Singh\Desktop\saiflower-vps\tools\mysql-to-pg\02_data_postgresql.sql").read_text(
-    encoding="utf-8"
-)
+args = parser.parse_args()
+
+dump = args.dump.read_text(encoding="utf-8", errors="replace")
+data = args.data.read_text(encoding="utf-8")
 
 starts = len(re.findall(r"^INSERT INTO", dump, re.M))
 outs = len(re.findall(r'^INSERT INTO', data, re.M))

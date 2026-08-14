@@ -1,3 +1,2 @@
--- Load converted dump data into Supabase/Postgres after migrate:
---   psql "$DATABASE_URL" -f tools/mysql-to-pg/02_data_postgresql.sql
--- Or run tools/mysql-to-pg/saiflower_supabase_full.sql for schema+data.
+-- Production data is converted into the Git-ignored migration-output folder.
+-- From the repository root, run `npm run db:load` after `db:migrate:deploy`.

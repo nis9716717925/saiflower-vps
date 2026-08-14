@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "description": "SaiFlower Express REST API — PHP business logic port (behavior-preserving)",
-  "main": "dist/server.js",
+  "main": "./dist/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
+    "prebuild": "npm run build -w @saiflower/shared && npm run build -w @saiflower/prisma",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/server.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",

@@ -10,7 +10,7 @@ apps/
   server/    Express REST API
 packages/
   shared/    Types, URL helpers, constants
-  prisma/    Prisma → Supabase PostgreSQL
+  prisma/    Prisma → PostgreSQL on Hostinger VPS
 assets/      Shared CSS / JS / images (linked into apps/web/public/assets)
 ```
 

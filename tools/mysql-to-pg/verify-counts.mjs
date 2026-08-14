@@ -14,6 +14,7 @@ async function main() {
       cakes: await prisma.cakes.count(),
       gifts: await prisma.gifts.count(),
       customers: await prisma.customers.count(),
+      customer_addresses: await prisma.customerAddress.count(),
       orders: await prisma.orders.count(),
       dynamic_pages: await prisma.dynamicPages.count(),
       blogs: await prisma.blogs.count(),

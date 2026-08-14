@@ -11,19 +11,21 @@
     "dev": "npm run dev --workspaces --if-present",
     "dev:web": "npm run dev -w @saiflower/web",
     "dev:server": "npm run dev -w @saiflower/server",
-    "build": "npm run build --workspaces --if-present",
-    "build:web": "npm run build -w @saiflower/web",
-    "build:server": "npm run build -w @saiflower/server",
+    "build:packages": "npm run build -w @saiflower/shared && npm run build -w @saiflower/prisma",
+    "build": "npm run build:packages && npm run build -w @saiflower/server && npm run build -w @saiflower/web",
+    "build:web": "npm run build:packages && npm run build -w @saiflower/web",
+    "build:server": "npm run build:packages && npm run build -w @saiflower/server",
     "lint": "npm run lint --workspaces --if-present",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "npm run typecheck --workspaces --if-present",
+    "db:pull": "npm run pull -w @saiflower/prisma",
     "db:generate": "npm run generate -w @saiflower/prisma",
-    "db:push": "npm run push -w @saiflower/prisma",
     "db:studio": "npm run studio -w @saiflower/prisma",
     "db:migrate:deploy": "npm run migrate:deploy -w @saiflower/prisma",
     "db:migrate:status": "npm run migrate:status -w @saiflower/prisma",
-    "db:load": "node tools/mysql-to-pg/load-to-supabase.mjs",
+    "db:convert": "python tools/mysql-to-pg/convert_dump.py",
+    "db:load": "node tools/mysql-to-pg/load-postgresql.mjs",
     "db:verify": "node tools/mysql-to-pg/verify-counts.mjs",
     "smoke": "node tools/smoke/smoke.mjs",
     "smoke:routes": "node tools/smoke/route-inventory.mjs"
@@ -36,6 +38,6 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
-    "pg": "^8.22.0"
+    "pg": "^8.23.0"
   }
 }

@@ -1,6 +1,8 @@
-# MySQL → PostgreSQL (Supabase) conversion
+# MySQL → PostgreSQL conversion
 
-Source dump: `u977002836_Saiflower999 (2).sql` (35 tables).
+The converter accepts a phpMyAdmin MySQL/MariaDB dump and produces SQL for the
+local PostgreSQL service on the Hostinger VPS. The current export contains 36
+tables, including `customer_addresses`.
 
 ## Outputs
 
@@ -8,27 +10,29 @@ Source dump: `u977002836_Saiflower999 (2).sql` (35 tables).
 |------|---------|
 | `01_schema_postgresql.sql` | DDL: enums, tables, PKs, uniques, indexes, FKs, identity |
 | `02_data_postgresql.sql` | All INSERT data + sequence sync |
-| `saiflower_supabase_full.sql` | Schema + data (one-shot load) |
-| `../../packages/prisma/schema.prisma` | Prisma models mapped to legacy tables |
-| `../../packages/prisma/migrations/20260728000000_init_legacy_schema/migration.sql` | Prisma migration |
+| `migration-output/01_schema_postgresql.sql` | DDL generated from the uploaded dump |
+| `migration-output/02_data_postgresql.sql` | Converted production data (private, Git-ignored) |
+| `migration-output/saiflower_postgresql_full.sql` | Schema + data for one-shot recovery (private, Git-ignored) |
+| `../../packages/prisma/migrations/20260815000000_postgresql_baseline/migration.sql` | Version-controlled PostgreSQL baseline |
 
-## Apply to Supabase
+## Safe migration flow
 
-This network is **IPv4-only**. Use the **Session pooler** URI (not `db.*.supabase.co`, which is IPv6-only).
-
-```bash
-# Example (region/cluster must match your project — from Dashboard → Connect):
-# postgresql://postgres.PROJECT_REF:PASSWORD@aws-N-REGION.pooler.supabase.com:5432/postgres
-
+```powershell
+npm run db:convert -- "C:\secure\u977002836_Saiflower999.sql"
+npm run db:migrate:deploy
 npm run db:load
 npm run db:verify
 ```
 
-## Preserved
+On Linux/VPS, give the converter the uploaded dump’s Linux path. `DATABASE_URL`
+must point to PostgreSQL before running migrate/load/verify.
 
-- All 35 table names and columns
+- All 36 table names and columns
 - Integer primary keys + identity sequences at MySQL AUTO_INCREMENT values
 - Unique constraints and secondary indexes
-- Foreign keys: `cake_variants`, `gift_variants`, `homepage_section_items`
+- Foreign keys, including `customer_addresses.customer_id`
 - Soft Prisma relations: `flower_images`, `flower_variants`, `admin_tokens`, `wishlist`
 - Row data from the dump
+
+Never commit the source dump or files under `migration-output/`; they contain
+customer details, password hashes, order history, and access tokens.
