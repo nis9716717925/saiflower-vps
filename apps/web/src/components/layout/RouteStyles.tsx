@@ -7,17 +7,19 @@ import { useMemo } from 'react';
 const CORE_CSS = [
   '/assets/css/style.css',
   '/assets/css/catnav.css',
-  '/assets/css/mobile-nav.css',
+  '/assets/css/mobile-nav.css?v=3',
   '/assets/css/search-suggest.css',
+  // Must stay last: overrides the opaque header/catnav chrome with the glass pane.
+  '/assets/css/header-glass.css?v=2',
 ] as const;
 
 function pageCss(pathname: string): string[] {
   if (pathname === '/') {
     return [
-      '/assets/css/homepage-premium.css',
+      '/assets/css/homepage-premium.css?v=4',
       '/assets/css/homepage-firstview.css',
-      '/assets/css/homepage-luxe.css',
-      '/assets/css/homepage-mobile.css',
+      '/assets/css/homepage-luxe.css?v=5',
+      '/assets/css/homepage-mobile.css?v=7',
       '/assets/css/celebrations-calendar.css',
     ];
   }
@@ -37,7 +39,11 @@ function pageCss(pathname: string): string[] {
   }
 
   if (pathname === '/flowers' || pathname === '/cakes' || pathname === '/gifts') {
-    return ['/assets/css/shop-luxe.css', '/assets/css/category-page.css'];
+    return ['/assets/css/shop-commerce.css?v=3', '/assets/css/shop-luxe.css', '/assets/css/category-page.css'];
+  }
+
+  if (pathname === '/search-results' || pathname.startsWith('/search-results')) {
+    return ['/assets/css/shop-commerce.css?v=3'];
   }
 
   if (
@@ -49,7 +55,7 @@ function pageCss(pathname: string): string[] {
     return [
       '/assets/css/collection-landing.css?v=6',
       '/assets/css/category-page.css',
-      '/assets/css/product-detail-premium.css',
+      '/assets/css/product-detail-premium.css?v=2',
       '/assets/css/shop-luxe.css',
     ];
   }
@@ -69,6 +75,15 @@ function pageCss(pathname: string): string[] {
   if (pathname.startsWith('/about')) return ['/assets/css/about-page.css'];
   if (pathname.startsWith('/contact')) return ['/assets/css/contact-page.css'];
   if (pathname.startsWith('/faq')) return ['/assets/css/faq-page.css'];
+
+  if (
+    pathname === '/cart' ||
+    pathname.startsWith('/checkout') ||
+    pathname.startsWith('/login') ||
+    pathname.startsWith('/register')
+  ) {
+    return ['/assets/css/checkout-commerce.css?v=2'];
+  }
 
   return [];
 }

@@ -20,12 +20,20 @@ export function BodyClass() {
       pathname.startsWith('/flower-delivery-in-');
     const isShopListing =
       pathname === '/flowers' || pathname === '/cakes' || pathname === '/gifts';
+    const isCheckoutFunnel =
+      pathname === '/cart' ||
+      pathname.startsWith('/checkout') ||
+      pathname.startsWith('/login') ||
+      pathname.startsWith('/register');
 
     body.classList.toggle('homepage-premium', isHome);
     body.classList.toggle('cl-page-body', isCollection);
     body.classList.toggle('shop-listing-body', isShopListing);
+    body.classList.toggle('checkout-funnel-body', isCheckoutFunnel);
 
-    if (isHome) {
+    if (isCheckoutFunnel) {
+      body.style.backgroundColor = '#f3f5f4';
+    } else if (isHome) {
       body.style.backgroundColor = '#fdfcf9';
     } else if (isCollection) {
       body.style.backgroundColor = '#f6f2ea';

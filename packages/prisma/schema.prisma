@@ -1,5 +1,5 @@
 // =============================================================================
-// SaiFlower Prisma schema ‚Äî legacy MySQL tables on Supabase PostgreSQL
+// SaiFlower Prisma schema Gùù Hostinger MySQL (legacy tables)
 // Generated from: u977002836_Saiflower999 MySQL dump
 // Preserves: table names (@@map), integer IDs, relations, constraints
 // =============================================================================
@@ -9,7 +9,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -59,7 +59,7 @@ model AdminTokens {
   id Int @id @default(autoincrement())
   adminId Int @map("admin_id")
   token String @db.VarChar(64)
-  expiry DateTime @db.Timestamptz(6)
+  expiry DateTime @db.DateTime(0)
   admin AdminUsers @relation("admin_tokens_admin_id_fkey", fields: [adminId], references: [id], onDelete: Cascade)
   @@index([adminId], map: "admin_tokens_admin_id_idx")
   @@index([token], map: "admin_tokens_token_idx")
@@ -70,7 +70,7 @@ model AdminUsers {
   id Int @id @default(autoincrement())
   username String @db.VarChar(50)
   password String @db.VarChar(255)
-  createdAt DateTime? @db.Timestamptz(6) @default(now()) @map("created_at")
+  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
   adminTokens AdminTokens[] @relation("admin_tokens_admin_id_fkey")
   @@unique([username], map: "admin_users_username_key")
   @@map("admin_users")
@@ -83,7 +83,7 @@ model Blogs {
   content String @db.Text
   image String @db.VarChar(255)
   status Int? @db.SmallInt @default(1)
-  createdAt DateTime? @db.Timestamptz(6) @default(now()) @map("created_at")
+  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
   metaTitle String? @db.VarChar(255) @map("meta_title")
   metaDescription String? @db.Text @map("meta_description")
   metaKeywords String? @db.Text @map("meta_keywords")
@@ -105,7 +105,7 @@ model Cakes {
   metaTitle String? @db.VarChar(255) @map("meta_title")
   metaDescription String? @db.Text @map("meta_description")
   metaKeywords String? @db.Text @map("meta_keywords")
-  createdAt DateTime? @db.Timestamptz(6) @default(now()) @map("created_at")
+  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
   rating Decimal @db.Decimal(2, 1) @default(5.0)
   deliverySameday Int @db.SmallInt @default(1) @map("delivery_sameday")
   deliveryNextday Int @db.SmallInt @default(1) @map("delivery_nextday")
@@ -134,7 +134,7 @@ model Categories {
   image String? @db.VarChar(255)
   status Int? @db.SmallInt @default(1)
   sortOrder Int? @default(0) @map("sort_order")
-  createdAt DateTime? @db.Timestamptz(6) @default(now()) @map("created_at")
+  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
   @@map("categories")
 }
 
@@ -145,8 +145,15 @@ model Comments {
   email String @db.VarChar(100)
   comment String @db.Text
   status CommentsStatus? @default(APPROVED)
-  createdAt DateTime? @db.Timestamptz(6) @default(now()) @map("created_at")
+  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
   @@map("comments")
+}
+
+enum CustomerAddressType {
+  Home
+  Work
+  Other
+  @@map("customer_address_type")
 }
 
 model Customers {
@@ -156,19 +163,38 @@ model Customers {
   phone String? @db.VarChar(20)
   password String @db.VarChar(255)
   address String? @db.Text
-  createdAt DateTime? @db.Timestamptz(6) @default(now()) @map("created_at")
+  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
   city String? @db.VarChar(100)
   pincode String? @db.VarChar(10)
-  updatedAt DateTime? @db.Timestamptz(6) @default(now()) @updatedAt @map("updated_at")
+  updatedAt DateTime? @db.DateTime(0) @default(now()) @updatedAt @map("updated_at")
   isVerified Int? @db.SmallInt @default(0) @map("is_verified")
   verificationToken String? @db.VarChar(255) @map("verification_token")
   googleId String? @db.VarChar(255) @map("google_id")
   authProvider String @db.VarChar(32) @default("local") @map("auth_provider")
   avatarUrl String? @db.VarChar(512) @map("avatar_url")
   wishlist Wishlist[] @relation("wishlist_user_id_fkey")
+  addresses CustomerAddress[] @relation("customer_addresses_customer_id_fkey")
   @@unique([email], map: "customers_email_key")
   @@unique([googleId], map: "uniq_customers_google_id")
   @@map("customers")
+}
+
+model CustomerAddress {
+  id Int @id @default(autoincrement())
+  customerId Int @map("customer_id")
+  recipientName String @db.VarChar(100) @map("recipient_name")
+  mobile String @db.VarChar(20)
+  email String? @db.VarChar(100)
+  flatHouseNo String @db.VarChar(100) @map("flat_house_no")
+  apartmentStreetLocality String @db.VarChar(255) @map("apartment_street_locality")
+  pincode String @db.VarChar(10)
+  addressType CustomerAddressType @default(Home) @map("address_type")
+  isDefault Int @db.SmallInt @default(0) @map("is_default")
+  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
+  updatedAt DateTime? @db.DateTime(0) @default(now()) @updatedAt @map("updated_at")
+  customer Customers @relation("customer_addresses_customer_id_fkey", fields: [customerId], references: [id], onDelete: Cascade)
+  @@index([customerId], map: "customer_addresses_customer_id_idx")
+  @@map("customer_addresses")
 }
 
 model DynamicPages {
@@ -185,8 +211,8 @@ model DynamicPages {
   metaDescription String? @db.Text @map("meta_description")
   metaKeywords String? @db.Text @map("meta_keywords")
   status Int? @db.SmallInt @default(1)
-  createdAt DateTime? @db.Timestamptz(6) @default(now()) @map("created_at")
-  updatedAt DateTime? @db.Timestamptz(6) @default(now()) @updatedAt @map("updated_at")
+  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
+  updatedAt DateTime? @db.DateTime(0) @default(now()) @updatedAt @map("updated_at")
   faqs String? @db.Text
   midgridImage String? @db.VarChar(255) @map("midgrid_image")
   midgridImageAlt String? @db.VarChar(255) @map("midgrid_image_alt")
@@ -202,7 +228,7 @@ model Events {
   description String @db.Text
   coverImage String @db.VarChar(255) @map("cover_image")
   status Int? @db.SmallInt @default(1)
-  createdAt DateTime? @db.Timestamptz(6) @default(now()) @map("created_at")
+  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
   metaTitle String? @db.VarChar(255) @map("meta_title")
   metaDescription String? @db.Text @map("meta_description")
   metaKeywords String? @db.Text @map("meta_keywords")
@@ -234,7 +260,7 @@ model Flowers {
   metaTitle String? @db.VarChar(255) @map("meta_title")
   metaDescription String? @db.Text @map("meta_description")
   metaKeywords String? @db.VarChar(255) @map("meta_keywords")
-  createdAt DateTime? @db.Timestamptz(6) @default(now()) @map("created_at")
+  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
   rating Decimal @db.Decimal(2, 1) @default(5.0)
   deliverySameday Int @db.SmallInt @default(1) @map("delivery_sameday")
   deliveryNextday Int @db.SmallInt @default(1) @map("delivery_nextday")
@@ -273,7 +299,7 @@ model Gallery {
   tag String? @db.VarChar(255)
   image String @db.VarChar(255)
   status Int? @db.SmallInt @default(1)
-  createdAt DateTime? @db.Timestamptz(6) @default(now()) @map("created_at")
+  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
   metaTitle String? @db.VarChar(255) @map("meta_title")
   metaDescription String? @db.Text @map("meta_description")
   metaKeywords String? @db.Text @map("meta_keywords")
@@ -293,7 +319,7 @@ model Gifts {
   metaTitle String? @db.VarChar(255) @map("meta_title")
   metaDescription String? @db.Text @map("meta_description")
   metaKeywords String? @db.Text @map("meta_keywords")
-  createdAt DateTime? @db.Timestamptz(6) @default(now()) @map("created_at")
+  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
   rating Decimal @db.Decimal(2, 1) @default(5.0)
   deliverySameday Int @db.SmallInt @default(1) @map("delivery_sameday")
   deliveryNextday Int @db.SmallInt @default(1) @map("delivery_nextday")
@@ -384,7 +410,7 @@ model Leads {
   message String? @db.Text
   status String? @db.VarChar(20) @default("New")
   service String? @db.VarChar(100)
-  createdAt DateTime? @db.Timestamptz(6) @default(now()) @map("created_at")
+  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
   @@map("leads")
 }
 
@@ -394,7 +420,7 @@ model Occasions {
   icon String? @db.VarChar(100) @default("fas fa-gift")
   status Int? @db.SmallInt @default(1)
   sortOrder Int? @default(0) @map("sort_order")
-  createdAt DateTime? @db.Timestamptz(6) @default(now()) @map("created_at")
+  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
   @@unique([name], map: "occasions_name_key")
   @@map("occasions")
 }
@@ -409,7 +435,7 @@ model Orders {
   orderItems String @db.Text @map("order_items")
   totalAmount Decimal @db.Decimal(10, 2) @default(0.00) @map("total_amount")
   status OrdersStatus? @default(Pending)
-  createdAt DateTime? @db.Timestamptz(6) @default(now()) @map("created_at")
+  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
   couponCode String? @db.VarChar(50) @map("coupon_code")
   @@map("orders")
 }
@@ -419,7 +445,7 @@ model PricingLog {
   category String @db.VarChar(50)
   percentage Decimal @db.Decimal(5, 2)
   action String @db.VarChar(50)
-  createdAt DateTime @db.Timestamptz(6) @default(now()) @map("created_at")
+  createdAt DateTime @db.DateTime(0) @default(now()) @map("created_at")
   @@map("pricing_log")
 }
 
@@ -430,7 +456,7 @@ model Products {
   image String? @db.VarChar(255) @default("default.jpg")
   description String? @db.Text
   category String? @db.VarChar(100)
-  createdAt DateTime? @db.Timestamptz(6) @default(now()) @map("created_at")
+  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
   @@map("products")
 }
 
@@ -439,7 +465,7 @@ model ProductOccasions {
   productType ProductOccasionsProductType @map("product_type")
   productId Int @map("product_id")
   occasionName String @db.VarChar(100) @map("occasion_name")
-  createdAt DateTime? @db.Timestamptz(6) @default(now()) @map("created_at")
+  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
   @@unique([productType, productId, occasionName], map: "unique_product_occasion")
   @@index([occasionName], map: "idx_occasion")
   @@map("product_occasions")
@@ -455,7 +481,7 @@ model PromoCodes {
   description String? @db.Text
   status Int? @db.SmallInt @default(1)
   isFeatured Int? @db.SmallInt @default(0) @map("is_featured")
-  createdAt DateTime? @db.Timestamptz(6) @default(now()) @map("created_at")
+  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
   type PromoCodesType? @default(PERCENTAGE)
   value Decimal? @db.Decimal(10, 2) @default(0.00)
   showOnCakes Int? @db.SmallInt @default(0) @map("show_on_cakes")
@@ -474,7 +500,7 @@ model Reviews {
   rating Int? @default(5)
   platform String? @db.VarChar(50) @default("Google")
   status Int? @db.SmallInt @default(1)
-  createdAt DateTime? @db.Timestamptz(6) @default(now()) @map("created_at")
+  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
   @@map("reviews")
 }
 
@@ -513,7 +539,7 @@ model Tags {
   id Int @id @default(autoincrement())
   name String @db.VarChar(255)
   status Int? @db.SmallInt @default(1)
-  createdAt DateTime? @db.Timestamptz(6) @default(now()) @map("created_at")
+  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
   @@map("tags")
 }
 
@@ -522,7 +548,7 @@ model Wishlist {
   userId Int @map("user_id")
   productId Int @map("product_id")
   type String? @db.VarChar(50) @default("flower")
-  createdAt DateTime? @db.Timestamptz(6) @default(now()) @map("created_at")
+  createdAt DateTime? @db.DateTime(0) @default(now()) @map("created_at")
   user Customers @relation("wishlist_user_id_fkey", fields: [userId], references: [id], onDelete: Cascade)
   @@unique([userId, productId, type], map: "unique_wishlist")
   @@map("wishlist")

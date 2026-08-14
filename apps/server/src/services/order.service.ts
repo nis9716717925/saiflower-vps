@@ -51,10 +51,25 @@ export async function placeOrder(input: {
   recipient_name?: string;
   recipient_phone?: string;
   delivery_time?: string;
+  address_id?: number;
   userId?: number;
   guestId?: string;
 }) {
   requireAddressFields(input.name, input.phone, input.address);
+
+  if (!input.userId) {
+    throw new AppError('Please log in to place your order.', 401);
+  }
+
+  if (input.address_id) {
+    const saved = await prisma.customerAddress.findFirst({
+      where: { id: input.address_id, customerId: input.userId },
+      select: { id: true },
+    });
+    if (!saved) {
+      throw new ValidationError('Saved address not found for this account.');
+    }
+  }
 
   const shippingResult = await calculateShippingFromAddress(input.address);
   assertShippingReady(shippingResult);

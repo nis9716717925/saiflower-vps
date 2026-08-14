@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { body } from 'express-validator';
+import { body, query } from 'express-validator';
 import type { AuthRequest } from '../middleware/auth';
 import { guestCart, optionalAuth, authenticate } from '../middleware/auth';
 import { validate } from '../middleware/errorHandler';
@@ -36,6 +36,7 @@ checkoutRouter.get('/summary', async (req: AuthRequest, res, next) => {
 
 checkoutRouter.post(
   '/place-order',
+  authenticate,
   validate([
     body('name').isString().trim().notEmpty(),
     body('phone').isString().trim().notEmpty(),
@@ -59,7 +60,8 @@ checkoutRouter.post(
         recipient_name: req.body.recipient_name,
         recipient_phone: req.body.recipient_phone,
         delivery_time: req.body.delivery_time ?? req.body.time,
-        userId: req.user?.id,
+        address_id: req.body.address_id != null ? Number(req.body.address_id) : undefined,
+        userId: req.user!.id,
         guestId: req.guestId,
       });
       res.status(201).json(successResponse(result.message, result));
@@ -86,6 +88,54 @@ shippingRouter.post('/calculate', async (req, res, next) => {
     next(err);
   }
 });
+
+shippingRouter.get(
+  '/address-suggestions',
+  authenticate,
+  validate([query('input').isString().trim().isLength({ min: 3, max: 200 })]),
+  async (req, res, next) => {
+    try {
+      const suggestions = await shippingService.autocompleteAddress(String(req.query.input));
+      res.json(successResponse('Address suggestions retrieved', suggestions));
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
+shippingRouter.post(
+  '/place-details',
+  authenticate,
+  validate([body('placeId').isString().trim().notEmpty()]),
+  async (req, res, next) => {
+    try {
+      const address = await shippingService.getPlaceAddress(req.body.placeId);
+      res.json(successResponse('Address retrieved', address));
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
+shippingRouter.post(
+  '/reverse-geocode',
+  authenticate,
+  validate([
+    body('latitude').isFloat({ min: -90, max: 90 }),
+    body('longitude').isFloat({ min: -180, max: 180 }),
+  ]),
+  async (req, res, next) => {
+    try {
+      const address = await shippingService.reverseGeocode(
+        Number(req.body.latitude),
+        Number(req.body.longitude),
+      );
+      res.json(successResponse('Current location detected', address));
+    } catch (err) {
+      next(err);
+    }
+  },
+);
 
 couponRouter.get('/', async (_req, res, next) => {
   try {

@@ -4,6 +4,7 @@ import { successResponse } from '../utils/response';
 import authRoutes from './auth.routes';
 import productRoutes from './product.routes';
 import cartRoutes from './cart.routes';
+import addressRoutes from './address.routes';
 import {
   checkoutRouter,
   orderRouter,
@@ -42,6 +43,7 @@ router.get('/', (_req, res) => {
         'GET /categories',
         'GET /search?q=',
         'GET|POST|PATCH|DELETE /cart',
+        'GET|POST|PATCH|DELETE /addresses',
         'POST /shipping/calculate',
         'GET /coupons',
         'POST /checkout/place-order',
@@ -68,6 +70,7 @@ router.use('/products', productRoutes);
 router.use('/categories', categoryRouter);
 router.use('/search', searchRouter);
 router.use('/cart', cartRoutes);
+router.use('/addresses', addressRoutes);
 router.use('/shipping', shippingRouter);
 router.use('/coupons', couponRouter);
 router.use('/checkout', checkoutRouter);

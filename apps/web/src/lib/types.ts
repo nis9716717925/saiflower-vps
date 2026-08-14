@@ -144,9 +144,46 @@ export interface ShippingResult {
   message?: string;
 }
 
+export interface AddressSuggestion {
+  description: string;
+  placeId: string;
+}
+
+export interface GoogleAddressDetails {
+  flatHouseNo: string;
+  apartmentStreetLocality: string;
+  pincode: string;
+  formattedAddress: string;
+}
+
 export interface PlaceOrderResult {
   order_id: number;
   message: string;
   whatsappUrl: string;
   status?: string;
+}
+
+export type AddressType = 'Home' | 'Work' | 'Other';
+
+export interface CustomerAddress {
+  id: number;
+  customerId: number;
+  recipientName: string;
+  mobile: string;
+  email?: string | null;
+  flatHouseNo: string;
+  apartmentStreetLocality: string;
+  pincode: string;
+  addressType: AddressType;
+  isDefault: boolean;
+  addressLine?: string;
+  city?: string;
+  formattedAddress?: string;
+  createdAt?: string | Date | null;
+  updatedAt?: string | Date | null;
+}
+
+export interface AuthSession {
+  authenticated: boolean;
+  customer?: CustomerProfile;
 }

@@ -6,6 +6,7 @@ import { Suspense, useState } from 'react';
 import { apiSend, setAuth } from '@/lib/api';
 import { useCart } from '@/components/providers/AppProviders';
 import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton';
+import { CheckoutProgress } from '@/components/checkout/CheckoutProgress';
 import type { AuthPayload } from '@/lib/types';
 
 function LoginForm() {
@@ -13,6 +14,7 @@ function LoginForm() {
   const { refreshCart } = useCart();
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect') ?? '/';
+  const toCheckout = redirect.includes('/checkout');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -40,52 +42,76 @@ function LoginForm() {
   }
 
   return (
-    <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl border border-slate-100">
-      <div className="text-center mb-8">
-        <Link href="/" className="flex items-center justify-center gap-2">
-          <img src="/uploads/logo_transparent.png" alt="Sai Flower" className="h-12 w-auto" />
-        </Link>
-        <h1 className="text-2xl font-bold mt-6 text-slate-900">Welcome Back</h1>
-        <p className="text-slate-500 text-sm mt-2">Sign in to your Sai Flower account</p>
-      </div>
+    <div className="qc-auth-card">
+      {toCheckout ? <CheckoutProgress current="address" /> : null}
+
+      <Link href="/" className="qc-auth-logo-wrap">
+        <img src="/uploads/logo_transparent.png" alt="Sai Flower" className="qc-auth-logo" />
+      </Link>
+      <h1 className="qc-title" style={{ textAlign: 'center', marginTop: '1rem', fontSize: '1.45rem' }}>
+        Welcome back
+      </h1>
+      <p className="qc-subtitle" style={{ textAlign: 'center' }}>
+        {toCheckout
+          ? 'Sign in to continue to delivery address and WhatsApp checkout.'
+          : 'Sign in to your Sai Flower account'}
+      </p>
+
+      {toCheckout && (
+        <div className="qc-trust" style={{ margin: '1rem 0 0.25rem' }}>
+          <div className="qc-trust__item">
+            <span className="material-icons-outlined">lock</span>
+            <div>
+              <strong>Secure login</strong>
+              <span>Cart stays saved</span>
+            </div>
+          </div>
+          <div className="qc-trust__item">
+            <span className="material-icons-outlined">location_on</span>
+            <div>
+              <strong>Faster delivery</strong>
+              <span>Reuse addresses</span>
+            </div>
+          </div>
+          <div className="qc-trust__item">
+            <span className="material-icons-outlined">bolt</span>
+            <div>
+              <strong>Quick pay</strong>
+              <span>WhatsApp confirm</span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {error && (
-        <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-xl text-sm border border-red-100">
+        <div className="qc-alert qc-alert--err" style={{ marginTop: '1rem' }}>
           {error}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">
-            Email
-          </label>
+      <form onSubmit={handleSubmit} className="qc-stack" style={{ marginTop: '1rem' }}>
+        <div className="qc-field">
+          <label className="qc-label">Email</label>
           <input
             type="email"
-            className="w-full mt-1 bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm outline-none"
+            className="qc-input"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
-        <div>
-          <label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">
-            Password
-          </label>
+        <div className="qc-field">
+          <label className="qc-label">Password</label>
           <input
             type="password"
-            className="w-full mt-1 bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm outline-none"
+            className="qc-input"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-primary text-white font-bold py-3 rounded-xl shadow-lg disabled:opacity-60"
-        >
-          {loading ? 'Signing in…' : 'Sign In'}
+        <button type="submit" disabled={loading} className="qc-cta">
+          {loading ? 'Signing in…' : toCheckout ? 'Continue to checkout' : 'Sign In'}
         </button>
       </form>
 
@@ -97,9 +123,12 @@ function LoginForm() {
         onError={setError}
       />
 
-      <p className="text-center text-sm text-slate-500 mt-6">
+      <p className="qc-muted" style={{ textAlign: 'center', marginTop: '1.1rem' }}>
         Don&apos;t have an account?{' '}
-        <Link href="/register" className="text-primary font-bold hover:underline">
+        <Link
+          href={`/register?redirect=${encodeURIComponent(redirect)}`}
+          style={{ color: '#1f6a4a', fontWeight: 800 }}
+        >
           Create one
         </Link>
       </p>
@@ -109,8 +138,8 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <main className="bg-slate-50 flex items-center justify-center min-h-[70vh] font-sans px-4 py-12">
-      <Suspense fallback={<div className="text-slate-500">Loading…</div>}>
+    <main className="qc-shell qc-shell--auth">
+      <Suspense fallback={<div className="qc-skeleton" />}>
         <LoginForm />
       </Suspense>
     </main>

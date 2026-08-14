@@ -2,12 +2,24 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { SHIPPING } from '@saiflower/shared';
-import { apiGet, apiSend } from '@/lib/api';
+import { apiGet, apiSend, getCustomer } from '@/lib/api';
 import { useCart } from '@/components/providers/AppProviders';
+import { CheckoutProgress } from '@/components/checkout/CheckoutProgress';
 import { formatInr, resolveImageSrc } from '@/lib/images';
-import type { CartData, PlaceOrderResult, ShippingResult } from '@/lib/types';
+import type {
+  AddressSuggestion,
+  AddressType,
+  AuthSession,
+  CartData,
+  CustomerAddress,
+  GoogleAddressDetails,
+  PlaceOrderResult,
+  ShippingResult,
+} from '@/lib/types';
+
+type CheckoutStep = 'address' | 'payment';
 
 type ShippingOk = {
   ok: true;
@@ -18,17 +30,32 @@ type ShippingOk = {
 
 type ShippingFail = { ok: false };
 
-function buildDeliveryAddress(addressLine: string, city: string, zip: string): string {
-  // Must match shipping.service calculateShippingParts (appends India)
-  return [addressLine.trim(), city.trim(), zip.trim(), 'India'].filter(Boolean).join(', ');
+const ADDRESS_TYPES: AddressType[] = ['Home', 'Work', 'Other'];
+
+const TIME_SLOTS = [
+  { value: 'Morning (9am - 12pm)', title: 'Morning', hint: '9am – 12pm' },
+  { value: 'Afternoon (12pm - 4pm)', title: 'Afternoon', hint: '12pm – 4pm' },
+  { value: 'Evening (4pm - 8pm)', title: 'Evening', hint: '4pm – 8pm' },
+] as const;
+
+function buildDeliveryAddress(flatHouseNo: string, locality: string, pincode: string): string {
+  return [flatHouseNo.trim(), locality.trim(), 'Delhi', pincode.trim(), 'India']
+    .filter(Boolean)
+    .join(', ');
 }
 
 export default function CheckoutPage() {
   const router = useRouter();
   const { refreshCart } = useCart();
+  const [step, setStep] = useState<CheckoutStep>('address');
   const [cart, setCart] = useState<CartData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [savingAddress, setSavingAddress] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [addresses, setAddresses] = useState<CustomerAddress[]>([]);
+  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
+  const [showNewAddressForm, setShowNewAddressForm] = useState(true);
+
   const [shippingReady, setShippingReady] = useState(false);
   const [shippingFee, setShippingFee] = useState(0);
   const [distanceKm, setDistanceKm] = useState(0);
@@ -38,29 +65,64 @@ export default function CheckoutPage() {
     text: string;
   } | null>(null);
 
-  const [senderName, setSenderName] = useState('');
-  const [senderPhone, setSenderPhone] = useState('');
   const [recipientName, setRecipientName] = useState('');
-  const [recipientPhone, setRecipientPhone] = useState('');
+  const [mobile, setMobile] = useState('');
   const [email, setEmail] = useState('');
-  const [addressLine, setAddressLine] = useState('');
-  const [city, setCity] = useState('');
-  const [zip, setZip] = useState('');
+  const [flatHouseNo, setFlatHouseNo] = useState('');
+  const [apartmentStreetLocality, setApartmentStreetLocality] = useState('');
+  const [pincode, setPincode] = useState('');
+  const [addressType, setAddressType] = useState<AddressType>('Home');
+  const [formError, setFormError] = useState('');
+  const [addressSuggestions, setAddressSuggestions] = useState<AddressSuggestion[]>([]);
+  const [addressSearchActive, setAddressSearchActive] = useState(false);
+  const [searchingAddress, setSearchingAddress] = useState(false);
+  const [addressSearchError, setAddressSearchError] = useState('');
+  const [detectingLocation, setDetectingLocation] = useState(false);
+
   const [delDate, setDelDate] = useState('');
   const [delTime, setDelTime] = useState('Morning (9am - 12pm)');
+
+  const customer = getCustomer();
+  const selectedAddress = useMemo(
+    () => addresses.find((a) => a.id === selectedAddressId) ?? null,
+    [addresses, selectedAddressId],
+  );
 
   useEffect(() => {
     void (async () => {
       try {
+        const session = await apiGet<AuthSession>('/auth/session');
+        if (!session.authenticated) {
+          router.replace(`/login?redirect=${encodeURIComponent('/checkout')}`);
+          return;
+        }
+
         const data = await apiGet<CartData>('/cart');
         setCart(data);
-        if (data.items.length === 0) router.replace('/flowers');
+        if (data.items.length === 0) {
+          router.replace('/cart');
+          return;
+        }
+
+        const saved = await apiGet<CustomerAddress[]>('/addresses');
+        setAddresses(saved);
+        if (saved.length > 0) {
+          const preferred = saved.find((a) => a.isDefault) ?? saved[0];
+          setSelectedAddressId(preferred.id);
+          setShowNewAddressForm(false);
+          fillFormFromAddress(preferred);
+        } else {
+          setShowNewAddressForm(true);
+          setEmail(session.customer?.email ?? customer?.email ?? '');
+          setMobile(session.customer?.phone ?? customer?.phone ?? '');
+        }
       } catch {
-        router.replace('/flowers');
+        router.replace(`/login?redirect=${encodeURIComponent('/checkout')}`);
       } finally {
         setLoading(false);
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
   useEffect(() => {
@@ -68,23 +130,145 @@ export default function CheckoutPage() {
     setDelDate(minDate);
   }, []);
 
+  function fillFormFromAddress(address: CustomerAddress) {
+    setRecipientName(address.recipientName);
+    setMobile(address.mobile);
+    setEmail(address.email ?? '');
+    setFlatHouseNo(address.flatHouseNo);
+    setApartmentStreetLocality(address.apartmentStreetLocality);
+    setPincode(address.pincode);
+    setAddressType(address.addressType);
+    setAddressSearchActive(false);
+    setAddressSuggestions([]);
+  }
+
+  useEffect(() => {
+    if (!addressSearchActive || apartmentStreetLocality.trim().length < 3) {
+      setAddressSuggestions([]);
+      return;
+    }
+
+    let cancelled = false;
+    const timer = setTimeout(() => {
+      setSearchingAddress(true);
+      setAddressSearchError('');
+      void apiGet<AddressSuggestion[]>(
+        `/shipping/address-suggestions?input=${encodeURIComponent(apartmentStreetLocality.trim())}`,
+      )
+        .then((results) => {
+          if (!cancelled) setAddressSuggestions(results);
+        })
+        .catch((err) => {
+          if (!cancelled) {
+            setAddressSuggestions([]);
+            setAddressSearchError(
+              err instanceof Error
+                ? err.message
+                : 'Google address search is unavailable; enter the address manually.',
+            );
+          }
+        })
+        .finally(() => {
+          if (!cancelled) setSearchingAddress(false);
+        });
+    }, 350);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [addressSearchActive, apartmentStreetLocality]);
+
+  function applyGoogleAddress(address: GoogleAddressDetails) {
+    if (address.flatHouseNo) setFlatHouseNo(address.flatHouseNo);
+    setApartmentStreetLocality(address.apartmentStreetLocality);
+    if (address.pincode) setPincode(address.pincode);
+    setAddressSearchActive(false);
+    setAddressSuggestions([]);
+    setAddressSearchError('');
+    setFormError('');
+  }
+
+  async function selectAddressSuggestion(suggestion: AddressSuggestion) {
+    setSearchingAddress(true);
+    try {
+      const address = await apiSend<GoogleAddressDetails>('/shipping/place-details', 'POST', {
+        placeId: suggestion.placeId,
+      });
+      applyGoogleAddress(address);
+    } catch (err) {
+      setFormError(err instanceof Error ? err.message : 'Could not load this address');
+    } finally {
+      setSearchingAddress(false);
+    }
+  }
+
+  async function detectCurrentLocation() {
+    setFormError('');
+    if (!navigator.geolocation) {
+      setFormError('Location detection is not supported by this browser.');
+      return;
+    }
+
+    setDetectingLocation(true);
+    try {
+      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: true,
+          timeout: 12000,
+          maximumAge: 60000,
+        });
+      });
+      const address = await apiSend<GoogleAddressDetails>('/shipping/reverse-geocode', 'POST', {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      });
+      applyGoogleAddress(address);
+    } catch (err) {
+      if (
+        typeof err === 'object' &&
+        err !== null &&
+        'code' in err &&
+        typeof (err as { code?: unknown }).code === 'number'
+      ) {
+        const code = (err as { code: number }).code;
+        const message =
+          code === 1
+            ? 'Location permission was denied. Allow location access and try again.'
+            : 'We could not detect your location. Please try again or enter the address.';
+        setFormError(message);
+      } else {
+        setFormError(err instanceof Error ? err.message : 'Could not detect your location');
+      }
+    } finally {
+      setDetectingLocation(false);
+    }
+  }
+
   const subtotal = cart?.subtotal ?? 0;
   const discount = cart?.discountAmount ?? 0;
   const grandTotal = Math.max(0, subtotal + shippingFee - discount);
 
-  async function calculateShipping(): Promise<ShippingOk | ShippingFail> {
-    if (!addressLine.trim() || !city.trim() || !zip.trim()) {
+  async function calculateShipping(
+    addressOverride?: { flatHouseNo: string; locality: string; pincode: string },
+  ): Promise<ShippingOk | ShippingFail> {
+    const flat = addressOverride?.flatHouseNo ?? flatHouseNo;
+    const locality = addressOverride?.locality ?? apartmentStreetLocality;
+    const pin = addressOverride?.pincode ?? pincode;
+
+    if (!flat.trim() || !locality.trim() || !pin.trim()) {
       setShippingReady(false);
       setShippingFee(0);
       setShippingMsg(null);
       return { ok: false };
     }
+
     setShippingMsg({ type: 'loading', text: 'Calculating delivery distance…' });
     try {
       const result = await apiSend<ShippingResult>('/shipping/calculate', 'POST', {
-        address_line: addressLine,
-        city,
-        zip,
+        address_line: `${flat.trim()}, ${locality.trim()}`,
+        city: 'Delhi',
+        zip: pin.trim(),
       });
       if (result.status === 'ok') {
         const fee = result.shipping_fee ?? 0;
@@ -96,7 +280,7 @@ export default function CheckoutPage() {
         setDistanceText(text);
         setShippingMsg({
           type: 'success',
-          text: `Delivery distance: ${text} | Shipping: ${formatInr(fee)} (₹${SHIPPING.ratePerKmInr}/km)`,
+          text: `Delivery ${text} · Shipping ${formatInr(fee)} (₹${SHIPPING.ratePerKmInr}/km)`,
         });
         return { ok: true, fee, distanceKm: km, distanceText: text };
       }
@@ -116,21 +300,101 @@ export default function CheckoutPage() {
   }
 
   useEffect(() => {
+    if (step !== 'address' && step !== 'payment') return;
     const timer = setTimeout(() => void calculateShipping(), 600);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addressLine, city, zip]);
+  }, [flatHouseNo, apartmentStreetLocality, pincode, step]);
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSaveAndContinue(e: React.FormEvent) {
     e.preventDefault();
-    if (!cart?.items.length) return;
+    setFormError('');
+    setSavingAddress(true);
+    try {
+      let saved: CustomerAddress;
+      if (!showNewAddressForm && selectedAddressId) {
+        saved = await apiSend<CustomerAddress>(`/addresses/${selectedAddressId}`, 'PATCH', {
+          recipientName,
+          mobile,
+          email: email.trim() || null,
+          flatHouseNo,
+          apartmentStreetLocality,
+          pincode,
+          addressType,
+          isDefault: true,
+        });
+      } else {
+        saved = await apiSend<CustomerAddress>('/addresses', 'POST', {
+          recipientName,
+          mobile,
+          email: email.trim() || null,
+          flatHouseNo,
+          apartmentStreetLocality,
+          pincode,
+          addressType,
+          isDefault: true,
+        });
+      }
+
+      const list = await apiGet<CustomerAddress[]>('/addresses');
+      setAddresses(list);
+      setSelectedAddressId(saved.id);
+      setShowNewAddressForm(false);
+      fillFormFromAddress(saved);
+
+      const shipping = await calculateShipping({
+        flatHouseNo: saved.flatHouseNo,
+        locality: saved.apartmentStreetLocality,
+        pincode: saved.pincode,
+      });
+      if (!shipping.ok) {
+        setFormError('Please enter a valid delivery address so we can calculate shipping.');
+        return;
+      }
+      setStep('payment');
+    } catch (err) {
+      setFormError(err instanceof Error ? err.message : 'Could not save address');
+    } finally {
+      setSavingAddress(false);
+    }
+  }
+
+  async function handleSelectSavedAddress(address: CustomerAddress) {
+    setSelectedAddressId(address.id);
+    setShowNewAddressForm(false);
+    fillFormFromAddress(address);
+    setFormError('');
+    await apiSend(`/addresses/${address.id}/default`, 'POST').catch(() => undefined);
+  }
+
+  function startNewAddress() {
+    setShowNewAddressForm(true);
+    setSelectedAddressId(null);
+    setRecipientName('');
+    setMobile(customer?.phone ?? '');
+    setEmail(customer?.email ?? '');
+    setFlatHouseNo('');
+    setApartmentStreetLocality('');
+    setPincode('');
+    setAddressType('Home');
+    setAddressSearchActive(false);
+    setAddressSuggestions([]);
+  }
+
+  async function handleWhatsAppOrder() {
+    if (!cart?.items.length || !selectedAddress) return;
 
     let fee = shippingFee;
     let km = distanceKm;
     if (!shippingReady) {
-      const shipping = await calculateShipping();
+      const shipping = await calculateShipping({
+        flatHouseNo: selectedAddress.flatHouseNo,
+        locality: selectedAddress.apartmentStreetLocality,
+        pincode: selectedAddress.pincode,
+      });
       if (!shipping.ok) {
         alert('Please enter a valid delivery address so we can calculate shipping.');
+        setStep('address');
         return;
       }
       fee = shipping.fee;
@@ -138,22 +402,28 @@ export default function CheckoutPage() {
     }
 
     setSubmitting(true);
-    const address = buildDeliveryAddress(addressLine, city, zip);
+    const address = buildDeliveryAddress(
+      selectedAddress.flatHouseNo,
+      selectedAddress.apartmentStreetLocality,
+      selectedAddress.pincode,
+    );
     const itemLines = cart.items.map(
       (item) => `• ${item.name} (x${item.qty}) - ${formatInr(item.price * item.qty)}`,
     );
     const payable = Math.max(0, subtotal + fee - discount);
+    const sender = getCustomer();
 
     try {
       const result = await apiSend<PlaceOrderResult>('/checkout/place-order', 'POST', {
-        name: senderName,
-        phone: senderPhone,
-        email,
+        name: sender?.name || selectedAddress.recipientName,
+        phone: sender?.phone || selectedAddress.mobile,
+        email: selectedAddress.email || sender?.email || '',
         address,
         date: delDate,
         delivery_time: delTime,
-        recipient_name: recipientName,
-        recipient_phone: recipientPhone,
+        recipient_name: selectedAddress.recipientName,
+        recipient_phone: selectedAddress.mobile,
+        address_id: selectedAddress.id,
         items: itemLines.join('\n'),
         total: payable,
         shipping_fee: fee,
@@ -171,295 +441,430 @@ export default function CheckoutPage() {
 
   if (loading || !cart) {
     return (
-      <main className="container mx-auto px-4 py-16 text-center text-slate-500">
-        Loading checkout…
+      <main className="qc-shell">
+        <div className="qc-skeleton" />
       </main>
     );
   }
 
-  return (
-    <main className="container mx-auto px-4 py-8 md:py-12">
-      <form id="checkoutForm" onSubmit={handleSubmit}>
-        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8">
-          <div className="lg:w-7/12">
-            <h1 className="text-3xl font-bold mb-8">Checkout</h1>
+  const showAddressForm = showNewAddressForm || addresses.length === 0 || Boolean(selectedAddress);
 
-            <div className="section-card bg-white border border-slate-100 rounded-2xl p-6 md:p-8 mb-6">
-              <div className="flex items-center gap-3 mb-6">
-                <span className="material-icons-outlined text-primary">local_shipping</span>
-                <h2 className="text-xl font-bold">Delivery Information</h2>
-              </div>
+  const addressForm = (
+    <div className="qc-card">
+      <div className="qc-card__head">
+        <h2 className="qc-card__title">
+          <span className="material-icons-outlined">location_on</span>
+          {showNewAddressForm || addresses.length === 0 ? 'Delivery address' : 'Confirm address'}
+        </h2>
+        <button
+          type="button"
+          className="qc-loc-btn"
+          onClick={() => void detectCurrentLocation()}
+          disabled={detectingLocation}
+        >
+          <span className="material-icons-outlined">
+            {detectingLocation ? 'sync' : 'my_location'}
+          </span>
+          {detectingLocation ? 'Detecting…' : 'Use my location'}
+        </button>
+      </div>
 
-              <div className="mb-6 p-4 bg-blue-50 text-blue-800 rounded-xl flex items-center gap-3 border border-blue-100">
-                <span className="material-icons-outlined">info</span>
-                <p className="text-sm">
-                  Already a member?{' '}
-                  <Link href="/login" className="font-bold underline">
-                    Login here
-                  </Link>{' '}
-                  for a faster experience.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">
-                    Sender Name
-                  </label>
-                  <input
-                    className="checkout-input w-full bg-white border-slate-200 rounded-lg px-4 py-3 text-sm outline-none border"
-                    id="sender_name"
-                    placeholder="Your name"
-                    type="text"
-                    value={senderName}
-                    onChange={(e) => setSenderName(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">
-                    Sender Phone
-                  </label>
-                  <input
-                    className="checkout-input w-full bg-white border-slate-200 rounded-lg px-4 py-3 text-sm outline-none border"
-                    id="sender_phone"
-                    placeholder="Your phone number"
-                    type="tel"
-                    value={senderPhone}
-                    onChange={(e) => setSenderPhone(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">
-                    Recipient Name
-                  </label>
-                  <input
-                    className="checkout-input w-full bg-white border-slate-200 rounded-lg px-4 py-3 text-sm outline-none border"
-                    id="recipient_name"
-                    placeholder="Who is this for?"
-                    type="text"
-                    value={recipientName}
-                    onChange={(e) => setRecipientName(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">
-                    Recipient Phone
-                  </label>
-                  <input
-                    className="checkout-input w-full bg-white border-slate-200 rounded-lg px-4 py-3 text-sm outline-none border"
-                    id="recipient_phone"
-                    placeholder="Their phone number"
-                    type="tel"
-                    value={recipientPhone}
-                    onChange={(e) => setRecipientPhone(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="md:col-span-2 space-y-1">
-                  <label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">
-                    Email Address
-                  </label>
-                  <input
-                    className="checkout-input w-full bg-white border-slate-200 rounded-lg px-4 py-3 text-sm outline-none border"
-                    id="cust_email"
-                    placeholder="For receipt..."
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
-
-                <div className="md:col-span-2 p-4 bg-slate-50 rounded-xl border border-slate-100">
-                  <div className="flex items-start gap-2 text-xs text-slate-600">
-                    <span className="material-icons-outlined text-primary text-sm mt-0.5">
-                      storefront
-                    </span>
-                    <div>
-                      <p className="font-bold text-slate-800">Dispatching from Sai Flower</p>
-                      <p className="mt-1 leading-relaxed">{SHIPPING.storeAddress}</p>
-                      <p className="mt-2 text-primary font-semibold">
-                        Shipping: ₹{SHIPPING.ratePerKmInr} per km (based on driving distance)
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="md:col-span-2 space-y-1">
-                  <label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">
-                    Delivery Address
-                  </label>
-                  <input
-                    className="checkout-input w-full bg-white border-slate-200 rounded-lg px-4 py-3 text-sm outline-none border"
-                    id="cust_address_line"
-                    placeholder="Start typing your address..."
-                    type="text"
-                    value={addressLine}
-                    onChange={(e) => setAddressLine(e.target.value)}
-                    required
-                    autoComplete="off"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">
-                    City
-                  </label>
-                  <input
-                    className="checkout-input w-full bg-white border-slate-200 rounded-lg px-4 py-3 text-sm outline-none border"
-                    id="cust_city"
-                    placeholder="e.g. New Delhi"
-                    type="text"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">
-                    Postal Code
-                  </label>
-                  <input
-                    className="checkout-input w-full bg-white border-slate-200 rounded-lg px-4 py-3 text-sm outline-none border"
-                    id="cust_zip"
-                    placeholder="e.g. 110003"
-                    type="text"
-                    value={zip}
-                    onChange={(e) => setZip(e.target.value)}
-                    required
-                  />
-                </div>
-
-                {shippingMsg && (
-                  <div
-                    className={`md:col-span-2 p-4 rounded-xl border text-sm ${
-                      shippingMsg.type === 'success'
-                        ? 'bg-green-50 border-green-100 text-green-800'
-                        : shippingMsg.type === 'error'
-                          ? 'bg-red-50 border-red-100 text-red-700'
-                          : 'bg-amber-50 border-amber-100 text-amber-800'
-                    }`}
-                  >
-                    {shippingMsg.type === 'loading' ? (
-                      <span className="inline-flex items-center gap-2">
-                        <span className="material-icons-outlined text-sm animate-spin">sync</span>
-                        {shippingMsg.text}
-                      </span>
-                    ) : (
-                      shippingMsg.text
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="section-card bg-white border border-slate-100 rounded-2xl p-6 md:p-8 mb-6">
-              <div className="flex items-center gap-3 mb-6">
-                <span className="material-icons-outlined text-primary">calendar_month</span>
-                <h2 className="text-xl font-bold">Delivery Schedule</h2>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">
-                    Preferred Date
-                  </label>
-                  <input
-                    className="checkout-input w-full bg-white border-slate-200 rounded-lg px-4 py-3 text-sm border outline-none"
-                    id="del_date"
-                    type="date"
-                    min={new Date().toISOString().slice(0, 10)}
-                    value={delDate}
-                    onChange={(e) => setDelDate(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">
-                    Preferred Time Slot
-                  </label>
-                  <select
-                    className="checkout-input w-full bg-white border-slate-200 rounded-lg px-4 py-3 text-sm border outline-none"
-                    id="del_time"
-                    value={delTime}
-                    onChange={(e) => setDelTime(e.target.value)}
-                  >
-                    <option>Morning (9am - 12pm)</option>
-                    <option>Afternoon (12pm - 4pm)</option>
-                    <option>Evening (4pm - 8pm)</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="lg:w-5/12">
-            <div className="sticky top-24">
-              <div className="bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-xl">
-                <div className="p-6 md:p-8">
-                  <h2 className="text-xl font-bold mb-6">Order Summary</h2>
-                  <div className="space-y-6 mb-8">
-                    {cart.items.map((item) => (
-                      <div key={`${item.category}-${item.id}`} className="flex gap-4">
-                        <div className="w-16 h-16 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0">
-                          <img
-                            alt={item.name}
-                            className="w-full h-full object-cover"
-                            src={resolveImageSrc(item.image)}
-                          />
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-bold text-xs">{item.name}</h4>
-                          <div className="flex justify-between mt-1">
-                            <span className="text-[10px] text-slate-400">Qty: {item.qty}</span>
-                            <span className="font-bold text-primary text-sm">
-                              {formatInr(item.price * item.qty)}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="space-y-3 pt-4 border-t border-slate-100">
-                    <div className="flex justify-between text-xs text-slate-500">
-                      <span>Subtotal</span>
-                      <span>{formatInr(subtotal)}</span>
-                    </div>
-                    <div className="flex justify-between text-xs text-slate-500">
-                      <span>Shipping {shippingReady ? `(${distanceText})` : ''}</span>
-                      <span className="font-bold text-primary">
-                        {shippingReady ? formatInr(shippingFee) : '—'}
-                      </span>
-                    </div>
-                    {discount > 0 && (
-                      <div className="flex justify-between text-xs text-green-600 font-bold">
-                        <span>Discount</span>
-                        <span>- {formatInr(discount)}</span>
-                      </div>
-                    )}
-                    <div className="flex justify-between pt-3 border-t">
-                      <span className="text-base font-bold">Total Payable</span>
-                      <span className="text-xl font-bold text-primary">{formatInr(grandTotal)}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                id="placeOrderBtn"
-                disabled={submitting}
-                className="w-full mt-6 bg-primary text-white font-bold py-4 rounded-xl shadow-lg hover:scale-[1.01] transition-all flex items-center justify-center gap-3 disabled:opacity-60"
+      <div className="qc-grid qc-grid--2">
+        <div className="qc-field">
+          <label className="qc-label">Recipient name</label>
+          <input
+            className="qc-input"
+            value={recipientName}
+            onChange={(e) => setRecipientName(e.target.value)}
+            required
+          />
+        </div>
+        <div className="qc-field">
+          <label className="qc-label">Mobile number</label>
+          <input
+            className="qc-input"
+            type="tel"
+            inputMode="numeric"
+            value={mobile}
+            onChange={(e) => setMobile(e.target.value)}
+            required
+          />
+        </div>
+        <div className="qc-field" style={{ gridColumn: '1 / -1' }}>
+          <label className="qc-label">Email id (optional)</label>
+          <input
+            className="qc-input"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div className="qc-field">
+          <label className="qc-label">Flat / House no.</label>
+          <input
+            className="qc-input"
+            value={flatHouseNo}
+            onChange={(e) => setFlatHouseNo(e.target.value)}
+            required
+          />
+        </div>
+        <div className="qc-field">
+          <label className="qc-label">Pincode</label>
+          <input
+            className="qc-input"
+            value={pincode}
+            onChange={(e) => setPincode(e.target.value)}
+            required
+          />
+        </div>
+        <div className="qc-field" style={{ gridColumn: '1 / -1' }}>
+          <label className="qc-label">Apartment / Street / Locality</label>
+          <div style={{ position: 'relative' }}>
+            <input
+              className="qc-input"
+              style={{ paddingRight: '2.5rem' }}
+              value={apartmentStreetLocality}
+              onChange={(e) => {
+                setApartmentStreetLocality(e.target.value);
+                setAddressSearchActive(true);
+              }}
+              placeholder="Search with Google Maps"
+              autoComplete="off"
+              required
+            />
+            {searchingAddress && (
+              <span
+                className="material-icons-outlined"
+                style={{
+                  position: 'absolute',
+                  right: '0.8rem',
+                  top: '0.85rem',
+                  color: '#9aa59e',
+                  fontSize: '1.15rem',
+                }}
               >
-                <i className="fab fa-whatsapp text-2xl" />{' '}
-                {submitting ? 'Placing order…' : 'Confirm Order'}
+                sync
+              </span>
+            )}
+            {addressSearchActive && addressSuggestions.length > 0 && (
+              <div className="qc-suggest">
+                {addressSuggestions.map((suggestion) => (
+                  <button
+                    key={suggestion.placeId}
+                    type="button"
+                    onClick={() => void selectAddressSuggestion(suggestion)}
+                  >
+                    <span className="material-icons-outlined" style={{ color: '#1f6a4a' }}>
+                      location_on
+                    </span>
+                    <span>{suggestion.description}</span>
+                  </button>
+                ))}
+                <p className="qc-suggest__powered">Powered by Google</p>
+              </div>
+            )}
+          </div>
+          {addressSearchError && (
+            <p className="qc-muted" style={{ color: '#8a6110' }}>
+              Google address search is unavailable. You can enter the address manually.
+            </p>
+          )}
+        </div>
+        <div className="qc-field" style={{ gridColumn: '1 / -1' }}>
+          <label className="qc-label">Type of address</label>
+          <div className="qc-chips">
+            {ADDRESS_TYPES.map((type) => (
+              <button
+                key={type}
+                type="button"
+                className={`qc-chip${addressType === type ? ' is-active' : ''}`}
+                onClick={() => setAddressType(type)}
+              >
+                {type}
               </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const summaryCard = (
+    <div className="qc-card">
+      <div className="qc-card__head">
+        <h2 className="qc-card__title">
+          <span className="material-icons-outlined">shopping_bag</span>
+          Order summary
+        </h2>
+      </div>
+
+      {cart.items.map((item) => (
+        <div key={`${item.category}-${item.id}`} className="qc-item">
+          <div className="qc-item__img">
+            <img alt={item.name} src={resolveImageSrc(item.image)} />
+          </div>
+          <div className="qc-item__body">
+            <h3 className="qc-item__name">{item.name}</h3>
+            <div className="qc-item__row">
+              <span className="qc-item__meta">Qty {item.qty}</span>
+              <span className="qc-price">{formatInr(item.price * item.qty)}</span>
             </div>
           </div>
         </div>
-      </form>
+      ))}
+
+      <div className="qc-divider" />
+
+      <div className="qc-bill">
+        <div className="qc-bill__row">
+          <span>Item total</span>
+          <span>{formatInr(subtotal)}</span>
+        </div>
+        <div className="qc-bill__row">
+          <span>Delivery {shippingReady ? `(${distanceText})` : ''}</span>
+          <span>{shippingReady ? formatInr(shippingFee) : 'After address'}</span>
+        </div>
+        {discount > 0 && (
+          <div className="qc-bill__row qc-bill__row--discount">
+            <span>Discount</span>
+            <span>- {formatInr(discount)}</span>
+          </div>
+        )}
+        <div className="qc-bill__total">
+          <span>{step === 'payment' ? 'Total payable' : 'Estimated total'}</span>
+          <strong>{formatInr(grandTotal)}</strong>
+        </div>
+      </div>
+
+      {shippingMsg && (
+        <div
+          className={`qc-alert ${
+            shippingMsg.type === 'success'
+              ? 'qc-alert--ok'
+              : shippingMsg.type === 'error'
+                ? 'qc-alert--err'
+                : 'qc-alert--warn'
+          }`}
+          style={{ marginTop: '0.85rem' }}
+        >
+          {shippingMsg.text}
+        </div>
+      )}
+
+      <p className="qc-muted" style={{ marginTop: '0.85rem', lineHeight: 1.45 }}>
+        Dispatching from Sai Flower · {SHIPPING.storeAddress}
+      </p>
+      <Link href="/cart" className="qc-link-btn" style={{ marginTop: '0.65rem', display: 'inline-flex' }}>
+        ← Back to cart
+      </Link>
+    </div>
+  );
+
+  return (
+    <main className="qc-shell">
+      <CheckoutProgress current={step === 'payment' ? 'payment' : 'address'} />
+
+      <div className="qc-title-row">
+        <div>
+          <h1 className="qc-title">{step === 'payment' ? 'Review & pay' : 'Delivery details'}</h1>
+          <p className="qc-subtitle">
+            {step === 'payment'
+              ? 'Confirm your address, schedule and WhatsApp payment.'
+              : 'Add recipient details, save your address, then continue.'}
+          </p>
+        </div>
+      </div>
+
+      <div className="qc-layout">
+        <div className="qc-stack">
+          {step === 'address' && (
+            <form id="checkout-address-form" onSubmit={handleSaveAndContinue} className="qc-stack">
+              {addresses.length > 0 && (
+                <div className="qc-card">
+                  <div className="qc-card__head">
+                    <h2 className="qc-card__title">
+                      <span className="material-icons-outlined">bookmark</span>
+                      Saved addresses
+                    </h2>
+                    <button type="button" className="qc-link-btn" onClick={startNewAddress}>
+                      + Add new
+                    </button>
+                  </div>
+                  <div className="qc-stack">
+                    {addresses.map((address) => (
+                      <button
+                        key={address.id}
+                        type="button"
+                        className={`qc-address${
+                          selectedAddressId === address.id && !showNewAddressForm ? ' is-active' : ''
+                        }`}
+                        onClick={() => void handleSelectSavedAddress(address)}
+                      >
+                        <div className="qc-address__top">
+                          <strong>{address.recipientName}</strong>
+                          <span className="qc-badge qc-badge--green">{address.addressType}</span>
+                        </div>
+                        <p className="qc-muted" style={{ margin: '0.35rem 0 0' }}>
+                          {address.flatHouseNo}, {address.apartmentStreetLocality}
+                        </p>
+                        <p className="qc-muted" style={{ margin: '0.2rem 0 0' }}>
+                          {address.mobile}
+                          {address.email ? ` · ${address.email}` : ''} · PIN {address.pincode}
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {showAddressForm ? addressForm : null}
+
+              <div className="qc-card">
+                <div className="qc-card__head">
+                  <h2 className="qc-card__title">
+                    <span className="material-icons-outlined">schedule</span>
+                    Delivery schedule
+                  </h2>
+                </div>
+                <div className="qc-grid qc-grid--2">
+                  <div className="qc-field">
+                    <label className="qc-label">Preferred date</label>
+                    <input
+                      className="qc-input"
+                      type="date"
+                      min={new Date().toISOString().slice(0, 10)}
+                      value={delDate}
+                      onChange={(e) => setDelDate(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="qc-field">
+                    <label className="qc-label">Time slot</label>
+                    <div className="qc-stack">
+                      {TIME_SLOTS.map((slot) => (
+                        <button
+                          key={slot.value}
+                          type="button"
+                          className={`qc-slot${delTime === slot.value ? ' is-active' : ''}`}
+                          onClick={() => setDelTime(slot.value)}
+                        >
+                          <strong>{slot.title}</strong>
+                          <span>{slot.hint}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {formError && <div className="qc-alert qc-alert--err">{formError}</div>}
+
+              <button type="submit" className="qc-cta qc-cta--desktop-only" disabled={savingAddress}>
+                {savingAddress ? 'Saving…' : 'Save & Continue'}
+                <span className="material-icons-outlined" style={{ fontSize: '1.1rem' }}>
+                  arrow_forward
+                </span>
+              </button>
+            </form>
+          )}
+
+          {step === 'payment' && selectedAddress && (
+            <div className="qc-stack">
+              <div className="qc-card">
+                <div className="qc-card__head">
+                  <h2 className="qc-card__title">
+                    <span className="material-icons-outlined">local_shipping</span>
+                    Delivering to
+                  </h2>
+                  <button type="button" className="qc-link-btn" onClick={() => setStep('address')}>
+                    Edit
+                  </button>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.75rem' }}>
+                  <div>
+                    <strong>{selectedAddress.recipientName}</strong>
+                    <p className="qc-muted" style={{ margin: '0.3rem 0 0' }}>
+                      {selectedAddress.mobile}
+                      {selectedAddress.email ? ` · ${selectedAddress.email}` : ''}
+                    </p>
+                    <p className="qc-muted" style={{ margin: '0.35rem 0 0', lineHeight: 1.45 }}>
+                      {selectedAddress.flatHouseNo}, {selectedAddress.apartmentStreetLocality}
+                      <br />
+                      PIN {selectedAddress.pincode} · {selectedAddress.addressType}
+                    </p>
+                  </div>
+                  <span className="qc-badge qc-badge--green">{selectedAddress.addressType}</span>
+                </div>
+                <div className="qc-divider" />
+                <p className="qc-muted" style={{ margin: 0 }}>
+                  <strong style={{ color: '#14261c' }}>{delDate}</strong> · {delTime}
+                </p>
+              </div>
+
+              <div className="qc-card">
+                <div className="qc-card__head">
+                  <h2 className="qc-card__title">
+                    <span className="material-icons-outlined">payments</span>
+                    Payment option
+                  </h2>
+                </div>
+                <div className="qc-payment">
+                  <div className="qc-payment__icon">
+                    <i className="fab fa-whatsapp" />
+                  </div>
+                  <div>
+                    <strong style={{ display: 'block', color: '#0f5132' }}>Buy on WhatsApp</strong>
+                    <p className="qc-muted" style={{ margin: '0.35rem 0 0', color: '#157a4b' }}>
+                      We&apos;ll create your order and open WhatsApp so you can confirm payment with
+                      Sai Flower.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  className="qc-cta qc-cta--wa qc-cta--desktop-only"
+                  style={{ marginTop: '1rem' }}
+                  disabled={submitting}
+                  onClick={() => void handleWhatsAppOrder()}
+                >
+                  <i className="fab fa-whatsapp" style={{ fontSize: '1.25rem' }} />
+                  {submitting ? 'Placing order…' : 'Buy on WhatsApp'}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <aside className="qc-sticky-summary">{summaryCard}</aside>
+      </div>
+
+      <div className="qc-mobile-bar">
+        <div className="qc-mobile-bar__inner">
+          <div className="qc-mobile-bar__meta">
+            <small>{step === 'payment' ? 'Total payable' : 'Estimated total'}</small>
+            <strong>{formatInr(grandTotal)}</strong>
+          </div>
+          {step === 'address' ? (
+            <button
+              type="submit"
+              form="checkout-address-form"
+              className="qc-cta"
+              disabled={savingAddress}
+            >
+              {savingAddress ? 'Saving…' : 'Continue'}
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="qc-cta qc-cta--wa"
+              disabled={submitting}
+              onClick={() => void handleWhatsAppOrder()}
+            >
+              {submitting ? 'Placing…' : 'WhatsApp'}
+            </button>
+          )}
+        </div>
+      </div>
     </main>
   );
 }

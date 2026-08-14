@@ -2,8 +2,9 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { apiGet, apiSend } from '@/lib/api';
+import { apiGet, apiSend, getAccessToken } from '@/lib/api';
 import { useCart } from '@/components/providers/AppProviders';
+import { CheckoutProgress } from '@/components/checkout/CheckoutProgress';
 import { formatInr, resolveImageSrc } from '@/lib/images';
 import type { CartData } from '@/lib/types';
 
@@ -11,6 +12,7 @@ export default function CartPage() {
   const { refreshCart } = useCart();
   const [cart, setCart] = useState<CartData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
   const [couponCode, setCouponCode] = useState('');
   const [couponBusy, setCouponBusy] = useState(false);
   const [couponMsg, setCouponMsg] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
@@ -29,6 +31,7 @@ export default function CartPage() {
 
   useEffect(() => {
     void loadCart();
+    setLoggedIn(Boolean(getAccessToken()));
   }, []);
 
   async function updateQty(index: number, change: number) {
@@ -92,24 +95,23 @@ export default function CartPage() {
 
   if (loading) {
     return (
-      <main className="container mx-auto px-4 py-16 text-center text-slate-500">
-        Loading cart…
+      <main className="qc-shell">
+        <div className="qc-skeleton" />
       </main>
     );
   }
 
   if (!cart || cart.items.length === 0) {
     return (
-      <main className="container mx-auto px-4 py-16 text-center">
-        <span className="material-icons-outlined text-6xl text-slate-300 mb-4">shopping_cart</span>
-        <h1 className="text-2xl font-bold mb-2">Your cart is empty</h1>
-        <p className="text-slate-500 mb-8">Add fresh flowers, cakes or gifts to get started.</p>
-        <Link
-          href="/flowers"
-          className="inline-block bg-primary text-white font-bold px-8 py-3 rounded-xl"
-        >
-          Shop Flowers
-        </Link>
+      <main className="qc-shell">
+        <div className="qc-card qc-empty">
+          <span className="material-icons-outlined">shopping_cart</span>
+          <h1>Your cart is empty</h1>
+          <p>Add fresh flowers, cakes or gifts to get started.</p>
+          <Link href="/flowers" className="qc-cta" style={{ maxWidth: 240, margin: '0 auto' }}>
+            Shop Flowers
+          </Link>
+        </div>
       </main>
     );
   }
@@ -119,114 +121,228 @@ export default function CartPage() {
       ? String((cart.coupon as { code?: string }).code ?? '')
       : '';
 
-  return (
-    <main className="container mx-auto px-4 py-8 md:py-12 max-w-4xl">
-      <h1 className="text-3xl font-bold mb-8">Your Cart</h1>
-      <div className="space-y-4 mb-8">
-        {cart.items.map((item, index) => (
-          <div
-            key={`${item.category}-${item.id}-${index}`}
-            className="flex gap-4 bg-white rounded-2xl border border-slate-100 p-4 shadow-sm"
-          >
-            <div className="w-20 h-20 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0">
-              <img
-                src={resolveImageSrc(item.image)}
-                alt={item.name}
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="flex-1 min-w-0">
-              <h2 className="font-bold text-sm truncate">{item.name}</h2>
-              <p className="text-primary font-bold mt-1">{formatInr(item.price)}</p>
-              <div className="flex items-center gap-3 mt-3">
-                <button
-                  type="button"
-                  className="w-8 h-8 rounded-full border border-slate-200 hover:bg-slate-50"
-                  onClick={() => updateQty(index, -1)}
-                  aria-label="Decrease quantity"
-                >
-                  −
-                </button>
-                <span className="font-bold text-sm w-6 text-center">{item.qty}</span>
-                <button
-                  type="button"
-                  className="w-8 h-8 rounded-full border border-slate-200 hover:bg-slate-50"
-                  onClick={() => updateQty(index, 1)}
-                  aria-label="Increase quantity"
-                >
-                  +
-                </button>
-                <button
-                  type="button"
-                  className="ml-auto text-red-500 text-sm font-bold hover:underline"
-                  onClick={() => removeItem(index)}
-                >
-                  Remove
-                </button>
-              </div>
-            </div>
-            <div className="font-bold text-sm">{formatInr(item.price * item.qty)}</div>
-          </div>
-        ))}
+  const continueHref = loggedIn
+    ? '/checkout'
+    : `/login?redirect=${encodeURIComponent('/checkout')}`;
+  const continueLabel = loggedIn ? 'Continue' : 'Login to continue';
+
+  const billCard = (
+    <div className="qc-card">
+      <div className="qc-card__head">
+        <h2 className="qc-card__title">
+          <span className="material-icons-outlined">receipt_long</span>
+          Estimated bill
+        </h2>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm">
-        <form onSubmit={applyCoupon} className="flex flex-col sm:flex-row gap-2 mb-4">
-          <input
-            type="text"
-            value={couponCode}
-            onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-            placeholder="Promo code"
-            className="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm outline-none"
-            disabled={couponBusy || Boolean(couponLabel)}
-          />
-          {couponLabel ? (
-            <button
-              type="button"
-              onClick={() => void removeCoupon()}
-              disabled={couponBusy}
-              className="px-5 py-3 rounded-lg border border-slate-200 font-bold text-sm text-red-500"
-            >
-              Remove {couponLabel}
-            </button>
-          ) : (
-            <button
-              type="submit"
-              disabled={couponBusy || !couponCode.trim()}
-              className="px-5 py-3 rounded-lg bg-slate-900 text-white font-bold text-sm disabled:opacity-50"
-            >
-              {couponBusy ? 'Applying…' : 'Apply'}
-            </button>
-          )}
-        </form>
-        {couponMsg && (
-          <p
-            className={`text-sm mb-4 ${couponMsg.type === 'ok' ? 'text-green-600' : 'text-red-600'}`}
-          >
-            {couponMsg.text}
-          </p>
-        )}
+      <form onSubmit={applyCoupon} className="qc-grid" style={{ marginBottom: '0.9rem' }}>
+        <div className="qc-field">
+          <label className="qc-label">Promo code</label>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <input
+              type="text"
+              value={couponCode}
+              onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+              placeholder="Enter code"
+              className="qc-input"
+              disabled={couponBusy || Boolean(couponLabel)}
+            />
+            {couponLabel ? (
+              <button
+                type="button"
+                onClick={() => void removeCoupon()}
+                disabled={couponBusy}
+                className="qc-cta--ghost"
+                style={{
+                  minWidth: 110,
+                  borderRadius: '0.85rem',
+                  border: '1px solid #f3d0cd',
+                  color: '#b42318',
+                  fontWeight: 800,
+                  background: '#fff',
+                  cursor: 'pointer',
+                }}
+              >
+                Remove
+              </button>
+            ) : (
+              <button
+                type="submit"
+                disabled={couponBusy || !couponCode.trim()}
+                className="qc-cta"
+                style={{ minWidth: 96, boxShadow: 'none' }}
+              >
+                {couponBusy ? '…' : 'Apply'}
+              </button>
+            )}
+          </div>
+        </div>
+      </form>
 
-        <div className="flex justify-between text-sm mb-2">
-          <span className="text-slate-500">Subtotal</span>
+      {couponMsg && (
+        <div
+          className={`qc-alert ${couponMsg.type === 'ok' ? 'qc-alert--ok' : 'qc-alert--err'}`}
+          style={{ marginBottom: '0.85rem' }}
+        >
+          {couponMsg.text}
+        </div>
+      )}
+
+      {couponLabel ? (
+        <div className="qc-alert qc-alert--ok" style={{ marginBottom: '0.85rem' }}>
+          Applied: <strong>{couponLabel}</strong>
+        </div>
+      ) : null}
+
+      <div className="qc-bill">
+        <div className="qc-bill__row">
+          <span>Item total</span>
           <span>{formatInr(cart.subtotal)}</span>
         </div>
         {cart.discountAmount > 0 && (
-          <div className="flex justify-between text-sm mb-2 text-green-600">
-            <span>Discount{couponLabel ? ` (${couponLabel})` : ''}</span>
+          <div className="qc-bill__row qc-bill__row--discount">
+            <span>Discount</span>
             <span>- {formatInr(cart.discountAmount)}</span>
           </div>
         )}
-        <div className="flex justify-between font-bold text-lg pt-3 border-t border-slate-100">
-          <span>Total</span>
-          <span className="text-primary">{formatInr(cart.grandTotal)}</span>
+        <div className="qc-bill__row">
+          <span>Delivery fee</span>
+          <span>After address</span>
         </div>
-        <Link
-          href="/checkout"
-          className="block w-full mt-6 bg-primary text-white font-bold py-4 rounded-xl text-center shadow-lg hover:scale-[1.01] transition-all"
-        >
-          Proceed to Checkout
+        <div className="qc-bill__total">
+          <span>To pay (est.)</span>
+          <strong>{formatInr(cart.grandTotal)}</strong>
+        </div>
+      </div>
+
+      {!loggedIn && (
+        <div className="qc-alert qc-alert--info" style={{ marginTop: '0.9rem' }}>
+          Log in to save your address and finish checkout on WhatsApp.
+        </div>
+      )}
+
+      <Link href={continueHref} className="qc-cta qc-cta--desktop-only" style={{ marginTop: '1rem' }}>
+        {continueLabel}
+        <span className="material-icons-outlined" style={{ fontSize: '1.1rem' }}>
+          arrow_forward
+        </span>
+      </Link>
+
+      {!loggedIn && (
+        <p className="qc-muted" style={{ textAlign: 'center', marginTop: '0.75rem' }}>
+          New here?{' '}
+          <Link
+            href={`/register?redirect=${encodeURIComponent('/checkout')}`}
+            style={{ color: '#1f6a4a', fontWeight: 800 }}
+          >
+            Create an account
+          </Link>
+        </p>
+      )}
+    </div>
+  );
+
+  return (
+    <main className="qc-shell">
+      <CheckoutProgress current="cart" />
+
+      <div className="qc-title-row">
+        <div>
+          <h1 className="qc-title">Your cart</h1>
+          <p className="qc-subtitle">
+            {cart.count} item{cart.count === 1 ? '' : 's'} · Same-day delivery across Delhi NCR
+          </p>
+        </div>
+        <Link href="/flowers" className="qc-link-btn">
+          + Add more
         </Link>
+      </div>
+
+      <div className="qc-trust" style={{ marginBottom: '1rem' }}>
+        <div className="qc-trust__item">
+          <span className="material-icons-outlined">bolt</span>
+          <div>
+            <strong>Fast checkout</strong>
+            <span>Confirm on WhatsApp</span>
+          </div>
+        </div>
+        <div className="qc-trust__item">
+          <span className="material-icons-outlined">local_shipping</span>
+          <div>
+            <strong>Live delivery fee</strong>
+            <span>Calculated by distance</span>
+          </div>
+        </div>
+        <div className="qc-trust__item">
+          <span className="material-icons-outlined">verified_user</span>
+          <div>
+            <strong>Secure account</strong>
+            <span>Saved addresses ready</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="qc-layout">
+        <div className="qc-stack">
+          <div className="qc-card">
+            <div className="qc-card__head">
+              <h2 className="qc-card__title">
+                <span className="material-icons-outlined">shopping_bag</span>
+                Items
+              </h2>
+            </div>
+            {cart.items.map((item, index) => (
+              <div key={`${item.category}-${item.id}-${index}`} className="qc-item">
+                <div className="qc-item__img">
+                  <img src={resolveImageSrc(item.image)} alt={item.name} />
+                </div>
+                <div className="qc-item__body">
+                  <h2 className="qc-item__name">{item.name}</h2>
+                  <p className="qc-item__meta">{formatInr(item.price)} each</p>
+                  <div className="qc-item__row">
+                    <div className="qc-qty">
+                      <button
+                        type="button"
+                        onClick={() => updateQty(index, -1)}
+                        aria-label="Decrease quantity"
+                      >
+                        −
+                      </button>
+                      <span>{item.qty}</span>
+                      <button
+                        type="button"
+                        onClick={() => updateQty(index, 1)}
+                        aria-label="Increase quantity"
+                      >
+                        +
+                      </button>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                      <span className="qc-price">{formatInr(item.price * item.qty)}</span>
+                      <button type="button" className="qc-remove" onClick={() => removeItem(index)}>
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <aside className="qc-sticky-summary">{billCard}</aside>
+      </div>
+
+      <div className="qc-mobile-bar">
+        <div className="qc-mobile-bar__inner">
+          <div className="qc-mobile-bar__meta">
+            <small>Estimated total</small>
+            <strong>{formatInr(cart.grandTotal)}</strong>
+          </div>
+          <Link href={continueHref} className="qc-cta">
+            {continueLabel}
+          </Link>
+        </div>
       </div>
     </main>
   );

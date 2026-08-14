@@ -1,13 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense, useState } from 'react';
 import { apiSend } from '@/lib/api';
 import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton';
+import { CheckoutProgress } from '@/components/checkout/CheckoutProgress';
 
-export default function RegisterPage() {
+function RegisterForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get('redirect') ?? '/';
+  const toCheckout = redirect.includes('/checkout');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -40,6 +44,9 @@ export default function RegisterPage() {
         msg += ` Dev verify: /verify?token=${data.verificationToken}`;
       }
       setSuccess(msg);
+      setTimeout(() => {
+        router.push(`/login?redirect=${encodeURIComponent(redirect)}`);
+      }, 1200);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Registration failed');
     } finally {
@@ -48,99 +55,116 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="bg-slate-50 flex items-center justify-center min-h-[70vh] font-sans px-4 py-12">
-      <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl border border-slate-100">
-        <div className="text-center mb-8">
-          <Link href="/" className="flex items-center justify-center gap-2">
-            <img src="/uploads/logo_transparent.png" alt="Sai Flower" className="h-12 w-auto" />
-          </Link>
-          <h1 className="text-2xl font-bold mt-6 text-slate-900">Create Account</h1>
-          <p className="text-slate-500 text-sm mt-2">Join Sai Flower for faster checkout</p>
+    <div className="qc-auth-card">
+      {toCheckout ? <CheckoutProgress current="address" /> : null}
+
+      <Link href="/">
+        <img src="/uploads/logo_transparent.png" alt="Sai Flower" className="qc-auth-logo" />
+      </Link>
+      <h1 className="qc-title" style={{ textAlign: 'center', marginTop: '1rem', fontSize: '1.45rem' }}>
+        Create account
+      </h1>
+      <p className="qc-subtitle" style={{ textAlign: 'center' }}>
+        {toCheckout
+          ? 'Join Sai Flower for saved addresses and faster WhatsApp checkout.'
+          : 'Join Sai Flower for faster checkout'}
+      </p>
+
+      {error && (
+        <div className="qc-alert qc-alert--err" style={{ marginTop: '1rem' }}>
+          {error}
         </div>
+      )}
+      {success && (
+        <div className="qc-alert qc-alert--ok" style={{ marginTop: '1rem' }}>
+          {success}
+        </div>
+      )}
 
-        {error && (
-          <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-xl text-sm border border-red-100">{error}</div>
-        )}
-        {success && (
-          <div className="mb-4 p-3 bg-green-50 text-green-700 rounded-xl text-sm border border-green-100">{success}</div>
-        )}
+      <form onSubmit={handleSubmit} className="qc-stack" style={{ marginTop: '1rem' }}>
+        <div className="qc-field">
+          <label className="qc-label">Full name</label>
+          <input
+            type="text"
+            className="qc-input"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        </div>
+        <div className="qc-field">
+          <label className="qc-label">Email</label>
+          <input
+            type="email"
+            className="qc-input"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div className="qc-field">
+          <label className="qc-label">Phone</label>
+          <input
+            type="tel"
+            className="qc-input"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+        </div>
+        <div className="qc-field">
+          <label className="qc-label">Password</label>
+          <input
+            type="password"
+            className="qc-input"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            minLength={6}
+          />
+        </div>
+        <div className="qc-field">
+          <label className="qc-label">Confirm password</label>
+          <input
+            type="password"
+            className="qc-input"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+            minLength={6}
+          />
+        </div>
+        <button type="submit" disabled={loading} className="qc-cta">
+          {loading ? 'Creating account…' : 'Create account'}
+        </button>
+      </form>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Full Name</label>
-            <input
-              type="text"
-              className="w-full mt-1 bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm outline-none focus:ring-primary"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Email</label>
-            <input
-              type="email"
-              className="w-full mt-1 bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm outline-none focus:ring-primary"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Phone</label>
-            <input
-              type="tel"
-              className="w-full mt-1 bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm outline-none focus:ring-primary"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Password</label>
-            <input
-              type="password"
-              className="w-full mt-1 bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm outline-none focus:ring-primary"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={6}
-            />
-          </div>
-          <div>
-            <label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Confirm Password</label>
-            <input
-              type="password"
-              className="w-full mt-1 bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm outline-none focus:ring-primary"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              minLength={6}
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-primary text-white font-bold py-3 rounded-xl shadow-lg disabled:opacity-60"
-          >
-            {loading ? 'Creating account…' : 'Create Account'}
-          </button>
-        </form>
+      <GoogleSignInButton
+        onSuccess={() => {
+          router.push(redirect);
+          router.refresh();
+        }}
+        onError={setError}
+      />
 
-        <GoogleSignInButton
-          onSuccess={() => {
-            router.push('/');
-            router.refresh();
-          }}
-          onError={setError}
-        />
+      <p className="qc-muted" style={{ textAlign: 'center', marginTop: '1.1rem' }}>
+        Already have an account?{' '}
+        <Link
+          href={`/login?redirect=${encodeURIComponent(redirect)}`}
+          style={{ color: '#1f6a4a', fontWeight: 800 }}
+        >
+          Sign in
+        </Link>
+      </p>
+    </div>
+  );
+}
 
-        <p className="text-center text-sm text-slate-500 mt-6">
-          Already have an account?{' '}
-          <Link href="/login" className="text-primary font-bold hover:underline">
-            Sign in
-          </Link>
-        </p>
-      </div>
+export default function RegisterPage() {
+  return (
+    <main className="qc-shell qc-shell--auth">
+      <Suspense fallback={<div className="qc-skeleton" />}>
+        <RegisterForm />
+      </Suspense>
     </main>
   );
 }

@@ -13,6 +13,142 @@ export type ShippingErr = {
   message: string;
 };
 
+type GoogleAddressComponent = {
+  long_name: string;
+  short_name: string;
+  types: string[];
+};
+
+type GoogleAddressResult = {
+  formatted_address?: string;
+  address_components?: GoogleAddressComponent[];
+};
+
+function requireMapsKey() {
+  if (!config.shipping.googleMapsApiKey) {
+    throw new AppError('Google Maps API key is not configured', 503);
+  }
+  return config.shipping.googleMapsApiKey;
+}
+
+function component(
+  components: GoogleAddressComponent[] | undefined,
+  ...types: string[]
+): string {
+  return (
+    components?.find((item) => types.some((type) => item.types.includes(type)))?.long_name ?? ''
+  );
+}
+
+function mapGoogleAddress(result: GoogleAddressResult) {
+  const parts = result.address_components;
+  const streetNumber = component(parts, 'street_number', 'premise', 'subpremise');
+  const route = component(parts, 'route');
+  const neighborhood = component(
+    parts,
+    'sublocality_level_2',
+    'sublocality_level_1',
+    'neighborhood',
+  );
+  const locality = component(parts, 'locality', 'administrative_area_level_2');
+  const state = component(parts, 'administrative_area_level_1');
+  const pincode = component(parts, 'postal_code');
+  const localityParts = [route, neighborhood, locality, state].filter(
+    (value, index, values) => value && values.indexOf(value) === index,
+  );
+
+  return {
+    flatHouseNo: streetNumber,
+    apartmentStreetLocality: localityParts.join(', ') || result.formatted_address || '',
+    pincode,
+    formattedAddress: result.formatted_address ?? '',
+  };
+}
+
+async function fetchGoogleJson<T>(url: string): Promise<T> {
+  let response: Response;
+  try {
+    response = await fetch(url);
+  } catch {
+    throw new AppError('Unable to reach Google Maps. Please try again.', 502);
+  }
+  if (!response.ok) {
+    throw new AppError('Google Maps request failed. Please try again.', 502);
+  }
+  return (await response.json()) as T;
+}
+
+export async function autocompleteAddress(inputRaw: string) {
+  const input = inputRaw.trim();
+  if (input.length < 3) return [];
+
+  const params = new URLSearchParams({
+    input,
+    key: requireMapsKey(),
+    components: 'country:in',
+    location: `${config.shipping.storeLat},${config.shipping.storeLng}`,
+    radius: '100000',
+  });
+  const data = await fetchGoogleJson<{
+    status?: string;
+    error_message?: string;
+    predictions?: Array<{ description: string; place_id: string }>;
+  }>(`https://maps.googleapis.com/maps/api/place/autocomplete/json?${params}`);
+
+  if (data.status === 'ZERO_RESULTS') return [];
+  if (data.status !== 'OK') {
+    throw new AppError(data.error_message ?? 'Could not search Google Maps addresses', 502);
+  }
+  return (data.predictions ?? []).slice(0, 5).map((prediction) => ({
+    description: prediction.description,
+    placeId: prediction.place_id,
+  }));
+}
+
+export async function getPlaceAddress(placeIdRaw: string) {
+  const placeId = placeIdRaw.trim();
+  if (!placeId) throw new ValidationError('Google place ID is required');
+
+  const params = new URLSearchParams({
+    place_id: placeId,
+    fields: 'formatted_address,address_component',
+    key: requireMapsKey(),
+  });
+  const data = await fetchGoogleJson<{
+    status?: string;
+    error_message?: string;
+    result?: GoogleAddressResult;
+  }>(`https://maps.googleapis.com/maps/api/place/details/json?${params}`);
+
+  if (data.status !== 'OK' || !data.result) {
+    throw new AppError(data.error_message ?? 'Could not load this Google Maps address', 502);
+  }
+  return mapGoogleAddress(data.result);
+}
+
+export async function reverseGeocode(latitude: number, longitude: number) {
+  if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+    throw new ValidationError('Valid location coordinates are required');
+  }
+
+  const params = new URLSearchParams({
+    latlng: `${latitude},${longitude}`,
+    key: requireMapsKey(),
+    result_type: 'street_address|premise|subpremise|route',
+  });
+  const data = await fetchGoogleJson<{
+    status?: string;
+    error_message?: string;
+    results?: GoogleAddressResult[];
+  }>(`https://maps.googleapis.com/maps/api/geocode/json?${params}`);
+
+  const result = data.results?.[0];
+  if (data.status !== 'OK' || !result) {
+    throw new AppError(data.error_message ?? 'Could not detect an address at this location', 422);
+  }
+  return mapGoogleAddress(result);
+}
+
 /** Mirrors includes/shipping_helper.php calculate_shipping_from_address(). */
 export async function calculateShippingFromAddress(
   destinationRaw: string,
