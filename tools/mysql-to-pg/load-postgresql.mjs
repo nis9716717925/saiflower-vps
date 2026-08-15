@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Load converted SaiFlower SQL into PostgreSQL.
+ * Load converted SaiFlower SQL into Supabase PostgreSQL.
  *
  * Usage:
  *   node tools/mysql-to-pg/load-postgresql.mjs [path-to-sql]
@@ -12,6 +12,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import pg from 'pg';
+import { loadDatabaseEnv } from '../load-database-env.mjs';
 
 const { Client } = pg;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -37,9 +38,12 @@ function safeTarget(connectionString) {
 }
 
 async function main() {
-  const databaseUrl = process.env.DATABASE_URL;
+  loadDatabaseEnv();
+  // Imports must bypass the transaction pooler. On an IPv4-only VPS,
+  // DIRECT_URL should be Supabase's session pooler URI on port 5432.
+  const databaseUrl = process.env.DIRECT_URL || process.env.DATABASE_URL;
   if (!databaseUrl || !databaseUrl.startsWith('postgres')) {
-    throw new Error('DATABASE_URL must be a PostgreSQL connection string.');
+    throw new Error('DIRECT_URL or DATABASE_URL must be a PostgreSQL connection string.');
   }
 
   const sqlPath = process.argv[2]
@@ -53,7 +57,7 @@ async function main() {
   const sql = fs.readFileSync(sqlPath, 'utf8');
   const ssl = useSsl(databaseUrl) ? { rejectUnauthorized: false } : false;
   console.log(`Loading ${path.basename(sqlPath)} (${(sql.length / 1024 / 1024).toFixed(2)} MB)...`);
-  console.log('Target:', safeTarget(databaseUrl));
+  console.log(`Target (${process.env.DIRECT_URL ? 'DIRECT_URL' : 'DATABASE_URL'}):`, safeTarget(databaseUrl));
 
   const client = new Client({
     connectionString: databaseUrl,

@@ -10,7 +10,7 @@ apps/
   server/    Express REST API
 packages/
   shared/    Types, URL helpers, constants
-  prisma/    Prisma → PostgreSQL on Hostinger VPS
+  prisma/    Prisma → Supabase PostgreSQL
 assets/      Shared CSS / JS / images (linked into apps/web/public/assets)
 ```
 
@@ -40,3 +40,4 @@ npm run dev:web      # :3000
 - Storefront URLs match the former PHP paths (rewrites / redirects in `apps/web`).
 - Checkout stays WhatsApp-confirm until explicitly changed.
 - Media often loads from `NEXT_PUBLIC_MEDIA_ORIGIN` (production CDN/host).
+- Supabase database setup: [`docs/SUPABASE_SETUP.md`](docs/SUPABASE_SETUP.md).

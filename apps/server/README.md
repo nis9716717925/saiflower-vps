@@ -4,10 +4,10 @@ Express REST API for the SaiFlower migration.
 
 ## Database
 
-APIs use **Prisma → PostgreSQL** running locally on the Hostinger VPS.
+APIs use **Prisma → Supabase PostgreSQL**.
 
 ```bash
-# Put the local PostgreSQL URI in packages/prisma/.env and apps/server/.env
+# Put the Supabase DATABASE_URL and DIRECT_URL in both env files
 npm run db:migrate:deploy
 npm run db:load
 npm run db:verify

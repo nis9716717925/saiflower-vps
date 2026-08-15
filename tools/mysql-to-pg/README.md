@@ -1,8 +1,8 @@
 # MySQL → PostgreSQL conversion
 
-The converter accepts a phpMyAdmin MySQL/MariaDB dump and produces SQL for the
-local PostgreSQL service on the Hostinger VPS. The current export contains 36
-tables, including `customer_addresses`.
+The converter accepts a phpMyAdmin MySQL/MariaDB dump and produces SQL for
+Supabase PostgreSQL. The current export contains 36 tables, including
+`customer_addresses`.
 
 ## Outputs
 
@@ -24,8 +24,16 @@ npm run db:load
 npm run db:verify
 ```
 
-On Linux/VPS, give the converter the uploaded dump’s Linux path. `DATABASE_URL`
-must point to PostgreSQL before running migrate/load/verify.
+For a brand-new, empty Supabase project, the last three commands can be run as
+`npm run db:supabase:setup`.
+
+Set both Supabase URLs before running these commands:
+
+- `DATABASE_URL`: transaction pooler on port 6543 for the application.
+- `DIRECT_URL`: session pooler on port 5432 for migrate/load.
+
+The loader prefers `DIRECT_URL`, avoiding transaction-pooler limitations during
+the bulk import.
 
 - All 36 table names and columns
 - Integer primary keys + identity sequences at MySQL AUTO_INCREMENT values

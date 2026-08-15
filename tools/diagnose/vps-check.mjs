@@ -6,11 +6,7 @@
  *   node tools/diagnose/vps-check.mjs
  */
 import { PrismaClient } from '@prisma/client';
-
-const API_PORT = process.env.PORT ?? '4000';
-const API_PREFIX = process.env.API_PREFIX ?? '/api/v1';
-const WEB_ORIGIN = process.env.DIAG_WEB_ORIGIN ?? 'http://127.0.0.1:3000';
-const API_ORIGIN = process.env.DIAG_API_ORIGIN ?? `http://127.0.0.1:${API_PORT}`;
+import { loadDatabaseEnv } from '../load-database-env.mjs';
 
 function maskUrl(value) {
   if (!value) return '(not set)';
@@ -45,10 +41,17 @@ async function probe(label, url) {
 }
 
 async function main() {
+  const loadedEnvFiles = loadDatabaseEnv();
+  const apiPort = process.env.PORT ?? '4000';
+  const apiPrefix = process.env.API_PREFIX ?? '/api/v1';
+  const webOrigin = process.env.DIAG_WEB_ORIGIN ?? 'http://127.0.0.1:3000';
+  const apiOrigin = process.env.DIAG_API_ORIGIN ?? `http://127.0.0.1:${apiPort}`;
   console.log('=== env ===');
+  console.log('loaded env files :', loadedEnvFiles.join(', ') || '(none)');
   console.log('DATABASE_URL     :', maskUrl(process.env.DATABASE_URL));
-  console.log('PORT             :', API_PORT);
-  console.log('API_PREFIX       :', API_PREFIX);
+  console.log('DIRECT_URL       :', maskUrl(process.env.DIRECT_URL));
+  console.log('PORT             :', apiPort);
+  console.log('API_PREFIX       :', apiPrefix);
   console.log('NEXT_PUBLIC_API_URL          :', process.env.NEXT_PUBLIC_API_URL ?? '(not set -> /api/v1)');
   console.log(
     'NEXT_PUBLIC_API_PROXY_TARGET :',
@@ -76,13 +79,13 @@ async function main() {
   }
 
   console.log('\n=== express api (direct) ===');
-  await probe('health        ', `${API_ORIGIN}/health`);
-  await probe('products      ', `${API_ORIGIN}${API_PREFIX}/products?type=flower&limit=3`);
-  await probe('categories    ', `${API_ORIGIN}${API_PREFIX}/categories`);
+  await probe('health        ', `${apiOrigin}/health`);
+  await probe('products      ', `${apiOrigin}${apiPrefix}/products?type=flower&limit=3`);
+  await probe('categories    ', `${apiOrigin}${apiPrefix}/categories`);
 
   console.log('\n=== next.js (what the browser hits) ===');
-  await probe('web api proxy ', `${WEB_ORIGIN}${API_PREFIX}/products?type=flower&limit=3`);
-  await probe('web homepage  ', WEB_ORIGIN);
+  await probe('web api proxy ', `${webOrigin}${apiPrefix}/products?type=flower&limit=3`);
+  await probe('web homepage  ', webOrigin);
 
   console.log('\nRead the first failing layer above: database -> express -> next.js.');
 }

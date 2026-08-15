@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 import { PrismaClient } from '@prisma/client';
+import { loadDatabaseEnv } from '../load-database-env.mjs';
 
 async function main() {
+  loadDatabaseEnv();
   if (!process.env.DATABASE_URL) {
     console.error('DATABASE_URL is required');
     process.exit(1);

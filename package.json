@@ -27,6 +27,7 @@
     "db:convert": "python tools/mysql-to-pg/convert_dump.py",
     "db:load": "node tools/mysql-to-pg/load-postgresql.mjs",
     "db:verify": "node tools/mysql-to-pg/verify-counts.mjs",
+    "db:supabase:setup": "npm run db:migrate:deploy && npm run db:load && npm run db:verify",
     "diagnose": "node tools/diagnose/vps-check.mjs",
     "smoke": "node tools/smoke/smoke.mjs",
     "smoke:routes": "node tools/smoke/route-inventory.mjs"
@@ -39,6 +40,7 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
+    "dotenv": "^17.4.2",
     "pg": "^8.23.0"
   }
 }

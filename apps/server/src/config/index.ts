@@ -20,7 +20,7 @@ export const config = {
   isProduction: process.env.NODE_ENV === 'production',
 
   database: {
-    /** Local PostgreSQL on the Hostinger VPS — Prisma datasource */
+    /** Supabase PostgreSQL — Prisma pooled runtime datasource */
     url: process.env.DATABASE_URL ?? '',
   },
 

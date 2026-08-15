@@ -1,19 +1,21 @@
 # @saiflower/prisma
 
-Prisma client for SaiFlower’s local **PostgreSQL** database on the Hostinger VPS.
-Legacy table and column names are preserved.
+Prisma client for SaiFlower’s **Supabase PostgreSQL** database. Legacy table
+and column names are preserved.
 
 ## Setup
 
 1. Copy `.env.example` → `.env`
-2. Set `DATABASE_URL` for the PostgreSQL database:
+2. Copy both connection strings from Supabase Dashboard → **Connect**:
 
 ```env
-DATABASE_URL="postgresql://saiflower_app:PASSWORD@127.0.0.1:5432/saiflower?schema=public"
+DATABASE_URL="postgresql://postgres.PROJECT_REF:PASSWORD@REGION.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=10"
+DIRECT_URL="postgresql://postgres.PROJECT_REF:PASSWORD@REGION.pooler.supabase.com:5432/postgres?sslmode=require"
 ```
 
-Keep PostgreSQL bound to localhost when the API runs on the same VPS. Do not
-expose port 5432 publicly.
+`DATABASE_URL` is the transaction pooler used by the running API. `DIRECT_URL`
+is the session pooler used by Prisma migrations and the initial data import.
+The session pooler works from IPv4-only VPS networks.
 
 3. Apply migrations and generate the client:
 
@@ -26,3 +28,6 @@ npm run generate -w @saiflower/prisma
 
 - Use committed migrations for production; do not use `prisma db push`.
 - The initial production data load is handled by `tools/mysql-to-pg`.
+- Never use Supabase anon/service-role API keys as database passwords.
+- The Supabase RLS migration intentionally exposes no tables through the
+  browser REST API; the Express API remains the only application data layer.

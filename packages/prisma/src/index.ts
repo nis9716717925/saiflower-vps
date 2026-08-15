@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
-/** Shared Prisma client for PostgreSQL on the Hostinger VPS (legacy table names). */
+/** Shared Prisma client for Supabase PostgreSQL (legacy table names). */
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
 export const prisma =
