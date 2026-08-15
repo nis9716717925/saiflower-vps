@@ -1,4 +1,4 @@
-import { fetchProducts } from '@/lib/api';
+import { fetchProducts, getApiBase } from '@/lib/api';
 import type { Product } from '@/lib/types';
 
 /**
@@ -80,7 +80,12 @@ export async function fetchLandingBouquets(
       if (bouquets.length >= limit) break;
     }
     return bouquets.slice(0, limit);
-  } catch {
+  } catch (error) {
+    console.error('[bouquet] product fetch failed', {
+      apiBase: getApiBase(),
+      params,
+      message: error instanceof Error ? error.message : String(error),
+    });
     return [];
   }
 }
