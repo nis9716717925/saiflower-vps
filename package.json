@@ -27,6 +27,7 @@
     "db:convert": "python tools/mysql-to-pg/convert_dump.py",
     "db:load": "node tools/mysql-to-pg/load-postgresql.mjs",
     "db:verify": "node tools/mysql-to-pg/verify-counts.mjs",
+    "diagnose": "node tools/diagnose/vps-check.mjs",
     "smoke": "node tools/smoke/smoke.mjs",
     "smoke:routes": "node tools/smoke/route-inventory.mjs"
   },
