@@ -85,15 +85,7 @@ export async function searchSuggest(qRaw: string) {
   }
 
   const normalized = results.slice(0, 10).map((item) => {
-    let image = item.image || '/assets/images/logo-transparent.png';
-    if (
-      image &&
-      !image.startsWith('http://') &&
-      !image.startsWith('https://') &&
-      !image.startsWith('/')
-    ) {
-      image = image.startsWith('uploads/') ? `/${image}` : `/uploads/${image}`;
-    }
+    const image = mediaUrl(item.image, `${item.type}s`) || '';
     return {
       ...item,
       image,

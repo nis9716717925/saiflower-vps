@@ -1,15 +1,17 @@
-const FALLBACK_FLOWER =
-  'https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=600&q=80';
+import {
+  FLOWER_PLACEHOLDER_IMAGE,
+  mediaUrl as sharedMediaUrl,
+  resolveImageSrc as sharedResolveImageSrc,
+} from '@saiflower/shared';
+
+export { FLOWER_PLACEHOLDER_IMAGE };
 
 /** Prefix uploads paths and normalize image src for Next/public URLs. */
-export function resolveImageSrc(src: string | null | undefined, fallback = FALLBACK_FLOWER): string {
-  if (!src || !src.trim()) return fallback;
-  const trimmed = src.trim();
-  if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('/')) {
-    return trimmed;
-  }
-  if (trimmed.startsWith('uploads/')) return `/${trimmed}`;
-  return `/uploads/${trimmed}`;
+export function resolveImageSrc(
+  src: string | null | undefined,
+  fallback = FLOWER_PLACEHOLDER_IMAGE,
+): string {
+  return sharedResolveImageSrc(src, fallback);
 }
 
 export function productHref(type: string, slug: string): string {
@@ -59,9 +61,10 @@ export function productGalleryUrls(product: {
   imagesGallery?: string | null;
 }): string[] {
   const gallery = parseProductGallerySources(product.galleryImages, product.imagesGallery);
-  return [product.image, ...gallery]
-    .map((src) => resolveImageSrc(src))
-    .filter((src, index, images) => images.indexOf(src) === index);
+  const main = sharedMediaUrl(product.image) ?? resolveImageSrc(product.image);
+  return [main, ...gallery.map((src) => sharedMediaUrl(src) ?? resolveImageSrc(src))].filter(
+    (src, index, images) => src && images.indexOf(src) === index,
+  );
 }
 
 export function reviewCountEstimate(id: number): number {

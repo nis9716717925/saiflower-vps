@@ -44,10 +44,11 @@ const nextConfig: NextConfig = {
     return [
       { source: '/api/v1/:path*', destination: `${apiBase}/api/v1/:path*` },
       { source: '/health', destination: `${apiBase}/health` },
+      { source: '/uploads/:path*', destination: `${apiBase}/uploads/:path*` },
       { source: '/ajax_search.php', destination: `${apiBase}/api/v1/search` },
       { source: '/ajax/homepage-occasion.php', destination: '/ajax/homepage-occasion' },
       { source: '/sitemap.xml', destination: '/api/sitemap' },
-      // /uploads/* is served by app/uploads/[...path]/route.ts (browser-like proxy headers)
+      // /uploads/* is proxied to Express static (UPLOADS_DIR on disk)
     ];
   },
   async headers() {

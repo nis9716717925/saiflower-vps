@@ -7,8 +7,10 @@ import { globalRateLimiter } from './middleware/rateLimiter';
 import { sanitizeBody } from './middleware/sanitize';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 import routes from './routes';
+import { countUploadFilesSync, resolveUploadsDirectory } from './utils/uploads';
 
 const app = express();
+const uploadsDir = resolveUploadsDirectory();
 
 app.use(helmet());
 app.use(
@@ -32,22 +34,31 @@ app.use(sanitizeBody);
 app.use(morgan(config.isProduction ? 'combined' : 'dev'));
 app.use(globalRateLimiter);
 
+// Product/category images — canonical store: UPLOADS_DIR or /var/www/saiflower-vps/uploads
+app.use(
+  '/uploads',
+  express.static(uploadsDir, {
+    maxAge: config.isProduction ? '7d' : 0,
+    fallthrough: false,
+    setHeaders(res, filePath) {
+      if (filePath.endsWith('.webp')) res.setHeader('Content-Type', 'image/webp');
+    },
+  }),
+);
+
 app.get('/health', async (_req, res) => {
   const { pingDb, tableCounts } = await import('./db/client');
   const dbOk = await pingDb();
   const counts = dbOk ? await tableCounts().catch(() => undefined) : undefined;
-  let databaseHost = 'unset';
-  try {
-    databaseHost = new URL(config.database.url).host || 'invalid';
-  } catch {
-    databaseHost = 'invalid';
-  }
+  const uploadFiles = countUploadFilesSync();
   res.status(dbOk ? 200 : 503).json({
     status: dbOk ? 'ok' : 'degraded',
     service: 'saiflower-server',
     checkoutMode: config.checkout.mode,
     database: dbOk ? 'up' : 'down',
-    databaseHost,
+    uploadsDir,
+    uploadFiles,
+    ...(uploadFiles === 0 ? { uploadsWarning: 'No image files on disk — copy legacy uploads folder to UPLOADS_DIR' } : {}),
     ...(counts ? { tableCounts: counts } : {}),
     timestamp: new Date().toISOString(),
   });

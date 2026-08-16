@@ -30,7 +30,9 @@
     "db:supabase:setup": "npm run db:migrate:deploy && npm run db:load && npm run db:verify",
     "diagnose": "node tools/diagnose/vps-check.mjs",
     "smoke": "node tools/smoke/smoke.mjs",
-    "smoke:routes": "node tools/smoke/route-inventory.mjs"
+    "smoke:routes": "node tools/smoke/route-inventory.mjs",
+    "uploads:pack": "node tools/deploy/package-uploads.mjs",
+    "setup:uploads": "bash scripts/vps/setup-uploads.sh"
   },
   "engines": {
     "node": ">=18.18.0"

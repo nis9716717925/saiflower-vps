@@ -46,7 +46,7 @@ Hard DNS flip to Next is **out of this runbook’s default path** until SEO land
 | `NEXT_PUBLIC_SITE_URL` | Staging URL |
 | `NEXT_PUBLIC_API_URL` | `/api/v1` (same-origin proxy) |
 | `NEXT_PUBLIC_API_PROXY_TARGET` | `http://127.0.0.1:4000` |
-| `NEXT_PUBLIC_MEDIA_ORIGIN` | `https://saiflower.com` |
+| `NEXT_PUBLIC_MEDIA_ORIGIN` | **Legacy PHP host only** — do not set to the Next.js domain after cutover. See [`docs/UPLOADS_DEPLOY.md`](UPLOADS_DEPLOY.md). |
 | `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | Optional GIS |
 | `ALLOW_INDEXING` | omit / `false` |
 

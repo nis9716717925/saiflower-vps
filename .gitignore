@@ -47,5 +47,6 @@ __pycache__/
 next-env.d.ts
 .vercel
 
-# Local dev junction to PHP uploads (see apps/web/src/app/uploads/[...path]/route.ts)
+# Local dev junction to PHP uploads (see docs/UPLOADS_DEPLOY.md)
 apps/web/public/uploads/
+uploads/
