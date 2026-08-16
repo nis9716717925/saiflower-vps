@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
+import { SiteIcon } from '@/components/icons/SiteIcon';
 
 const WA_HREF = 'https://wa.me/918802004527';
 const TEL_HREF = 'tel:918802004527';
@@ -52,15 +53,11 @@ export function MobileBottomNav() {
       >
         <div className="sf-bottom-nav__inner">
           <Link href="/" className="sf-bottom-nav__item">
-            <span className="material-icons-outlined" aria-hidden="true">
-              home
-            </span>
+            <SiteIcon name="home" size={22} />
             <span>Home</span>
           </Link>
           <Link href="/flowers" className="sf-bottom-nav__item">
-            <span className="material-icons-outlined" aria-hidden="true">
-              shopping_bag
-            </span>
+            <SiteIcon name="shopping_bag" size={22} />
             <span>Shop</span>
           </Link>
           <a
@@ -76,15 +73,11 @@ export function MobileBottomNav() {
             <span>WhatsApp</span>
           </a>
           <a href={TEL_HREF} className="sf-bottom-nav__item">
-            <span className="material-icons-outlined" aria-hidden="true">
-              call
-            </span>
+            <SiteIcon name="call" size={22} />
             <span>Call</span>
           </a>
           <Link href="/contact" className="sf-bottom-nav__item">
-            <span className="material-icons-outlined" aria-hidden="true">
-              location_on
-            </span>
+            <SiteIcon name="location_on" size={22} />
             <span>Visit</span>
           </Link>
         </div>

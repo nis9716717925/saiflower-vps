@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { AppProviders } from '@/components/providers/AppProviders';
 import { OrderSuccessBanner } from '@/components/home/OrderSuccessBanner';
 import { BodyClass } from '@/components/layout/BodyClass';
+import { CriticalPaintGuard } from '@/components/layout/CriticalPaintGuard';
 import { CriticalRouteStyles } from '@/components/layout/CriticalRouteStyles';
 import { RouteStyles } from '@/components/layout/RouteStyles';
 import { ServerBody } from '@/components/layout/ServerBody';
@@ -38,6 +39,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   return (
     <html lang="en" style={themeCssVars(themePrimary)}>
       <head>
+        <CriticalPaintGuard />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
@@ -63,11 +65,6 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           type="font/woff2"
           crossOrigin=""
         />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){function m(){document.documentElement.classList.add('fonts-ready')}if(document.fonts&&document.fonts.ready){document.fonts.ready.then(m).catch(m)}else{m()}})();`,
-          }}
-        />
         <link
           href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&family=Manrope:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
           rel="stylesheet"
@@ -83,6 +80,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <CriticalRouteStyles />
       </head>
       <ServerBody>
+        {/* saiflower-build: fouc-v2 */}
         <RouteStyles />
         <AppProviders>
           <BodyClass />

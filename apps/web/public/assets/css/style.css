@@ -403,8 +403,7 @@ select {
     color: white;
     padding: 140px 0 60px;
     text-align: center;
-    background-image: url('../images/herotest1.svg');
-    /* Fallback */
+    background-image: none;
     background-size: cover;
     background-position: center;
 }

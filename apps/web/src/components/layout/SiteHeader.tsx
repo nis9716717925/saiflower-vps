@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import Script from 'next/script';
 import { useCallback, useEffect, useState } from 'react';
 import { getCustomer } from '@/lib/api';
+import { SiteIcon } from '@/components/icons/SiteIcon';
 import { useCart } from '@/components/providers/AppProviders';
 import { CatNav } from './CatNav';
 
@@ -94,12 +95,8 @@ export function SiteHeader() {
                 if (!menuOpen) setSearchOpen(false);
               }}
             >
-              <span className="material-icons-outlined text-2xl sf-mnav-icon-menu" aria-hidden="true">
-                menu
-              </span>
-              <span className="material-icons-outlined text-2xl sf-mnav-icon-close" aria-hidden="true">
-                close
-              </span>
+              <SiteIcon name="menu" size={28} className="sf-mnav-icon-menu" />
+              <SiteIcon name="close" size={28} className="sf-mnav-icon-close" />
             </button>
 
             <Link className="sf-site-header__logo" href="/">
@@ -133,8 +130,8 @@ export function SiteHeader() {
                   type="search"
                   enterKeyHint="search"
                 />
-                <button type="submit" className="material-icons-outlined" aria-label="Search">
-                  search
+                <button type="submit" aria-label="Search">
+                  <SiteIcon name="search" size={20} />
                 </button>
                 <div
                   id="desktopSearchSuggestions"
@@ -158,15 +155,15 @@ export function SiteHeader() {
                 setMenuOpen(false);
               }}
             >
-              <span className="material-icons-outlined text-2xl">search</span>
+              <SiteIcon name="search" size={28} />
             </button>
 
             <Link href="/wishlist" className="sf-site-header__icon-btn" aria-label="Wishlist">
-              <span className="material-icons-outlined text-2xl">favorite_border</span>
+              <SiteIcon name="favorite_border" size={28} />
             </Link>
 
             <Link href="/cart" className="sf-site-header__icon-btn" aria-label="Cart" style={{ position: 'relative' }}>
-              <span className="material-icons-outlined text-2xl">shopping_cart</span>
+              <SiteIcon name="shopping_cart" size={28} />
               {cartCount > 0 && (
                 <span className="sf-site-header__cart-count" aria-hidden="true">
                   {cartCount}
@@ -176,7 +173,7 @@ export function SiteHeader() {
 
             <div className="sf-site-header__account">
               <Link className="sf-site-header__icon-btn" href={accountHref} aria-label="Account">
-                <span className="material-icons-outlined">person_outline</span>
+                <SiteIcon name="person_outline" size={24} />
               </Link>
 
               <div className="sf-site-header__account-menu">
@@ -223,8 +220,8 @@ export function SiteHeader() {
                 type="search"
                 style={{ borderRadius: '1rem', padding: '0.75rem 3rem 0.75rem 1.25rem' }}
               />
-              <button type="submit" className="material-icons-outlined" aria-label="Search">
-                search
+              <button type="submit" aria-label="Search">
+                <SiteIcon name="search" size={20} />
               </button>
               <div
                 id="mobileSearchSuggestions"
