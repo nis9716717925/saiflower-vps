@@ -80,7 +80,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <CriticalRouteStyles />
       </head>
       <ServerBody>
-        {/* saiflower-build: fouc-v2 */}
+        {/* saiflower-build: fouc-v3 */}
         <RouteStyles />
         <AppProviders>
           <BodyClass />

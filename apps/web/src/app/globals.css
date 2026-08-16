@@ -67,11 +67,11 @@ a {
 }
 
 /* Hide ligature fallback text until icon webfonts finish loading. */
-html:not(.fonts-ready) .material-icons-outlined,
-html:not(.fonts-ready) .fas,
-html:not(.fonts-ready) .fab,
-html:not(.fonts-ready) .far {
-  color: transparent;
+html.sf-loading .material-icons-outlined,
+html.sf-loading .fas,
+html.sf-loading .fab,
+html.sf-loading .far {
+  visibility: hidden;
 }
 
 /* Tailwind-independent responsive chrome (avoids CDN flash). */
