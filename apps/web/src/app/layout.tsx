@@ -8,6 +8,7 @@ import { ServerBody } from '@/components/layout/ServerBody';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { getThemePrimary, themeCssVars } from '@/lib/theme';
+import '@/styles/bundled-core';
 import '../styles/site-header.css';
 import '../styles/not-found-page.css';
 import './tailwind.css';

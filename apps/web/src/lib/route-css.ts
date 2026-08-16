@@ -8,6 +8,57 @@ export const CORE_CSS = [
   '/assets/css/header-glass.css?v=2',
 ] as const;
 
+/** Legacy sheets shipped inside the Next.js CSS bundle (not loaded via <link>). */
+export const BUNDLED_CSS_FILES = new Set([
+  'catnav.css',
+  'mobile-nav.css',
+  'search-suggest.css',
+  'header-glass.css',
+  'homepage-premium.css',
+  'homepage-firstview.css',
+  'homepage-luxe.css',
+  'homepage-mobile.css',
+  'celebrations-calendar.css',
+]);
+
+export function cssFileName(href: string): string {
+  return href.split('/').pop()?.split('?')[0] ?? href;
+}
+
+export function isBundledCss(href: string): boolean {
+  return BUNDLED_CSS_FILES.has(cssFileName(href));
+}
+
+/** Stylesheets that still need a blocking <link> (route-specific, not in the JS bundle). */
+export function externalPageCss(pathname: string): string[] {
+  const seen = new Set<string>();
+  const hrefs: string[] = [];
+
+  for (const href of [...CORE_CSS, ...pageCss(pathname)]) {
+    if (isBundledCss(href)) continue;
+    const key = cssFileName(href);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    hrefs.push(href);
+  }
+
+  return hrefs;
+}
+
+export function ensureStylesheet(href: string): void {
+  if (typeof document === 'undefined') return;
+  const path = cssFileName(href);
+  const existing = document.querySelector<HTMLLinkElement>(
+    `link[rel="stylesheet"][href*="${path}"]`,
+  );
+  if (existing) return;
+
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = href;
+  document.head.appendChild(link);
+}
+
 /** Homepage sheets that must paint before first view (avoid square→circle icon flash). */
 export const HOMEPAGE_CRITICAL_CSS = [
   '/assets/css/homepage-premium.css?v=5',

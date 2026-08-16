@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Script from 'next/script';
 import { HomeHero } from '@/components/home/HomeHero';
 import { HomeProductRail } from '@/components/home/HomeProductRail';
+import '@/styles/bundled-homepage';
 import {
   AboutUsSection,
   CelebrationsCalendarSection,

@@ -1,22 +1,27 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { useMemo } from 'react';
-import { CORE_CSS, pageCss } from '@/lib/route-css';
+import { useEffect, useRef } from 'react';
+import { ensureStylesheet, externalPageCss } from '@/lib/route-css';
 
-/** Client-side route CSS for navigations after first paint (head preloads critical sheets). */
+/**
+ * Loads route-specific legacy CSS on client navigations only.
+ * Initial paint uses bundled CSS + CriticalRouteStyles; this renders no <link> tags in HTML.
+ */
 export function RouteStyles() {
   const pathname = usePathname() || '/';
-  const hrefs = useMemo(() => {
-    const set = new Set<string>([...CORE_CSS, ...pageCss(pathname)]);
-    return Array.from(set);
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    for (const href of externalPageCss(pathname)) {
+      ensureStylesheet(href);
+    }
   }, [pathname]);
 
-  return (
-    <>
-      {hrefs.map((href) => (
-        <link key={href} rel="stylesheet" href={href} />
-      ))}
-    </>
-  );
+  return null;
 }
