@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'saiflower.com' },
       { protocol: 'https', hostname: 'www.saiflower.com' },
       { protocol: 'https', hostname: 'images.unsplash.com' },
+      { protocol: 'https', hostname: 'wcoeimnhzzjmftnqpzwo.supabase.co' },
     ],
     unoptimized: true,
   },

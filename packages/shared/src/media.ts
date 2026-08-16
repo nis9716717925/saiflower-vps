@@ -9,17 +9,38 @@ function isLogoPath(value: string): boolean {
   return value === SITE_LOGO_PATH || value.endsWith('/logo-transparent.png');
 }
 
-/** Build a public `/uploads/...` URL from a DB path or filename. */
+function supabasePublicBase(): string | null {
+  const fromEnv =
+    (typeof process !== 'undefined' &&
+      (process.env.NEXT_PUBLIC_SUPABASE_STORAGE_PUBLIC_URL ||
+        process.env.SUPABASE_STORAGE_PUBLIC_URL)) ||
+    null;
+  return fromEnv ? String(fromEnv).replace(/\/$/, '') : null;
+}
+
+function storageObjectKey(raw: string, defaultFolder: string): string {
+  let key = raw.replace(/^\/+/, '');
+  if (key.startsWith('uploads/')) key = key.slice('uploads/'.length);
+  if (!key.includes('/') && defaultFolder) {
+    key = `${defaultFolder.replace(/^\/|\/$/g, '')}/${key}`;
+  }
+  return key.replace(/ /g, '%20');
+}
+
+/** Build a public image URL from a DB path, filename, or full URL. */
 export function mediaUrl(path?: string | null, defaultFolder = ''): string | null {
   if (!path?.trim()) return null;
   const raw = path.trim();
   if (isLogoPath(raw)) return null;
-  if (/^https?:\/\//i.test(raw) || raw.startsWith('/')) {
-    return raw.replace(/ /g, '%20');
+  if (/^https?:\/\//i.test(raw)) return raw.replace(/ /g, '%20');
+  if (raw.startsWith('/') && !raw.startsWith('/uploads/')) return raw.replace(/ /g, '%20');
+
+  const storageBase = supabasePublicBase();
+  if (storageBase) {
+    return `${storageBase}/${storageObjectKey(raw, defaultFolder)}`;
   }
-  if (raw.startsWith('uploads/')) {
-    return `/${raw}`.replace(/ /g, '%20');
-  }
+
+  if (raw.startsWith('uploads/')) return `/${raw}`.replace(/ /g, '%20');
   const folder = defaultFolder ? `${defaultFolder.replace(/^\/|\/$/g, '')}/` : '';
   return `/uploads/${folder}${raw}`.replace(/ /g, '%20');
 }
@@ -32,8 +53,7 @@ export function resolveImageSrc(
   if (!src?.trim()) return fallback;
   const trimmed = src.trim();
   if (isLogoPath(trimmed)) return fallback;
-  if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('/')) {
-    return trimmed;
-  }
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) return trimmed;
+  if (trimmed.startsWith('/') && !trimmed.startsWith('/uploads/')) return trimmed;
   return mediaUrl(trimmed) ?? fallback;
 }
