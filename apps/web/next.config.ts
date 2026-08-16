@@ -19,6 +19,8 @@ const nextConfig: NextConfig = {
     return [
       { source: '/index.php', destination: '/', permanent: true },
       { source: '/occasions/:slug', destination: '/occasion/:slug', permanent: true },
+      // Legacy singular flower-type paths from PHP nav
+      { source: '/flower/:slug', destination: '/flowers/:slug', permanent: true },
       { source: '/celebrations-calendar', destination: '/celebration-calendar', permanent: true },
       { source: '/personalised', destination: '/personalized', permanent: true },
       { source: '/personalised/:slug', destination: '/personalized/:slug', permanent: true },

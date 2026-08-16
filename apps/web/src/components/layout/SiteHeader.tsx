@@ -23,7 +23,7 @@ const NAV_LINKS = [
 const MOBILE_QUICK_LINKS = [
   { href: '/collection/same-day-delivery', label: 'Same Day', icon: 'bolt' },
   { href: '/occasion/birthday', label: 'Birthday', icon: 'cake' },
-  { href: '/flower/roses', label: 'Roses', icon: 'spa' },
+  { href: '/flowers/roses', label: 'Roses', icon: 'spa' },
   { href: '/collection/flower-combos', label: 'Combos', icon: 'redeem' },
 ];
 

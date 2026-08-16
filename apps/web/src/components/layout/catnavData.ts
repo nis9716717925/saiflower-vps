@@ -33,7 +33,7 @@ export const CATNAV_ITEMS: CatNavItem[] = [
           title: 'Popular Picks',
           links: [
             { label: 'Same Day Birthday Gifts', href: '/collection/same-day-delivery' },
-            { label: 'Rose Bouquets', href: '/flower/roses' },
+            { label: 'Rose Bouquets', href: '/flowers/roses' },
             { label: 'Gift Hampers', href: '/collection/hampers' },
           ],
         },
@@ -56,7 +56,7 @@ export const CATNAV_ITEMS: CatNavItem[] = [
           title: 'Shop Anniversary',
           links: [
             { label: 'Anniversary Flowers', href: '/occasion/anniversary' },
-            { label: 'Romantic Roses', href: '/flower/roses' },
+            { label: 'Romantic Roses', href: '/flowers/roses' },
             { label: 'Flower & Cake Combos', href: '/cakes' },
           ],
         },
@@ -120,7 +120,7 @@ export const CATNAV_ITEMS: CatNavItem[] = [
           title: 'Collections',
           links: [
             { label: 'All Bouquets', href: '/flowers' },
-            { label: 'Rose Bouquets', href: '/flower/roses' },
+            { label: 'Rose Bouquets', href: '/flowers/roses' },
             { label: 'Premium Collection', href: '/collection/premium-bouquets' },
             { label: 'Newly Added', href: '/collection/new-arrivals' },
           ],
@@ -128,10 +128,10 @@ export const CATNAV_ITEMS: CatNavItem[] = [
         {
           title: 'By Flower Type',
           links: [
-            { label: 'Orchids', href: '/flower/orchids' },
-            { label: 'Lilies', href: '/flower/lilies' },
-            { label: 'Carnations', href: '/flower/carnations' },
-            { label: 'Tulips', href: '/flower/tulips' },
+            { label: 'Orchids', href: '/flowers/orchids' },
+            { label: 'Lilies', href: '/flowers/lilies' },
+            { label: 'Carnations', href: '/flowers/carnations' },
+            { label: 'Tulips', href: '/flowers/tulips' },
           ],
         },
       ],
@@ -152,7 +152,7 @@ export const CATNAV_ITEMS: CatNavItem[] = [
         {
           title: 'Shop LUXE',
           links: [
-            { label: 'Premium Roses', href: '/flower/roses' },
+            { label: 'Premium Roses', href: '/flowers/roses' },
             { label: 'Designer Bouquets', href: '/collection/designer-bouquets' },
             { label: 'Luxury Combos', href: '/collection/flower-combos' },
             { label: 'All Luxe Collection', href: '/collection/luxury-flowers' },
