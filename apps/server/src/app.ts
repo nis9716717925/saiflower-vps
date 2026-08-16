@@ -36,11 +36,18 @@ app.get('/health', async (_req, res) => {
   const { pingDb, tableCounts } = await import('./db/client');
   const dbOk = await pingDb();
   const counts = dbOk ? await tableCounts().catch(() => undefined) : undefined;
+  let databaseHost = 'unset';
+  try {
+    databaseHost = new URL(config.database.url).host || 'invalid';
+  } catch {
+    databaseHost = 'invalid';
+  }
   res.status(dbOk ? 200 : 503).json({
     status: dbOk ? 'ok' : 'degraded',
     service: 'saiflower-server',
     checkoutMode: config.checkout.mode,
     database: dbOk ? 'up' : 'down',
+    databaseHost,
     ...(counts ? { tableCounts: counts } : {}),
     timestamp: new Date().toISOString(),
   });
