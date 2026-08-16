@@ -46,7 +46,7 @@ function LoginForm() {
       {toCheckout ? <CheckoutProgress current="address" /> : null}
 
       <Link href="/" className="qc-auth-logo-wrap">
-        <img src="/uploads/logo_transparent.png" alt="Sai Flower" className="qc-auth-logo" />
+        <img src="/assets/images/logo-transparent.png" alt="Sai Flower" className="qc-auth-logo" />
       </Link>
       <h1 className="qc-title" style={{ textAlign: 'center', marginTop: '1rem', fontSize: '1.45rem' }}>
         Welcome back

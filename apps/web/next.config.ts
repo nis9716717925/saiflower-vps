@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: 'https', hostname: 'saiflower.com' },
       { protocol: 'https', hostname: 'www.saiflower.com' },
+      { protocol: 'https', hostname: 'images.unsplash.com' },
     ],
     unoptimized: true,
   },
@@ -39,7 +40,6 @@ const nextConfig: NextConfig = {
   },
   async rewrites() {
     const apiBase = process.env.NEXT_PUBLIC_API_PROXY_TARGET ?? 'http://localhost:4000';
-    const mediaBase = process.env.NEXT_PUBLIC_MEDIA_ORIGIN ?? 'https://saiflower.com';
 
     return [
       { source: '/api/v1/:path*', destination: `${apiBase}/api/v1/:path*` },
@@ -47,7 +47,7 @@ const nextConfig: NextConfig = {
       { source: '/ajax_search.php', destination: `${apiBase}/api/v1/search` },
       { source: '/ajax/homepage-occasion.php', destination: '/ajax/homepage-occasion' },
       { source: '/sitemap.xml', destination: '/api/sitemap' },
-      { source: '/uploads/:path*', destination: `${mediaBase}/uploads/:path*` },
+      // /uploads/* is served by app/uploads/[...path]/route.ts (browser-like proxy headers)
     ];
   },
   async headers() {

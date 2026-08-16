@@ -48,7 +48,7 @@ export function productUrl(type: string, slug?: string | null, id?: number): str
 }
 
 export function mediaUrl(path?: string | null, defaultFolder = ''): string {
-  if (!path) return '/uploads/logo_transparent.png';
+  if (!path) return '/assets/images/logo-transparent.png';
   if (/^https?:\/\//i.test(path) || path.startsWith('/')) return path.replace(/ /g, '%20');
   if (path.startsWith('uploads/')) return `/${path}`.replace(/ /g, '%20');
   const folder = defaultFolder ? `${defaultFolder.replace(/^\/|\/$/g, '')}/` : '';

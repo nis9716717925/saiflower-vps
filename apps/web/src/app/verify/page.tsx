@@ -39,7 +39,7 @@ function VerifyContent() {
 
   return (
     <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl border border-slate-100 text-center">
-      <img src="/uploads/logo_transparent.png" alt="Sai Flower" className="h-12 w-auto mx-auto mb-6" />
+      <img src="/assets/images/logo-transparent.png" alt="Sai Flower" className="h-12 w-auto mx-auto mb-6" />
       <h1 className="text-2xl font-bold mb-3">Email Verification</h1>
       <p
         className={
