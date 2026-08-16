@@ -40,6 +40,36 @@ type ProductRow = {
   icon?: string | null;
 };
 
+/** Parse images_gallery column (JSON array or comma-separated paths). */
+function parseImagesGallery(raw?: string | null): string[] {
+  if (!raw?.trim()) return [];
+  const trimmed = raw.trim();
+  try {
+    const parsed = JSON.parse(trimmed) as unknown;
+    if (Array.isArray(parsed)) {
+      return parsed.map((item) => String(item).trim()).filter(Boolean);
+    }
+  } catch {
+    // fall through to delimiter split
+  }
+  return trimmed
+    .split(/[,|]/)
+    .map((part) => part.trim().replace(/^["']+|["']+$/g, ''))
+    .filter(Boolean);
+}
+
+function buildGalleryImages(
+  type: string,
+  row: ProductRow,
+  fromTable: string[],
+): string[] {
+  const folder = `${normalizeProductType(type)}s`;
+  const fromColumn = parseImagesGallery(row.imagesGallery).map((path) =>
+    mediaUrl(path, folder),
+  );
+  return [...new Set([...fromTable, ...fromColumn])];
+}
+
 function mapProduct(row: ProductRow, type: string) {
   const t = normalizeProductType(type);
   const basePrice = num(row.price);
@@ -371,6 +401,8 @@ export async function getProductBySlug(typeRaw: string, slug: string) {
     images = [];
   }
 
+  const galleryImages = buildGalleryImages(type, row, images);
+
   let relatedRows: ProductRow[] = [];
   switch (type) {
     case 'flower':
@@ -398,7 +430,7 @@ export async function getProductBySlug(typeRaw: string, slug: string) {
   return {
     ...product,
     variants,
-    galleryImages: images,
+    galleryImages,
     related: await Promise.all(related.map((r) => withLivePrice(mapProduct(r, type)))),
   };
 }

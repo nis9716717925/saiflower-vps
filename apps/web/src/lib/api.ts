@@ -374,10 +374,14 @@ export interface CmsPage {
   layoutType: string;
   pageTag?: string | null;
   heroImage?: string | null;
+  extraImages?: string[];
+  midgridImage?: string | null;
+  midgridImageAlt?: string | null;
   contentHtml: string;
   metaTitle?: string | null;
   metaDescription?: string | null;
   metaKeywords?: string | null;
+  faqs?: string | null;
   url: string;
 }
 

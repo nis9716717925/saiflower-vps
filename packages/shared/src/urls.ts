@@ -49,7 +49,7 @@ export function celebrationCalendarPath(): string {
 /** Permanent redirects that must exist in Next.js (from .htaccess). */
 export const PERMANENT_REDIRECTS: Array<{ source: string; destination: string }> = [
   { source: '/index.php', destination: '/' },
-  { source: '/occasions/:slug', destination: '/:slug' },
+  { source: '/occasions/:slug', destination: '/occasion/:slug' },
   { source: '/celebrations-calendar', destination: '/celebration-calendar' },
   { source: '/personalised', destination: '/personalized' },
   { source: '/personalised/:slug', destination: '/personalized/:slug' },

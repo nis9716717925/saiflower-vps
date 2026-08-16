@@ -29,6 +29,41 @@ export function discountPercent(price: number, originalPrice?: number | null): n
   return 0;
 }
 
+/** Parse product gallery paths from API column (JSON array or comma-separated). */
+export function parseProductGallerySources(
+  galleryImages?: string[] | null,
+  imagesGallery?: string | null,
+): string[] {
+  if (galleryImages?.length) return galleryImages;
+  if (!imagesGallery?.trim()) return [];
+
+  const trimmed = imagesGallery.trim();
+  try {
+    const parsed = JSON.parse(trimmed) as unknown;
+    if (Array.isArray(parsed)) {
+      return parsed.map((item) => String(item).trim()).filter(Boolean);
+    }
+  } catch {
+    // fall through
+  }
+
+  return trimmed
+    .split(/[,|]/)
+    .map((part) => part.trim().replace(/^["']+|["']+$/g, ''))
+    .filter(Boolean);
+}
+
+export function productGalleryUrls(product: {
+  image: string;
+  galleryImages?: string[] | null;
+  imagesGallery?: string | null;
+}): string[] {
+  const gallery = parseProductGallerySources(product.galleryImages, product.imagesGallery);
+  return [product.image, ...gallery]
+    .map((src) => resolveImageSrc(src))
+    .filter((src, index, images) => images.indexOf(src) === index);
+}
+
 export function reviewCountEstimate(id: number): number {
   return 80 + (id % 47) * 3;
 }

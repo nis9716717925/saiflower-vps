@@ -35,6 +35,15 @@ router.get('/:type/id/:id/stock', async (req, res, next) => {
   }
 });
 
+router.get('/:type/id/:id', async (req, res, next) => {
+  try {
+    const product = await productService.getProductById(req.params.type, Number(req.params.id));
+    res.json(successResponse('Product retrieved', product));
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.get('/:type/:slug', async (req, res, next) => {
   try {
     const product = await productService.getProductBySlug(req.params.type, req.params.slug);

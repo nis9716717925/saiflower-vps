@@ -18,7 +18,7 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       { source: '/index.php', destination: '/', permanent: true },
-      { source: '/occasions/:slug', destination: '/:slug', permanent: true },
+      { source: '/occasions/:slug', destination: '/occasion/:slug', permanent: true },
       { source: '/celebrations-calendar', destination: '/celebration-calendar', permanent: true },
       { source: '/personalised', destination: '/personalized', permanent: true },
       { source: '/personalised/:slug', destination: '/personalized/:slug', permanent: true },

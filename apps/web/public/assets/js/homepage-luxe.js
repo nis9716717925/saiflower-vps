@@ -88,8 +88,7 @@
         ? '.hp-section-head, .lx-section-head, .lx-trustbar__item, .lx-step, .lx-faq__item, .lx-final-cta__shell, .lx-promo-card, .lx-testimonial'
         : '.hp-section-head, .lx-section-head, .lx-trustbar__item, .lx-step, .lx-faq__item, ' +
           '.lx-final-cta__shell, .hp-finder-shell, .lx-story, .hp-dynamic-sections .container, ' +
-          '.lx-promo-card, .lx-tile, .lx-testimonial, .lx-stats__item, .hp-fnp-icons__item, ' +
-          '.lx-hero-side-card, .lx-about__visual';
+          '.lx-promo-card, .lx-tile, .lx-testimonial, .lx-stats__item, .lx-about__visual';
 
     var targets = document.querySelectorAll(selector);
     var observer = new IntersectionObserver(function (entries) {

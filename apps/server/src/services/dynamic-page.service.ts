@@ -29,12 +29,29 @@ function mapPage(row: {
   layoutType: string | null;
   pageTag: string | null;
   heroImage: string | null;
+  extraImages: string | null;
   content: string | null;
   metaTitle: string | null;
   metaDescription: string | null;
   metaKeywords: string | null;
   faqs: string | null;
+  midgridImage: string | null;
+  midgridImageAlt: string | null;
 }) {
+  let extraImages: string[] = [];
+  if (row.extraImages) {
+    try {
+      const parsed = JSON.parse(row.extraImages) as unknown;
+      if (Array.isArray(parsed)) {
+        extraImages = parsed
+          .map((item) => (typeof item === 'string' ? mediaUrl(item) : null))
+          .filter((item): item is string => Boolean(item));
+      }
+    } catch {
+      extraImages = [];
+    }
+  }
+
   return {
     id: row.id,
     title: row.title,
@@ -43,6 +60,9 @@ function mapPage(row: {
     layoutType: row.layoutType || 'event_info',
     pageTag: row.pageTag?.trim() || null,
     heroImage: row.heroImage ? mediaUrl(row.heroImage) : null,
+    extraImages,
+    midgridImage: row.midgridImage ? mediaUrl(row.midgridImage) : null,
+    midgridImageAlt: row.midgridImageAlt,
     contentHtml: formatContent(row.content),
     metaTitle: row.metaTitle,
     metaDescription: row.metaDescription,

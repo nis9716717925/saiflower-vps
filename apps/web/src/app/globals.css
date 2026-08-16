@@ -63,6 +63,14 @@ code {
   animation: pulse-green 2.5s infinite;
 }
 
+/* Keep above-the-fold homepage chrome visible during hydration. */
+.homepage-premium .hp-fnp-icons__item,
+.homepage-premium .lx-hero-side-card,
+.homepage-premium .hp-hero-carousel__slide {
+  opacity: 1;
+  transform: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .sf-wa-pulse {
     animation: none !important;

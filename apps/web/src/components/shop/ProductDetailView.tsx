@@ -3,11 +3,11 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Script from 'next/script';
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { apiSend } from '@/lib/api';
 import { useCart } from '@/components/providers/AppProviders';
 import { ProductCard } from '@/components/shop/ProductCard';
-import { discountPercent, formatInr, resolveImageSrc } from '@/lib/images';
+import { discountPercent, formatInr, productGalleryUrls, resolveImageSrc } from '@/lib/images';
 import type { Product } from '@/lib/types';
 
 interface ProductDetailViewProps {
@@ -23,21 +23,14 @@ export function ProductDetailView({ product, listLabel, listHref }: ProductDetai
   const [buying, setBuying] = useState(false);
   const [qty, setQty] = useState(1);
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
-  const img = resolveImageSrc(product.image);
+  const galleryImages = useMemo(() => productGalleryUrls(product), [product]);
+  const img = galleryImages[0] ?? resolveImageSrc(product.image);
   const [selectedImage, setSelectedImage] = useState(img);
   const relatedTrackRef = useRef<HTMLDivElement>(null);
   const discount = discountPercent(product.price, product.originalPrice);
   const inStock = product.inStock !== false;
   const rating = product.rating ?? 5.0;
   const related = product.related ?? [];
-  const gallery = product.galleryImages?.length
-    ? product.galleryImages
-    : product.imagesGallery
-      ? product.imagesGallery.split(',').map((s) => s.trim()).filter(Boolean)
-      : [];
-  const galleryImages = [product.image, ...gallery]
-    .map((src) => resolveImageSrc(src))
-    .filter((src, index, images) => images.indexOf(src) === index);
 
   function scrollRelated(direction: number) {
     const track = relatedTrackRef.current;
@@ -100,6 +93,7 @@ export function ProductDetailView({ product, listLabel, listHref }: ProductDetai
               {discount > 0 ? <span className="pd-media-sale">{discount}% OFF</span> : null}
               <span className="pd-zoom-hint">Tap to enlarge</span>
               <img
+                key={selectedImage}
                 src={selectedImage}
                 id="mainView"
                 width={800}
@@ -111,15 +105,16 @@ export function ProductDetailView({ product, listLabel, listHref }: ProductDetai
             </div>
             {galleryImages.length > 1 && (
               <div className="pd-thumbs" aria-label="Product images">
-                {galleryImages.map((src) => (
+                {galleryImages.map((src, index) => (
                   <button
-                    key={src}
+                    key={`${src}-${index}`}
                     type="button"
                     className={`pd-thumb${selectedImage === src ? ' is-active' : ''}`}
                     onClick={() => setSelectedImage(src)}
                     aria-label="Show product image"
+                    aria-pressed={selectedImage === src}
                   >
-                    <img src={src} alt="" />
+                    <img src={src} alt="" loading="lazy" />
                   </button>
                 ))}
               </div>

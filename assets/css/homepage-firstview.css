@@ -193,6 +193,40 @@
     }
 }
 
+/* Match luxe circular icons on first paint (before homepage-luxe.css finishes loading). */
+.homepage-premium .hp-fnp-icons {
+    background: transparent;
+    border-bottom: none;
+}
+
+.homepage-premium .hp-fnp-icons__img {
+    border-radius: 50%;
+    border: 1.5px solid rgba(194, 160, 90, 0.55);
+    padding: 0.22rem;
+    background: #fff;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+}
+
+.homepage-premium .hp-fnp-icons__img--icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 4.15rem;
+    height: 4.15rem;
+    aspect-ratio: 1;
+    flex-shrink: 0;
+}
+
+.homepage-premium .hp-fnp-icons__img--icon i {
+    font-size: 1.3rem;
+    color: #1e293b;
+    line-height: 1;
+}
+
+.homepage-premium .hp-fnp-icons__img img {
+    border-radius: 50%;
+}
+
 /* Spacing wrapper — does not alter slider internals */
 .hp-fnp-firstview {
     background: #fff;
