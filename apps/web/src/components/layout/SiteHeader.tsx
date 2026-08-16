@@ -168,7 +168,7 @@ export function SiteHeader() {
             <Link href="/cart" className="sf-site-header__icon-btn" aria-label="Cart" style={{ position: 'relative' }}>
               <span className="material-icons-outlined text-2xl">shopping_cart</span>
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-primary text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
+                <span className="sf-site-header__cart-count" aria-hidden="true">
                   {cartCount}
                 </span>
               )}

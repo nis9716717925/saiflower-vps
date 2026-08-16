@@ -11,7 +11,7 @@ const YEAR = new Date().getFullYear();
 export function SiteFooter() {
   return (
     <>
-      <footer className="hidden md:block bg-white dark:bg-slate-900 border-t border-primary/10 pt-16 pb-8 mt-20">
+      <footer className="sf-site-footer hidden md:block bg-white dark:bg-slate-900 border-t border-primary/10 pt-16 pb-8 mt-20">
         <div className="container mx-auto px-4 text-center">
           <div className="flex flex-col items-center justify-center gap-8 mb-12 border-b border-slate-100 pb-10">
             <div className="flex items-center justify-center gap-4 text-slate-500">

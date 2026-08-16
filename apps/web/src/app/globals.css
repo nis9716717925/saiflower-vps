@@ -14,8 +14,88 @@ body {
   font-family: 'Inter', sans-serif;
 }
 
+/* Prevent native button/input chrome before Tailwind CDN or page CSS loads. */
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+input[type='search'],
+input[type='text'],
+input[type='email'],
+input[type='tel'],
+input[type='password'],
+select,
+textarea {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.25rem;
+}
+
 a {
   color: inherit;
+}
+
+/* Material Icons — bundled rules paint before the Google font file arrives. */
+.material-icons-outlined {
+  font-family: 'Material Icons Outlined', sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'liga';
+  vertical-align: middle;
+  width: 1em;
+  height: 1em;
+  overflow: hidden;
+}
+
+/* Hide ligature fallback text until icon webfonts finish loading. */
+html:not(.fonts-ready) .material-icons-outlined,
+html:not(.fonts-ready) .fas,
+html:not(.fonts-ready) .fab,
+html:not(.fonts-ready) .far {
+  color: transparent;
+}
+
+/* Tailwind-independent responsive chrome (avoids CDN flash). */
+@media (min-width: 768px) {
+  #mobileBottomNav,
+  #mobileBottomNavSpacer {
+    display: none !important;
+  }
+
+  .sf-site-footer {
+    display: block;
+  }
+}
+
+@media (max-width: 767px) {
+  .sf-site-footer {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  #mobileMenuBtn {
+    display: none !important;
+  }
 }
 
 code {
@@ -69,6 +149,25 @@ code {
 .homepage-premium .hp-hero-carousel__slide {
   opacity: 1;
   transform: none;
+}
+
+/* Circular category icons on first paint (before homepage route CSS finishes). */
+.homepage-premium .hp-fnp-icons__img {
+  border-radius: 50%;
+  border: 1.5px solid rgba(194, 160, 90, 0.55);
+  padding: 0.22rem;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+}
+
+.homepage-premium .hp-fnp-icons__img--icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4.15rem;
+  height: 4.15rem;
+  aspect-ratio: 1;
+  flex-shrink: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {

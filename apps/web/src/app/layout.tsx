@@ -7,9 +7,10 @@ import { RouteStyles } from '@/components/layout/RouteStyles';
 import { ServerBody } from '@/components/layout/ServerBody';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
-import { TailwindBoot } from '@/components/layout/TailwindBoot';
+import { getThemePrimary, themeCssVars } from '@/lib/theme';
 import '../styles/site-header.css';
 import '../styles/not-found-page.css';
+import './tailwind.css';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -30,21 +31,41 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const themePrimary = await getThemePrimary();
+
   return (
-    <html lang="en">
+    <html lang="en" style={themeCssVars(themePrimary)}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
         <link rel="preconnect" href="https://accounts.google.com" />
-        <link rel="dns-prefetch" href="https://cdn.tailwindcss.com" />
         <link
           rel="preload"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-solid-900.woff2"
           as="font"
           type="font/woff2"
           crossOrigin=""
+        />
+        <link
+          rel="preload"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-brands-400.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin=""
+        />
+        <link
+          rel="preload"
+          href="https://fonts.gstatic.com/s/materialiconsoutlined/v109/gok-H7zzDkdnRel8-DQ6KAXJFi-w.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin=""
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){function m(){document.documentElement.classList.add('fonts-ready')}if(document.fonts&&document.fonts.ready){document.fonts.ready.then(m).catch(m)}else{m()}})();`,
+          }}
         />
         <link
           href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&family=Manrope:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
@@ -62,7 +83,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       </head>
       <ServerBody>
         <RouteStyles />
-        <TailwindBoot />
         <AppProviders>
           <BodyClass />
           <SiteHeader />
