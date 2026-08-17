@@ -1,9 +1,23 @@
 #!/usr/bin/env bash
-# Full Next.js redeploy on the VPS — fixes missing /_next/static chunks (400 errors).
+# Atomic VPS redeploy for SaiFlower web + API.
+# Builds into apps/web/.next-build while live apps/web/.next keeps serving,
+# verifies chunks, swaps directories, then reloads pm2.
+#
+# Usage (on VPS):
+#   cd /var/www/saiflower-vps && bash scripts/vps-redeploy-web.sh
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
+
+WEB_DIR="$ROOT/apps/web"
+LIVE_DIR="$WEB_DIR/.next"
+BUILD_DIR="$WEB_DIR/.next-build"
+PREV_DIR="$WEB_DIR/.next-prev"
+WEB_PORT="${WEB_PORT:-3000}"
+PUBLIC_ORIGIN="${PUBLIC_ORIGIN:-https://saiflower.com}"
+
+echo "==> Repo root: $ROOT"
 
 echo "==> Pull latest code"
 git pull --ff-only origin main
@@ -11,31 +25,85 @@ git pull --ff-only origin main
 echo "==> Install dependencies"
 npm ci
 
-echo "==> Build shared packages + web"
-npm run build:web
+echo "==> Build API + packages"
+npm run build:server
 
-echo "==> Verify critical static chunks exist"
-LAYOUT_CHUNK="$(find apps/web/.next/static/chunks/app -name 'layout-*.js' 2>/dev/null | head -1 || true)"
+echo "==> Atomic web build into .next-build (live .next untouched)"
+rm -rf "$BUILD_DIR"
+export NEXT_DIST_DIR=.next-build
+npm run build:packages
+npm run build -w @saiflower/web
+unset NEXT_DIST_DIR
+
+echo "==> Verify build output"
+node tools/deploy/verify-next-static.mjs --dir=apps/web/.next-build
+
+LAYOUT_CHUNK="$(find "$BUILD_DIR/static/chunks/app" -name 'layout-*.js' 2>/dev/null | head -1 || true)"
 if [ -z "$LAYOUT_CHUNK" ]; then
-  echo "ERROR: layout chunk missing after build — aborting."
+  echo "ERROR: layout chunk missing in .next-build — aborting (live site unchanged)."
   exit 1
 fi
-echo "    layout chunk: $LAYOUT_CHUNK"
+LAYOUT_NAME="$(basename "$LAYOUT_CHUNK")"
+echo "    layout chunk: $LAYOUT_NAME"
 
-echo "==> Verify static chunks"
-node tools/deploy/verify-next-static.mjs
+echo "==> Atomic swap .next-build -> .next"
+rm -rf "$PREV_DIR"
+if [ -d "$LIVE_DIR" ]; then
+  mv "$LIVE_DIR" "$PREV_DIR"
+fi
+mv "$BUILD_DIR" "$LIVE_DIR"
 
-echo "==> Restart Next.js (pm2)"
+rollback() {
+  echo "==> ROLLBACK: restoring previous .next"
+  if [ -d "$PREV_DIR" ]; then
+    rm -rf "$LIVE_DIR"
+    mv "$PREV_DIR" "$LIVE_DIR"
+  fi
+}
+
+echo "==> Reload pm2 processes"
 if command -v pm2 >/dev/null 2>&1; then
-  pm2 restart saiflower-web --update-env 2>/dev/null || pm2 restart web --update-env 2>/dev/null || pm2 restart all --update-env
+  if [ -f "$ROOT/deploy/pm2/ecosystem.config.cjs" ]; then
+    pm2 startOrReload "$ROOT/deploy/pm2/ecosystem.config.cjs" --update-env || true
+  fi
+  pm2 restart saiflower-web --update-env 2>/dev/null \
+    || pm2 restart web --update-env 2>/dev/null \
+    || pm2 restart all --update-env
+  pm2 restart saiflower-api --update-env 2>/dev/null \
+    || pm2 restart server --update-env 2>/dev/null \
+    || true
   pm2 save
+  pm2 list
 else
-  echo "WARN: pm2 not found — restart Next.js manually: npm run start -w @saiflower/web"
+  echo "WARN: pm2 not found — start Next manually from $ROOT"
 fi
 
-echo "==> Restart API (pm2) so Google OAuth env is loaded"
-if command -v pm2 >/dev/null 2>&1; then
-  pm2 restart saiflower-api --update-env 2>/dev/null || pm2 restart server --update-env 2>/dev/null || true
+echo "==> Wait for local server"
+sleep 4
+
+echo "==> Probe local chunks"
+if ! node tools/deploy/probe-live-chunks.mjs --origin="http://127.0.0.1:${WEB_PORT}"; then
+  echo "ERROR: local chunk probe failed after swap."
+  rollback
+  if command -v pm2 >/dev/null 2>&1; then
+    pm2 restart saiflower-web --update-env 2>/dev/null || pm2 restart all --update-env || true
+  fi
+  exit 1
 fi
 
-echo "Done. Test: https://saiflower.com/login"
+echo "==> Probe public site"
+if ! node tools/deploy/probe-live-chunks.mjs --origin="$PUBLIC_ORIGIN"; then
+  echo "WARN: public probe failed. Live local build is OK."
+  echo "      Check nginx includes deploy/nginx/next-static.conf BEFORE location /"
+  echo "      alias must be: $LIVE_DIR/static/"
+  echo "      Then: nginx -t && systemctl reload nginx"
+  echo "      Re-test: node tools/deploy/probe-live-chunks.mjs"
+else
+  echo "==> Cleaning previous build"
+  rm -rf "$PREV_DIR"
+fi
+
+API_STATUS="$(curl -s -o /dev/null -w '%{http_code}' "${PUBLIC_ORIGIN}/api/v1/health" || true)"
+echo "    public API health HTTP ${API_STATUS}"
+
+echo "Done. Hard refresh https://saiflower.com/ (Ctrl+Shift+R)."

@@ -8,6 +8,8 @@ import path from 'node:path';
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  // Allow atomic VPS deploys: build into .next-build while live .next keeps serving.
+  distDir: process.env.NEXT_DIST_DIR || '.next',
   outputFileTracingRoot: path.join(__dirname, '../..'),
   transpilePackages: ['@saiflower/shared'],
   images: {

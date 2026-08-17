@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { AppProviders } from '@/components/providers/AppProviders';
 import { OrderSuccessBanner } from '@/components/home/OrderSuccessBanner';
 import { BodyClass } from '@/components/layout/BodyClass';
+import { ChunkLoadRecovery } from '@/components/layout/ChunkLoadRecovery';
 import { CriticalPaintGuard } from '@/components/layout/CriticalPaintGuard';
 import { CriticalRouteStyles } from '@/components/layout/CriticalRouteStyles';
 import { RouteStyles } from '@/components/layout/RouteStyles';
@@ -84,6 +85,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         {/* saiflower-build: fouc-v3 */}
         <RouteStyles />
         <AppProviders>
+          <ChunkLoadRecovery />
           <BodyClass />
           <SiteHeader />
           <OrderSuccessBanner />
