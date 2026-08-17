@@ -807,6 +807,54 @@ body.checkout-funnel-body .sf-bottom-nav {
   display: block;
 }
 
+.sf-google-auth {
+  margin-top: 1rem;
+}
+
+.sf-google-auth__divider {
+  position: relative;
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.sf-google-auth__divider span {
+  position: relative;
+  z-index: 1;
+  padding: 0 0.75rem;
+  background: #fff;
+  color: #94a3b8;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.sf-google-auth__divider::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  border-top: 1px solid #eef2ef;
+}
+
+.sf-google-auth__button {
+  display: flex;
+  justify-content: center;
+  min-height: 44px;
+}
+
+.sf-google-auth__hint {
+  margin: 0.5rem 0 0;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.sf-google-auth__hint--warn {
+  color: #8a6110;
+}
+
 .qc-skeleton {
   border-radius: 1rem;
   background: linear-gradient(90deg, #eef2ef 25%, #f7faf8 50%, #eef2ef 75%);
