@@ -33,6 +33,7 @@
     "smoke:routes": "node tools/smoke/route-inventory.mjs",
     "uploads:pack": "node tools/deploy/package-uploads.mjs",
     "uploads:supabase": "node tools/deploy/upload-to-supabase.mjs",
+    "deploy:web": "npm run build:web",
     "setup:uploads": "bash scripts/vps/setup-uploads.sh"
   },
   "engines": {

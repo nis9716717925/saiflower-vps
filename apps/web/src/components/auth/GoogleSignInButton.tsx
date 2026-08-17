@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import Script from 'next/script';
 import { apiSend, setAuth } from '@/lib/api';
 import { useCart } from '@/components/providers/AppProviders';
+import { GOOGLE_CLIENT_ID } from '@/lib/google-client-id';
 import type { AuthPayload } from '@/lib/types';
 
 const GIS_SRC = 'https://accounts.google.com/gsi/client';
@@ -28,13 +28,12 @@ declare global {
 }
 
 interface GoogleSignInButtonProps {
-  /** Prefer passing from a server component so production picks up runtime env. */
   clientId?: string;
   onSuccess?: () => void;
   onError?: (message: string) => void;
 }
 
-function waitForGoogle(maxMs = 8000): Promise<boolean> {
+function waitForGoogle(maxMs = 10000): Promise<boolean> {
   return new Promise((resolve) => {
     if (window.google?.accounts?.id) {
       resolve(true);
@@ -56,6 +55,36 @@ function waitForGoogle(maxMs = 8000): Promise<boolean> {
   });
 }
 
+function loadGisScript(): Promise<void> {
+  if (window.google?.accounts?.id) return Promise.resolve();
+
+  const existing = document.querySelector<HTMLScriptElement>('script[data-sf-gis]');
+  if (existing) {
+    return existing.dataset.sfGisLoaded === '1'
+      ? Promise.resolve()
+      : new Promise((resolve, reject) => {
+          existing.addEventListener('load', () => resolve(), { once: true });
+          existing.addEventListener('error', () => reject(new Error('GIS script failed')), {
+            once: true,
+          });
+        });
+  }
+
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = GIS_SRC;
+    script.async = true;
+    script.defer = true;
+    script.dataset.sfGis = '1';
+    script.onload = () => {
+      script.dataset.sfGisLoaded = '1';
+      resolve();
+    };
+    script.onerror = () => reject(new Error('GIS script failed'));
+    document.head.appendChild(script);
+  });
+}
+
 export function GoogleSignInButton({
   clientId: clientIdProp,
   onSuccess,
@@ -65,11 +94,9 @@ export function GoogleSignInButton({
   const containerRef = useRef<HTMLDivElement>(null);
   const onSuccessRef = useRef(onSuccess);
   const onErrorRef = useRef(onError);
-  const [scriptReady, setScriptReady] = useState(false);
   const [renderState, setRenderState] = useState<'loading' | 'ready' | 'error'>('loading');
 
-  const envClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID?.trim() ?? '';
-  const clientId = clientIdProp?.trim() || envClientId;
+  const clientId = clientIdProp?.trim() || GOOGLE_CLIENT_ID;
 
   onSuccessRef.current = onSuccess;
   onErrorRef.current = onError;
@@ -92,29 +119,34 @@ export function GoogleSignInButton({
 
     async function renderButton() {
       if (cancelled || !containerRef.current) return;
-
       setRenderState('loading');
-      const ready = scriptReady || (await waitForGoogle());
-      if (cancelled || !ready || !window.google?.accounts?.id || !containerRef.current) {
-        if (!cancelled) setRenderState('error');
-        return;
-      }
 
-      const node = containerRef.current;
-      node.innerHTML = '';
-      window.google.accounts.id.initialize({
-        client_id: clientId,
-        callback: (response) => {
-          void handleCredential(response.credential);
-        },
-      });
-      window.google.accounts.id.renderButton(node, {
-        theme: 'outline',
-        size: 'large',
-        width: Math.min(320, node.parentElement?.clientWidth ?? 320),
-        text: 'continue_with',
-      });
-      if (!cancelled) setRenderState('ready');
+      try {
+        await loadGisScript();
+        const ready = await waitForGoogle();
+        if (cancelled || !ready || !window.google?.accounts?.id || !containerRef.current) {
+          if (!cancelled) setRenderState('error');
+          return;
+        }
+
+        const node = containerRef.current;
+        node.innerHTML = '';
+        window.google.accounts.id.initialize({
+          client_id: clientId,
+          callback: (response) => {
+            void handleCredential(response.credential);
+          },
+        });
+        window.google.accounts.id.renderButton(node, {
+          theme: 'outline',
+          size: 'large',
+          width: Math.min(320, node.parentElement?.clientWidth || 320),
+          text: 'continue_with',
+        });
+        if (!cancelled) setRenderState('ready');
+      } catch {
+        if (!cancelled) setRenderState('error');
+      }
     }
 
     void renderButton();
@@ -122,19 +154,12 @@ export function GoogleSignInButton({
     return () => {
       cancelled = true;
     };
-  }, [clientId, scriptReady, refreshCart]);
+  }, [clientId, refreshCart]);
 
   if (!clientId) return null;
 
   return (
     <div className="sf-google-auth">
-      <Script
-        id="sf-google-gsi"
-        src={GIS_SRC}
-        strategy="afterInteractive"
-        onLoad={() => setScriptReady(true)}
-        onError={() => setRenderState('error')}
-      />
       <div className="sf-google-auth__divider" aria-hidden="true">
         <span>or</span>
       </div>
@@ -144,7 +169,7 @@ export function GoogleSignInButton({
       )}
       {renderState === 'error' && (
         <p className="sf-google-auth__hint sf-google-auth__hint--warn">
-          Google sign-in could not load. Refresh the page or try email login.
+          Google sign-in could not load. Refresh the page or use email login below.
         </p>
       )}
     </div>
