@@ -64,7 +64,7 @@ export function ensureStylesheet(href: string): void {
 export const HOMEPAGE_CRITICAL_CSS = [
   '/assets/css/homepage-premium.css?v=5',
   '/assets/css/homepage-firstview.css?v=2',
-  '/assets/css/homepage-luxe.css?v=6',
+  '/assets/css/homepage-luxe.css?v=7',
 ] as const;
 
 const RESERVED_ROOT_SEGMENTS = new Set([
@@ -136,11 +136,11 @@ export function pageCss(pathname: string): string[] {
   }
 
   if (pathname === '/flowers' || pathname === '/cakes' || pathname === '/gifts') {
-    return ['/assets/css/shop-commerce.css?v=3', '/assets/css/shop-luxe.css', '/assets/css/category-page.css'];
+    return ['/assets/css/shop-commerce.css?v=4', '/assets/css/shop-luxe.css', '/assets/css/category-page.css'];
   }
 
   if (pathname === '/search-results' || pathname.startsWith('/search-results')) {
-    return ['/assets/css/shop-commerce.css?v=3'];
+    return ['/assets/css/shop-commerce.css?v=4'];
   }
 
   if (

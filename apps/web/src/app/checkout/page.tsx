@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { SHIPPING } from '@saiflower/shared';
 import { apiGet, apiSend, getCustomer } from '@/lib/api';
 import { useCart } from '@/components/providers/AppProviders';
@@ -78,6 +78,7 @@ export default function CheckoutPage() {
   const [searchingAddress, setSearchingAddress] = useState(false);
   const [addressSearchError, setAddressSearchError] = useState('');
   const [detectingLocation, setDetectingLocation] = useState(false);
+  const autoDetectAttempted = useRef(false);
 
   const [delDate, setDelDate] = useState('');
   const [delTime, setDelTime] = useState('Morning (9am - 12pm)');
@@ -237,6 +238,7 @@ export default function CheckoutPage() {
             ? 'Location permission was denied. Allow location access and try again.'
             : 'We could not detect your location. Please try again or enter the address.';
         setFormError(message);
+        sessionStorage.setItem('sf-location-denied', '1');
       } else {
         setFormError(err instanceof Error ? err.message : 'Could not detect your location');
       }
@@ -244,6 +246,22 @@ export default function CheckoutPage() {
       setDetectingLocation(false);
     }
   }
+
+  // Auto-detect location once when the address form is empty (user can still type manually).
+  useEffect(() => {
+    if (loading || autoDetectAttempted.current) return;
+    if (step !== 'address') return;
+    if (!showNewAddressForm && addresses.length > 0) return;
+    if (flatHouseNo.trim() || apartmentStreetLocality.trim() || pincode.trim()) return;
+    if (!navigator.geolocation) return;
+    if (sessionStorage.getItem('sf-location-denied') === '1') return;
+
+    autoDetectAttempted.current = true;
+    void detectCurrentLocation().catch(() => {
+      sessionStorage.setItem('sf-location-denied', '1');
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- run once when checkout address step is ready
+  }, [loading, step, showNewAddressForm, addresses.length]);
 
   const subtotal = cart?.subtotal ?? 0;
   const discount = cart?.discountAmount ?? 0;
@@ -519,6 +537,9 @@ export default function CheckoutPage() {
         </div>
         <div className="qc-field" style={{ gridColumn: '1 / -1' }}>
           <label className="qc-label">Apartment / Street / Locality</label>
+          <p className="qc-muted" style={{ margin: '0 0 0.45rem', fontSize: '0.82rem' }}>
+            Start typing for Google suggestions, or use &ldquo;Use my location&rdquo; above.
+          </p>
           <div style={{ position: 'relative' }}>
             <input
               className="qc-input"

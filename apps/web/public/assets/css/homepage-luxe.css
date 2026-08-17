@@ -2222,17 +2222,12 @@
 /* ============================================================
    High-converting shop first-view (FNP-style promo grid)
    ============================================================ */
-.sf-shop {
+.sf-firstview-desktop.sf-shop {
     padding: 0;
     background: transparent;
 }
 
-.sf-shop .hp-fnp-icons {
-    padding-top: 0.85rem;
-    padding-bottom: 0.35rem;
-}
-
-.sf-shop__grid {
+.sf-firstview-desktop .sf-shop__grid {
     max-width: 1520px;
     margin: 0 auto;
     padding: 0.35rem var(--hp-edge) 0.85rem;
@@ -2242,7 +2237,7 @@
 }
 
 @media (min-width: 900px) {
-    .sf-shop__grid {
+    .sf-firstview-desktop .sf-shop__grid {
         grid-template-columns: minmax(15rem, 0.92fr) minmax(0, 2.1fr);
         gap: 1rem;
         align-items: stretch;
@@ -2250,14 +2245,14 @@
     }
 }
 
-.sf-shop__sides {
+.sf-firstview-desktop .sf-shop__sides {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0.75rem;
 }
 
 @media (min-width: 900px) {
-    .sf-shop__sides {
+    .sf-firstview-desktop .sf-shop__sides {
         grid-template-columns: 1fr;
         height: var(--sf-banner-h);
     }
@@ -2848,7 +2843,7 @@
 }
 
 @media (max-width: 640px) {
-    .sf-shop__sides {
+    .sf-firstview-desktop .sf-shop__sides {
         grid-template-columns: 1fr;
     }
 
