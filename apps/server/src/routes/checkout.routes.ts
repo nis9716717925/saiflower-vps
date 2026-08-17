@@ -36,7 +36,6 @@ checkoutRouter.get('/summary', async (req: AuthRequest, res, next) => {
 
 checkoutRouter.post(
   '/place-order',
-  authenticate,
   validate([
     body('name').isString().trim().notEmpty(),
     body('phone').isString().trim().notEmpty(),
@@ -61,7 +60,7 @@ checkoutRouter.post(
         recipient_phone: req.body.recipient_phone,
         delivery_time: req.body.delivery_time ?? req.body.time,
         address_id: req.body.address_id != null ? Number(req.body.address_id) : undefined,
-        userId: req.user!.id,
+        userId: req.user?.id,
         guestId: req.guestId,
       });
       res.status(201).json(successResponse(result.message, result));
@@ -91,7 +90,8 @@ shippingRouter.post('/calculate', async (req, res, next) => {
 
 shippingRouter.get(
   '/address-suggestions',
-  authenticate,
+  optionalAuth,
+  guestCart,
   validate([query('input').isString().trim().isLength({ min: 3, max: 200 })]),
   async (req, res, next) => {
     try {
@@ -105,7 +105,8 @@ shippingRouter.get(
 
 shippingRouter.post(
   '/place-details',
-  authenticate,
+  optionalAuth,
+  guestCart,
   validate([body('placeId').isString().trim().notEmpty()]),
   async (req, res, next) => {
     try {
@@ -119,7 +120,8 @@ shippingRouter.post(
 
 shippingRouter.post(
   '/reverse-geocode',
-  authenticate,
+  optionalAuth,
+  guestCart,
   validate([
     body('latitude').isFloat({ min: -90, max: 90 }),
     body('longitude').isFloat({ min: -180, max: 180 }),

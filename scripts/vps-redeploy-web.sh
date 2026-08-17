@@ -22,6 +22,9 @@ if [ -z "$LAYOUT_CHUNK" ]; then
 fi
 echo "    layout chunk: $LAYOUT_CHUNK"
 
+echo "==> Verify static chunks"
+node tools/deploy/verify-next-static.mjs
+
 echo "==> Restart Next.js (pm2)"
 if command -v pm2 >/dev/null 2>&1; then
   pm2 restart saiflower-web --update-env 2>/dev/null || pm2 restart web --update-env 2>/dev/null || pm2 restart all --update-env

@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import path from 'node:path';
 
 /**
  * URL parity helpers + rewrites for the Next.js storefront.
@@ -7,6 +8,7 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  outputFileTracingRoot: path.join(__dirname, '../..'),
   transpilePackages: ['@saiflower/shared'],
   images: {
     remotePatterns: [

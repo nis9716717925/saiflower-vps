@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { SHIPPING } from '@saiflower/shared';
 import { apiGet, apiSend, getCustomer } from '@/lib/api';
 import { useCart } from '@/components/providers/AppProviders';
@@ -30,6 +30,16 @@ type ShippingOk = {
 
 type ShippingFail = { ok: false };
 
+type CheckoutAddressSnapshot = {
+  recipientName: string;
+  mobile: string;
+  email: string | null;
+  flatHouseNo: string;
+  apartmentStreetLocality: string;
+  pincode: string;
+  addressType: AddressType;
+};
+
 const ADDRESS_TYPES: AddressType[] = ['Home', 'Work', 'Other'];
 
 const TIME_SLOTS = [
@@ -45,7 +55,23 @@ function buildDeliveryAddress(flatHouseNo: string, locality: string, pincode: st
 }
 
 export default function CheckoutPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="qc-shell">
+          <div className="qc-skeleton" />
+        </main>
+      }
+    >
+      <CheckoutPageContent />
+    </Suspense>
+  );
+}
+
+function CheckoutPageContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isGuest = searchParams.get('guest') === '1';
   const { refreshCart } = useCart();
   const [step, setStep] = useState<CheckoutStep>('address');
   const [cart, setCart] = useState<CartData | null>(null);
@@ -53,6 +79,7 @@ export default function CheckoutPage() {
   const [savingAddress, setSavingAddress] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [addresses, setAddresses] = useState<CustomerAddress[]>([]);
+  const [guestAddress, setGuestAddress] = useState<CheckoutAddressSnapshot | null>(null);
   const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
   const [showNewAddressForm, setShowNewAddressForm] = useState(true);
 
@@ -89,11 +116,17 @@ export default function CheckoutPage() {
     [addresses, selectedAddressId],
   );
 
+  const paymentAddress = isGuest ? guestAddress : selectedAddress;
+
   useEffect(() => {
     void (async () => {
       try {
         const session = await apiGet<AuthSession>('/auth/session');
-        if (!session.authenticated) {
+        if (session.authenticated && isGuest) {
+          router.replace('/checkout');
+          return;
+        }
+        if (!session.authenticated && !isGuest) {
           router.replace(`/login?redirect=${encodeURIComponent('/checkout')}`);
           return;
         }
@@ -102,6 +135,11 @@ export default function CheckoutPage() {
         setCart(data);
         if (data.items.length === 0) {
           router.replace('/cart');
+          return;
+        }
+
+        if (isGuest) {
+          setShowNewAddressForm(true);
           return;
         }
 
@@ -118,13 +156,17 @@ export default function CheckoutPage() {
           setMobile(session.customer?.phone ?? customer?.phone ?? '');
         }
       } catch {
-        router.replace(`/login?redirect=${encodeURIComponent('/checkout')}`);
+        if (isGuest) {
+          router.replace('/cart');
+        } else {
+          router.replace(`/login?redirect=${encodeURIComponent('/checkout')}`);
+        }
       } finally {
         setLoading(false);
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router]);
+  }, [router, isGuest]);
 
   useEffect(() => {
     const minDate = new Date().toISOString().slice(0, 10);
@@ -329,6 +371,41 @@ export default function CheckoutPage() {
     setFormError('');
     setSavingAddress(true);
     try {
+      if (isGuest) {
+        const snapshot: CheckoutAddressSnapshot = {
+          recipientName: recipientName.trim(),
+          mobile: mobile.trim(),
+          email: email.trim() || null,
+          flatHouseNo: flatHouseNo.trim(),
+          apartmentStreetLocality: apartmentStreetLocality.trim(),
+          pincode: pincode.trim(),
+          addressType,
+        };
+        if (
+          !snapshot.recipientName ||
+          !snapshot.mobile ||
+          !snapshot.flatHouseNo ||
+          !snapshot.apartmentStreetLocality ||
+          !snapshot.pincode
+        ) {
+          setFormError('Please fill all required delivery fields.');
+          return;
+        }
+
+        const shipping = await calculateShipping({
+          flatHouseNo: snapshot.flatHouseNo,
+          locality: snapshot.apartmentStreetLocality,
+          pincode: snapshot.pincode,
+        });
+        if (!shipping.ok) {
+          setFormError('Please enter a valid delivery address so we can calculate shipping.');
+          return;
+        }
+        setGuestAddress(snapshot);
+        setStep('payment');
+        return;
+      }
+
       let saved: CustomerAddress;
       if (!showNewAddressForm && selectedAddressId) {
         saved = await apiSend<CustomerAddress>(`/addresses/${selectedAddressId}`, 'PATCH', {
@@ -400,15 +477,15 @@ export default function CheckoutPage() {
   }
 
   async function handleWhatsAppOrder() {
-    if (!cart?.items.length || !selectedAddress) return;
+    if (!cart?.items.length || !paymentAddress) return;
 
     let fee = shippingFee;
     let km = distanceKm;
     if (!shippingReady) {
       const shipping = await calculateShipping({
-        flatHouseNo: selectedAddress.flatHouseNo,
-        locality: selectedAddress.apartmentStreetLocality,
-        pincode: selectedAddress.pincode,
+        flatHouseNo: paymentAddress.flatHouseNo,
+        locality: paymentAddress.apartmentStreetLocality,
+        pincode: paymentAddress.pincode,
       });
       if (!shipping.ok) {
         alert('Please enter a valid delivery address so we can calculate shipping.');
@@ -421,9 +498,9 @@ export default function CheckoutPage() {
 
     setSubmitting(true);
     const address = buildDeliveryAddress(
-      selectedAddress.flatHouseNo,
-      selectedAddress.apartmentStreetLocality,
-      selectedAddress.pincode,
+      paymentAddress.flatHouseNo,
+      paymentAddress.apartmentStreetLocality,
+      paymentAddress.pincode,
     );
     const itemLines = cart.items.map(
       (item) => `• ${item.name} (x${item.qty}) - ${formatInr(item.price * item.qty)}`,
@@ -433,15 +510,17 @@ export default function CheckoutPage() {
 
     try {
       const result = await apiSend<PlaceOrderResult>('/checkout/place-order', 'POST', {
-        name: sender?.name || selectedAddress.recipientName,
-        phone: sender?.phone || selectedAddress.mobile,
-        email: selectedAddress.email || sender?.email || '',
+        name: sender?.name || paymentAddress.recipientName,
+        phone: sender?.phone || paymentAddress.mobile,
+        email: paymentAddress.email || sender?.email || '',
         address,
         date: delDate,
         delivery_time: delTime,
-        recipient_name: selectedAddress.recipientName,
-        recipient_phone: selectedAddress.mobile,
-        address_id: selectedAddress.id,
+        recipient_name: paymentAddress.recipientName,
+        recipient_phone: paymentAddress.mobile,
+        ...(isGuest || !('id' in paymentAddress)
+          ? {}
+          : { address_id: (paymentAddress as CustomerAddress).id }),
         items: itemLines.join('\n'),
         total: payable,
         shipping_fee: fee,
@@ -691,7 +770,9 @@ export default function CheckoutPage() {
           <p className="qc-subtitle">
             {step === 'payment'
               ? 'Confirm your address, schedule and WhatsApp payment.'
-              : 'Add recipient details, save your address, then continue.'}
+              : isGuest
+                ? 'Guest checkout — enter delivery details, no account needed.'
+                : 'Add recipient details, save your address, then continue.'}
           </p>
         </div>
       </div>
@@ -700,7 +781,7 @@ export default function CheckoutPage() {
         <div className="qc-stack">
           {step === 'address' && (
             <form id="checkout-address-form" onSubmit={handleSaveAndContinue} className="qc-stack">
-              {addresses.length > 0 && (
+              {addresses.length > 0 && !isGuest && (
                 <div className="qc-card">
                   <div className="qc-card__head">
                     <h2 className="qc-card__title">
@@ -781,7 +862,7 @@ export default function CheckoutPage() {
               {formError && <div className="qc-alert qc-alert--err">{formError}</div>}
 
               <button type="submit" className="qc-cta qc-cta--desktop-only" disabled={savingAddress}>
-                {savingAddress ? 'Saving…' : 'Save & Continue'}
+                {savingAddress ? 'Saving…' : isGuest ? 'Continue' : 'Save & Continue'}
                 <span className="material-icons-outlined" style={{ fontSize: '1.1rem' }}>
                   arrow_forward
                 </span>
@@ -789,7 +870,7 @@ export default function CheckoutPage() {
             </form>
           )}
 
-          {step === 'payment' && selectedAddress && (
+          {step === 'payment' && paymentAddress && (
             <div className="qc-stack">
               <div className="qc-card">
                 <div className="qc-card__head">
@@ -803,18 +884,18 @@ export default function CheckoutPage() {
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.75rem' }}>
                   <div>
-                    <strong>{selectedAddress.recipientName}</strong>
+                    <strong>{paymentAddress.recipientName}</strong>
                     <p className="qc-muted" style={{ margin: '0.3rem 0 0' }}>
-                      {selectedAddress.mobile}
-                      {selectedAddress.email ? ` · ${selectedAddress.email}` : ''}
+                      {paymentAddress.mobile}
+                      {paymentAddress.email ? ` · ${paymentAddress.email}` : ''}
                     </p>
                     <p className="qc-muted" style={{ margin: '0.35rem 0 0', lineHeight: 1.45 }}>
-                      {selectedAddress.flatHouseNo}, {selectedAddress.apartmentStreetLocality}
+                      {paymentAddress.flatHouseNo}, {paymentAddress.apartmentStreetLocality}
                       <br />
-                      PIN {selectedAddress.pincode} · {selectedAddress.addressType}
+                      PIN {paymentAddress.pincode} · {paymentAddress.addressType}
                     </p>
                   </div>
-                  <span className="qc-badge qc-badge--green">{selectedAddress.addressType}</span>
+                  <span className="qc-badge qc-badge--green">{paymentAddress.addressType}</span>
                 </div>
                 <div className="qc-divider" />
                 <p className="qc-muted" style={{ margin: 0 }}>

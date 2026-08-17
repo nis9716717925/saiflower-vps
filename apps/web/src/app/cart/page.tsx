@@ -8,6 +8,8 @@ import { CheckoutProgress } from '@/components/checkout/CheckoutProgress';
 import { formatInr, resolveImageSrc } from '@/lib/images';
 import type { CartData } from '@/lib/types';
 
+const CHECKOUT_REDIRECT = encodeURIComponent('/checkout');
+
 export default function CartPage() {
   const { refreshCart } = useCart();
   const [cart, setCart] = useState<CartData | null>(null);
@@ -121,10 +123,56 @@ export default function CartPage() {
       ? String((cart.coupon as { code?: string }).code ?? '')
       : '';
 
-  const continueHref = loggedIn
-    ? '/checkout'
-    : `/login?redirect=${encodeURIComponent('/checkout')}`;
-  const continueLabel = loggedIn ? 'Continue' : 'Login to continue';
+  const continueHref = loggedIn ? '/checkout' : `/login?redirect=${CHECKOUT_REDIRECT}`;
+  const guestCheckoutHref = '/checkout?guest=1';
+
+  const checkoutActions = !loggedIn ? (
+    <div className="qc-auth-actions">
+      <Link href={continueHref} className="qc-cta">
+        Log in to continue
+        <span className="material-icons-outlined" style={{ fontSize: '1.1rem' }}>
+          login
+        </span>
+      </Link>
+      <Link
+        href={`/register?redirect=${CHECKOUT_REDIRECT}`}
+        className="qc-cta qc-cta--ghost"
+      >
+        Create account
+      </Link>
+      <Link href={guestCheckoutHref} className="qc-cta qc-cta--guest">
+        Continue as guest
+        <span className="material-icons-outlined" style={{ fontSize: '1.1rem' }}>
+          arrow_forward
+        </span>
+      </Link>
+      <p className="qc-muted qc-auth-actions__hint">
+        Guest checkout skips saving your address — you can still pay on WhatsApp.
+      </p>
+    </div>
+  ) : (
+    <Link href={continueHref} className="qc-cta qc-cta--desktop-only" style={{ marginTop: '1rem' }}>
+      Continue
+      <span className="material-icons-outlined" style={{ fontSize: '1.1rem' }}>
+        arrow_forward
+      </span>
+    </Link>
+  );
+
+  const mobileContinue = !loggedIn ? (
+    <div className="qc-mobile-bar__actions">
+      <Link href={guestCheckoutHref} className="qc-cta qc-cta--guest qc-cta--compact">
+        Guest
+      </Link>
+      <Link href={continueHref} className="qc-cta qc-cta--compact">
+        Log in
+      </Link>
+    </div>
+  ) : (
+    <Link href={continueHref} className="qc-cta">
+      Continue
+    </Link>
+  );
 
   const billCard = (
     <div className="qc-card">
@@ -217,28 +265,11 @@ export default function CartPage() {
 
       {!loggedIn && (
         <div className="qc-alert qc-alert--info" style={{ marginTop: '0.9rem' }}>
-          Log in to save your address and finish checkout on WhatsApp.
+          Log in to save addresses, or continue as guest to checkout on WhatsApp.
         </div>
       )}
 
-      <Link href={continueHref} className="qc-cta qc-cta--desktop-only" style={{ marginTop: '1rem' }}>
-        {continueLabel}
-        <span className="material-icons-outlined" style={{ fontSize: '1.1rem' }}>
-          arrow_forward
-        </span>
-      </Link>
-
-      {!loggedIn && (
-        <p className="qc-muted" style={{ textAlign: 'center', marginTop: '0.75rem' }}>
-          New here?{' '}
-          <Link
-            href={`/register?redirect=${encodeURIComponent('/checkout')}`}
-            style={{ color: '#1f6a4a', fontWeight: 800 }}
-          >
-            Create an account
-          </Link>
-        </p>
-      )}
+      {checkoutActions}
     </div>
   );
 
@@ -339,9 +370,7 @@ export default function CartPage() {
             <small>Estimated total</small>
             <strong>{formatInr(cart.grandTotal)}</strong>
           </div>
-          <Link href={continueHref} className="qc-cta">
-            {continueLabel}
-          </Link>
+          {mobileContinue}
         </div>
       </div>
     </main>

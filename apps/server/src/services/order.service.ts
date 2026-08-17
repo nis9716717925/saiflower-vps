@@ -57,11 +57,15 @@ export async function placeOrder(input: {
 }) {
   requireAddressFields(input.name, input.phone, input.address);
 
-  if (!input.userId) {
-    throw new AppError('Please log in to place your order.', 401);
+  if (!input.userId && !input.guestId) {
+    throw new AppError('Please log in or continue as guest to place your order.', 401);
   }
 
-  if (input.address_id) {
+  if (input.address_id && !input.userId) {
+    throw new ValidationError('Saved addresses require a logged-in account.');
+  }
+
+  if (input.address_id && input.userId) {
     const saved = await prisma.customerAddress.findFirst({
       where: { id: input.address_id, customerId: input.userId },
       select: { id: true },
