@@ -167,23 +167,21 @@ export function SiteFooter() {
         </div>
       </footer>
 
-      <div
-        id="mobileFooterLinks"
-        className="md:hidden pt-6 pb-2 px-4 mt-4 mb-2 bg-transparent border-t border-slate-100 dark:border-slate-800"
-      >
-        <div className="container mx-auto opacity-95 text-center">
-          <div className="flex flex-col items-center justify-center gap-4 mb-6 py-4 border-b border-slate-100/50">
-            <div className="flex items-center justify-center gap-3">
-              <i className="fas fa-credit-card text-2xl text-slate-400" />
-              <div className="text-left flex flex-col justify-center">
-                <span className="font-bold text-slate-700 text-sm leading-tight">100% Safe & Secure Payment</span>
+      <div id="mobileFooterLinks" className="md:hidden">
+        <div className="sf-mfooter__inner">
+          <div className="sf-mfooter__trust">
+            <div className="sf-mfooter__trust-row">
+              <i className="fas fa-credit-card text-2xl text-slate-400" aria-hidden="true" />
+              <div className="text-left">
+                <span className="font-bold text-slate-700 text-sm leading-tight block">
+                  100% Safe & Secure Payment
+                </span>
                 <span className="text-[10px] text-slate-400">Secure payment methods</span>
               </div>
             </div>
-            <div className="flex items-center justify-center gap-4 mt-1">
+            <div className="sf-mfooter__social">
               <a
                 href="https://www.facebook.com/people/Sai-Flower/pfbid02xh4jFwjL4XzuB7GqE3G5GictcdAZZok3aWQKL74MNmoFmZeUsDkQK9kJ69DJ9h8Yl/"
-                className="w-9 h-9 rounded-xl border border-slate-200 flex items-center justify-center text-slate-400 hover:text-white hover:bg-[#1877F2] transition-colors duration-300"
                 aria-label="Facebook"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -192,7 +190,6 @@ export function SiteFooter() {
               </a>
               <a
                 href="https://x.com/saiflower03"
-                className="w-9 h-9 rounded-xl border border-slate-200 flex items-center justify-center text-slate-400 hover:text-white hover:bg-black transition-colors duration-300"
                 aria-label="X"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -201,7 +198,6 @@ export function SiteFooter() {
               </a>
               <a
                 href="https://www.instagram.com/saiflowerofficial/"
-                className="w-9 h-9 rounded-xl border border-slate-200 flex items-center justify-center text-slate-400 hover:text-white hover:bg-[#E4405F] transition-colors duration-300"
                 aria-label="Instagram"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -211,19 +207,17 @@ export function SiteFooter() {
             </div>
           </div>
 
-          <h4 className="font-bold text-sm mb-4 text-center text-primary uppercase tracking-[0.15em]">Quick Links</h4>
-          <div className="grid grid-cols-2 gap-y-3 gap-x-3 text-[13px] text-slate-500 font-medium px-2 mb-6">
-            <Link className="hover:text-primary transition-colors py-1" href="/about">About Us</Link>
-            <Link className="hover:text-primary transition-colors py-1" href="/contact">Contact</Link>
-            <Link className="hover:text-primary transition-colors py-1" href="/privacy">Privacy Policy</Link>
-            <Link className="hover:text-primary transition-colors py-1" href="/terms">Terms of Use</Link>
-            <Link className="hover:text-primary transition-colors py-1" href="/refund-policy">Refunds</Link>
-            <Link className="hover:text-primary transition-colors py-1" href="/delivery-policy">Delivery Info</Link>
+          <h4>Quick Links</h4>
+          <div className="sf-mfooter__links">
+            <Link href="/about">About Us</Link>
+            <Link href="/contact">Contact</Link>
+            <Link href="/privacy">Privacy Policy</Link>
+            <Link href="/terms">Terms of Use</Link>
+            <Link href="/refund-policy">Refunds</Link>
+            <Link href="/delivery-policy">Delivery Info</Link>
           </div>
 
-          <div className="text-center mt-4 text-[10px] text-slate-400 font-medium tracking-[0.05em] uppercase pb-2">
-            © {YEAR} Sai Flower
-          </div>
+          <p className="sf-mfooter__copy">© {YEAR} Sai Flower</p>
         </div>
       </div>
 

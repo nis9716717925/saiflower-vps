@@ -620,7 +620,7 @@
     .homepage-premium .hp-fnp-firstview,
     .homepage-premium main,
     .homepage-premium section {
-        max-width: 100vw;
+        max-width: 100%;
     }
 
     .homepage-premium .lx-promo-card__copy,

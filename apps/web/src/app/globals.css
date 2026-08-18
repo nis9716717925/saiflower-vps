@@ -98,6 +98,109 @@ html.sf-loading .far {
   .sf-site-footer {
     display: none;
   }
+
+  html,
+  body,
+  #sf-page {
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  #mobileFooterLinks {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 1.25rem 0 0;
+    padding: 1.35rem 1rem calc(1.25rem + env(safe-area-inset-bottom, 0px));
+    background: #fff;
+    border-top: 1px solid #ece7dd;
+    color: #374151;
+  }
+
+  #mobileFooterLinks .sf-mfooter__inner {
+    width: 100%;
+    max-width: 28rem;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  #mobileFooterLinks .sf-mfooter__trust {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.35rem 0 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  #mobileFooterLinks .sf-mfooter__trust-row {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+  #mobileFooterLinks .sf-mfooter__social {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+  }
+
+  #mobileFooterLinks .sf-mfooter__social a {
+    width: 2.35rem;
+    height: 2.35rem;
+    border-radius: 0.75rem;
+    border: 1px solid #e2e8f0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    text-decoration: none;
+  }
+
+  #mobileFooterLinks h4 {
+    margin: 0 0 0.85rem;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #a3823e;
+  }
+
+  #mobileFooterLinks .sf-mfooter__links {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.35rem 0.75rem;
+    margin: 0 0 1rem;
+  }
+
+  #mobileFooterLinks .sf-mfooter__links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.5rem;
+    padding: 0.35rem 0.25rem;
+    color: #64748b;
+    text-decoration: none;
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
+
+  #mobileFooterLinks .sf-mfooter__copy {
+    margin: 0;
+    padding-top: 0.35rem;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #94a3b8;
+  }
+
+  #mobileBottomNavSpacer {
+    height: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  }
 }
 
 @media (min-width: 1024px) {
