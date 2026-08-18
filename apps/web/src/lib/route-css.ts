@@ -20,6 +20,18 @@ export const BUNDLED_CSS_FILES = new Set([
   'homepage-luxe.css',
   'homepage-mobile.css',
   'celebrations-calendar.css',
+  'celebration-calendar-page.css',
+  'collection-landing.css',
+  'category-page.css',
+  'shop-commerce.css',
+  'shop-luxe.css',
+  'product-detail-premium.css',
+  'location-landing.css',
+  'blog-page.css',
+  'about-page.css',
+  'contact-page.css',
+  'faq-page.css',
+  'checkout-commerce.css',
 ]);
 
 export function cssFileName(href: string): string {
@@ -47,17 +59,37 @@ export function externalPageCss(pathname: string): string[] {
 }
 
 export function ensureStylesheet(href: string): void {
-  if (typeof document === 'undefined') return;
+  void ensureStylesheetAsync(href);
+}
+
+/** Attach a stylesheet and resolve when it is loaded (or already present). */
+export function ensureStylesheetAsync(href: string): Promise<void> {
+  if (typeof document === 'undefined') return Promise.resolve();
   const path = cssFileName(href);
   const existing = document.querySelector<HTMLLinkElement>(
     `link[rel="stylesheet"][href*="${path}"]`,
   );
-  if (existing) return;
+  if (existing) {
+    try {
+      if (existing.sheet) return Promise.resolve();
+    } catch {
+      /* cross-origin sheet access can throw — treat as loaded */
+      return Promise.resolve();
+    }
+    return new Promise((resolve) => {
+      existing.addEventListener('load', () => resolve(), { once: true });
+      existing.addEventListener('error', () => resolve(), { once: true });
+    });
+  }
 
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = href;
-  document.head.appendChild(link);
+  return new Promise((resolve) => {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = href;
+    link.addEventListener('load', () => resolve(), { once: true });
+    link.addEventListener('error', () => resolve(), { once: true });
+    document.head.appendChild(link);
+  });
 }
 
 /** Homepage sheets that must paint before first view (avoid square→circle icon flash). */

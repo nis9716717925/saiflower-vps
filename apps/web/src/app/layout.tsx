@@ -5,12 +5,14 @@ import { BodyClass } from '@/components/layout/BodyClass';
 import { ChunkLoadRecovery } from '@/components/layout/ChunkLoadRecovery';
 import { CriticalPaintGuard } from '@/components/layout/CriticalPaintGuard';
 import { CriticalRouteStyles } from '@/components/layout/CriticalRouteStyles';
+import { NavigationPaintGuard } from '@/components/layout/NavigationPaintGuard';
 import { RouteStyles } from '@/components/layout/RouteStyles';
 import { ServerBody } from '@/components/layout/ServerBody';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { getThemePrimary, themeCssVars } from '@/lib/theme';
 import '@/styles/bundled-core';
+import '@/styles/bundled-pages';
 import '../styles/site-header.css';
 import '../styles/not-found-page.css';
 import './tailwind.css';
@@ -82,15 +84,18 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <CriticalRouteStyles />
       </head>
       <ServerBody>
-        {/* saiflower-build: fouc-v3 */}
+        {/* saiflower-build: fouc-v4 */}
         <RouteStyles />
         <AppProviders>
           <ChunkLoadRecovery />
+          <NavigationPaintGuard />
           <BodyClass />
           <SiteHeader />
-          <OrderSuccessBanner />
-          {children}
-          <SiteFooter />
+          <div id="sf-page">
+            <OrderSuccessBanner />
+            {children}
+            <SiteFooter />
+          </div>
         </AppProviders>
       </ServerBody>
     </html>

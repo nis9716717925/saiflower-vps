@@ -2,11 +2,11 @@
 
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef } from 'react';
-import { ensureStylesheet, externalPageCss } from '@/lib/route-css';
+import { ensureStylesheetAsync, externalPageCss } from '@/lib/route-css';
 
 /**
- * Loads route-specific legacy CSS on client navigations only.
- * Initial paint uses bundled CSS + CriticalRouteStyles; this renders no <link> tags in HTML.
+ * Loads any remaining non-bundled route CSS on client navigations.
+ * Most legacy CSS is now in the Next.js bundle via bundled-pages.
  */
 export function RouteStyles() {
   const pathname = usePathname() || '/';
@@ -19,7 +19,7 @@ export function RouteStyles() {
     }
 
     for (const href of externalPageCss(pathname)) {
-      ensureStylesheet(href);
+      void ensureStylesheetAsync(href);
     }
   }, [pathname]);
 

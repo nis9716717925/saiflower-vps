@@ -279,7 +279,7 @@ export const CATNAV_ITEMS: CatNavItem[] = [
   },
   {
     label: 'International',
-    href: '/#hp-send-gifts-abroad',
+    href: '/flower-delivery-in-delhi',
     mega: {
       simple: true,
       cols: 1,
@@ -288,6 +288,8 @@ export const CATNAV_ITEMS: CatNavItem[] = [
           title: 'Delivery Locations',
           links: [
             { label: 'Delhi NCR', href: '/flower-delivery-in-delhi' },
+            { label: 'Gurgaon', href: '/flower-delivery-in-gurgaon' },
+            { label: 'Noida', href: '/flower-delivery-in-noida' },
             { label: 'Send Gifts Abroad', href: '/#hp-send-gifts-abroad' },
           ],
         },

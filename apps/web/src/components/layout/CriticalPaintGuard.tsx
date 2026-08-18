@@ -1,11 +1,9 @@
-/** Blocking first-paint guard — hide page until CSS + fonts are ready (prevents reload flash). */
+/** Blocking first-paint guard — hide UI until stylesheets + fonts are ready. */
 const CRITICAL_CSS = `
 html.sf-loading{background:#fdfcf9}
-html.sf-loading body{visibility:hidden}
-html.sf-loading .sf-site-header,
-html.sf-loading .lx-catnav,
-html.sf-loading .hp-fnp-firstview,
-html.sf-loading .sf-bottom-nav{visibility:hidden}
+html.sf-loading body{opacity:0!important;pointer-events:none!important}
+html.sf-nav-loading #sf-page{opacity:0;pointer-events:none}
+html.sf-ready body,html.sf-ready #sf-page{opacity:1;transition:opacity .2s ease}
 button,input,select,textarea{font:inherit;color:inherit}
 button{border:none;background:transparent;padding:0;cursor:pointer}
 .sf-site-header__icon-btn{display:inline-flex;align-items:center;justify-content:center;width:2.75rem;height:2.75rem;border-radius:999px;border:1px solid #e2e8f0;background:#fff;color:#374151}
@@ -24,7 +22,11 @@ button{border:none;background:transparent;padding:0;cursor:pointer}
 html.sf-loading .fas,html.sf-loading .fab,html.sf-loading .far,html.sf-loading .material-icons-outlined{visibility:hidden}
 `.replace(/\s+/g, ' ');
 
-const BOOT_SCRIPT = `(function(){var h=document.documentElement;h.classList.add('sf-loading');var loadDone=false,fontsDone=false,done=false;function reveal(){if(done)return;done=true;h.classList.remove('sf-loading');h.classList.add('sf-ready','fonts-ready')}function maybe(){if(!loadDone||!fontsDone)return;requestAnimationFrame(function(){requestAnimationFrame(reveal)})}function onLoad(){loadDone=true;maybe()}if(document.readyState==='complete'){onLoad()}else{window.addEventListener('load',onLoad,{once:true})}if(document.fonts&&document.fonts.ready){document.fonts.ready.then(function(){fontsDone=true;maybe()}).catch(function(){fontsDone=true;maybe()})}else{fontsDone=true}setTimeout(function(){loadDone=true;fontsDone=true;maybe()},3500)})();`;
+/**
+ * Reveal when CSSOM + fonts are ready — do NOT wait for full window.load
+ * (images), which either delays forever or times out into FOUC.
+ */
+const BOOT_SCRIPT = `(function(){var h=document.documentElement;if(h.classList.contains('sf-ready'))return;h.classList.add('sf-loading');var done=false;function reveal(){if(done)return;done=true;requestAnimationFrame(function(){requestAnimationFrame(function(){h.classList.remove('sf-loading');h.classList.add('sf-ready','fonts-ready')})})}function waitLink(l){try{if(l.sheet)return Promise.resolve()}catch(e){}return new Promise(function(res){l.addEventListener('load',res,{once:true});l.addEventListener('error',res,{once:true})})}function waitCss(){var links=[].slice.call(document.querySelectorAll('link[rel="stylesheet"]'));return Promise.all(links.map(waitLink))}var fonts=(document.fonts&&document.fonts.ready)?document.fonts.ready:Promise.resolve();Promise.all([waitCss(),fonts]).then(reveal).catch(reveal);setTimeout(reveal,2200)})();`;
 
 export function CriticalPaintGuard() {
   return (
