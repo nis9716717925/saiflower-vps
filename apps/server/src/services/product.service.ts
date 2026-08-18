@@ -38,6 +38,8 @@ type ProductRow = {
   faqs?: string | null;
   imagesGallery?: string | null;
   icon?: string | null;
+  deliverySameday?: number | null;
+  deliveryNextday?: number | null;
 };
 
 /** Parse images_gallery column (JSON array or comma-separated paths). */
@@ -97,6 +99,8 @@ function mapProduct(row: ProductRow, type: string) {
     metaDescription: row.metaDescription != null ? String(row.metaDescription) : null,
     faqs: row.faqs ?? null,
     imagesGallery: row.imagesGallery ?? null,
+    deliverySameday: row.deliverySameday == null ? true : Number(row.deliverySameday) === 1,
+    deliveryNextday: row.deliveryNextday == null ? true : Number(row.deliveryNextday) === 1,
     url: productUrl(t, row.slug != null ? String(row.slug) : '', row.id),
   };
 }
@@ -161,6 +165,47 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
+/** Prefer gift-ready flower bouquets near the current PDP price for conversion. */
+function pickRelatedFlowerBouquets<
+  T extends {
+    id: number;
+    name: string;
+    price: number;
+    tag?: string;
+    rating?: number | null;
+    deliverySameday?: boolean;
+  },
+>(candidates: T[], current: { price: number }): T[] {
+  const blocked =
+    /\bcar\b|\bdecor\b|\bdecoration\b|\bjaimala\b|\bvarmala\b|\bfirst\s*night\b|\bcanopy\b|\bhaldi\b|\bmandap\b/i;
+  const chocolate = /\bchocolate\b|\bferrero\b|\bkitkat\b|\bcadbury\b/i;
+  const scored = candidates
+    .map((p) => {
+      const hay = `${p.name} ${p.tag ?? ''}`.toLowerCase();
+      if (blocked.test(hay)) return null;
+      const isBouquet =
+        hay.includes('bouquet') || hay.includes('flower basket') || hay.includes('flower box');
+      if (!isBouquet) return null;
+      if (chocolate.test(hay)) return null;
+      const priceGap = Math.abs(Number(p.price) - Number(current.price));
+      const rating = Number(p.rating) || 4.5;
+      let score = rating * 10 - priceGap / 80;
+      if (Number(p.price) >= 699 && Number(p.price) <= 2499) score += 20;
+      if (p.deliverySameday !== false) score += 8;
+      return { p, score };
+    })
+    .filter((x): x is { p: T; score: number } => x != null)
+    .sort((a, b) => b.score - a.score);
+
+  const picked = scored.slice(0, 10).map((x) => x.p);
+  if (picked.length >= 6) return picked;
+  const extras = candidates.filter((p) => {
+    const hay = `${p.name} ${p.tag ?? ''}`.toLowerCase();
+    return !blocked.test(hay) && !picked.some((x) => x.id === p.id);
+  });
+  return [...picked, ...shuffle(extras)].slice(0, 10);
+}
+
 function mapFlowerVariant(v: {
   id: number;
   flowerId: number;
@@ -211,7 +256,7 @@ function mapGiftVariant(v: {
 
 async function listFlowerProducts(q: ProductListQuery) {
   const page = Math.max(1, q.page ?? 1);
-  const limit = Math.min(100, Math.max(1, q.limit ?? 24));
+  const limit = Math.min(200, Math.max(1, q.limit ?? 24));
   const skip = (page - 1) * limit;
 
   const where: Prisma.FlowersWhereInput = { status: 1 };
@@ -246,7 +291,7 @@ async function listFlowerProducts(q: ProductListQuery) {
 
 async function listCakeProducts(q: ProductListQuery) {
   const page = Math.max(1, q.page ?? 1);
-  const limit = Math.min(100, Math.max(1, q.limit ?? 24));
+  const limit = Math.min(200, Math.max(1, q.limit ?? 24));
   const skip = (page - 1) * limit;
 
   const where: Prisma.CakesWhereInput = { status: 1 };
@@ -278,7 +323,7 @@ async function listCakeProducts(q: ProductListQuery) {
 
 async function listGiftProducts(q: ProductListQuery) {
   const page = Math.max(1, q.page ?? 1);
-  const limit = Math.min(100, Math.max(1, q.limit ?? 24));
+  const limit = Math.min(200, Math.max(1, q.limit ?? 24));
   const skip = (page - 1) * limit;
 
   const where: Prisma.GiftsWhereInput = { status: 1 };
@@ -310,7 +355,7 @@ async function listGiftProducts(q: ProductListQuery) {
 
 async function listAddonProducts(q: ProductListQuery) {
   const page = Math.max(1, q.page ?? 1);
-  const limit = Math.min(100, Math.max(1, q.limit ?? 24));
+  const limit = Math.min(200, Math.max(1, q.limit ?? 24));
   const skip = (page - 1) * limit;
 
   const where: Prisma.AddonsWhereInput = { status: 1 };
@@ -408,7 +453,8 @@ export async function getProductBySlug(typeRaw: string, slug: string) {
     case 'flower':
       relatedRows = await prisma.flowers.findMany({
         where: { status: 1, NOT: { id } },
-        take: 20,
+        take: 60,
+        orderBy: [{ rating: 'desc' }, { id: 'desc' }],
       });
       break;
     case 'cake':
@@ -425,13 +471,17 @@ export async function getProductBySlug(typeRaw: string, slug: string) {
       break;
   }
 
-  const related = shuffle(relatedRows).slice(0, 10);
+  const relatedMapped = await Promise.all(relatedRows.map((r) => withLivePrice(mapProduct(r, type))));
+  const related =
+    type === 'flower'
+      ? pickRelatedFlowerBouquets(relatedMapped, product)
+      : shuffle(relatedMapped).slice(0, 10);
 
   return {
     ...product,
     variants,
     galleryImages,
-    related: await Promise.all(related.map((r) => withLivePrice(mapProduct(r, type)))),
+    related,
   };
 }
 

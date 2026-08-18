@@ -1,5 +1,7 @@
 import { ShopListing } from '@/components/shop/ShopListing';
+import { orderShopProductsForConversion } from '@/lib/bouquet';
 import { fetchCategories, fetchProducts } from '@/lib/api';
+import type { Product } from '@/lib/types';
 
 interface PageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -33,6 +35,42 @@ const FLOWER_FAQS = [
   },
 ];
 
+async function fetchAllFlowerProducts(params: {
+  sort: string;
+  price_min?: string;
+  price_max?: string;
+  category?: string;
+}): Promise<{ items: Product[]; total: number }> {
+  const merged: Product[] = [];
+  const seen = new Set<number>();
+  let total = 0;
+
+  for (let page = 1; page <= 4; page += 1) {
+    const listing = await fetchProducts({
+      type: 'flower',
+      sort: params.sort,
+      limit: 100,
+      page,
+      price_min: params.price_min || undefined,
+      price_max: params.price_max || undefined,
+      category: params.category || undefined,
+    });
+    total = listing.meta?.total ?? total;
+    for (const item of listing.items) {
+      if (seen.has(item.id)) continue;
+      seen.add(item.id);
+      merged.push(item);
+    }
+    if (listing.items.length < 100) break;
+    if (total > 0 && merged.length >= total) break;
+  }
+
+  return {
+    items: orderShopProductsForConversion(merged, params.sort),
+    total: total || merged.length,
+  };
+}
+
 export default async function FlowersPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const sort = param(params.sort, 'bestseller');
@@ -40,16 +78,14 @@ export default async function FlowersPage({ searchParams }: PageProps) {
   const priceMax = param(params.price_max);
   const category = param(params.category);
 
-  let items: Awaited<ReturnType<typeof fetchProducts>>['items'] = [];
+  let items: Product[] = [];
   let total = 0;
   let categories: Awaited<ReturnType<typeof fetchCategories>> = [];
 
   try {
     const [listing, cats] = await Promise.all([
-      fetchProducts({
-        type: 'flower',
+      fetchAllFlowerProducts({
         sort,
-        limit: 200,
         price_min: priceMin || undefined,
         price_max: priceMax || undefined,
         category: category || undefined,
@@ -57,7 +93,7 @@ export default async function FlowersPage({ searchParams }: PageProps) {
       fetchCategories(),
     ]);
     items = listing.items;
-    total = listing.meta?.total ?? items.length;
+    total = listing.total;
     categories = cats;
   } catch {
     try {
@@ -70,7 +106,7 @@ export default async function FlowersPage({ searchParams }: PageProps) {
   return (
     <ShopListing
       title="Shop All Flowers"
-      subtitle="Found {count} bouquets · Flowers first, décor last"
+      subtitle="Found {count} items · Flower bouquets first, then chocolates & more"
       type="flower"
       products={items}
       total={total}
@@ -81,6 +117,8 @@ export default async function FlowersPage({ searchParams }: PageProps) {
       categories={categories}
       basePath="/flowers"
       faqs={FLOWER_FAQS}
+      initialVisible={24}
+      loadMoreStep={24}
     />
   );
 }

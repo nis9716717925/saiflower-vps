@@ -233,11 +233,30 @@ export async function collectionFetchProducts(
 
 export function collectionSplitGroups(products: Product[]) {
   const all = products;
-  const featured = products.filter((p) => (p.rating ?? 0) >= 4.7).slice(0, 12);
-  const bestsellers = [...products]
-    .sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0))
-    .slice(0, 12);
-  const recent = [...products].reverse().slice(0, 12);
-  const sameday = products.filter((p) => p.deliverySameday !== false).slice(0, 12);
+  const used = new Map<string, number>();
+  const take = (list: Product[], size: number) => {
+    const out: Product[] = [];
+    for (const p of list) {
+      if (out.length >= size) break;
+      const key = `${p.type}-${p.id}`;
+      const count = used.get(key) ?? 0;
+      if (count >= 2) continue;
+      used.set(key, count + 1);
+      out.push(p);
+    }
+    return out;
+  };
+
+  const byRating = [...products].sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+  const featured = take(
+    products.filter((p) => (p.rating ?? 0) >= 4.7),
+    12,
+  );
+  const bestsellers = take(byRating, 12);
+  const recent = take([...products].sort((a, b) => b.id - a.id), 12);
+  const sameday = take(
+    products.filter((p) => p.deliverySameday !== false),
+    12,
+  );
   return { all, featured, bestsellers, recent, sameday };
 }

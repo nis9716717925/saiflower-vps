@@ -1162,3 +1162,28 @@ button.sf-chip {
     font-size: 0.92rem;
   }
 }
+
+.sf-shop__load-more {
+  display: flex;
+  justify-content: center;
+  padding: 1.25rem 0 2rem;
+}
+
+.sf-shop__load-more-btn {
+  min-height: 2.75rem;
+  padding: 0.65rem 1.35rem;
+  border: 1.5px solid rgba(47, 111, 78, 0.28);
+  border-radius: 999px;
+  background: #fff;
+  color: #1f5138;
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(32, 28, 23, 0.06);
+}
+
+.sf-shop__load-more-btn:hover {
+  background: #eef5f0;
+  border-color: rgba(47, 111, 78, 0.45);
+}

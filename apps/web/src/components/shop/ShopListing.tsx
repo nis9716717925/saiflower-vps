@@ -18,6 +18,9 @@ interface ShopListingProps {
   categories?: ShopCategory[];
   basePath: string;
   faqs?: { question: string; answer: string }[];
+  /** First paint size — remaining products load as the user scrolls. */
+  initialVisible?: number;
+  loadMoreStep?: number;
 }
 
 const SORT_OPTIONS = [
@@ -94,9 +97,12 @@ export function ShopListing({
   categories = [],
   basePath,
   faqs = [],
+  initialVisible = 24,
+  loadMoreStep = 24,
 }: ShopListingProps) {
   const [filterOpen, setFilterOpen] = useState(false);
   const [sameDayOnly, setSameDayOnly] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(initialVisible);
   const orderedCats = orderCategoriesFlowerFirst(categories);
   const activeCategory = categoryId ? Number(categoryId) : null;
   const hasPriceOrCat = Boolean(priceMin || priceMax || activeCategory);
@@ -109,6 +115,10 @@ export function ShopListing({
       document.body.style.overflow = '';
     };
   }, [filterOpen]);
+
+  useEffect(() => {
+    setVisibleCount(initialVisible);
+  }, [products, sameDayOnly, sort, priceMin, priceMax, categoryId, initialVisible]);
 
   function hrefWith(params: Record<string, string | undefined>) {
     const q = new URLSearchParams();
@@ -126,12 +136,34 @@ export function ShopListing({
     return qs ? `${basePath}?${qs}` : basePath;
   }
 
-  const visibleProducts = useMemo(() => {
+  const filteredProducts = useMemo(() => {
     if (!sameDayOnly) return products;
     return products.filter((p) => p.inStock !== false && p.deliverySameday !== false);
   }, [products, sameDayOnly]);
 
-  const shownCount = sameDayOnly ? visibleProducts.length : total;
+  const visibleProducts = useMemo(
+    () => filteredProducts.slice(0, visibleCount),
+    [filteredProducts, visibleCount],
+  );
+
+  const hasMore = visibleCount < filteredProducts.length;
+  const shownCount = sameDayOnly ? filteredProducts.length : total;
+
+  useEffect(() => {
+    if (!hasMore) return;
+    const sentinel = document.getElementById('sf-shop-load-more');
+    if (!sentinel) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setVisibleCount((n) => Math.min(n + loadMoreStep, filteredProducts.length));
+        }
+      },
+      { rootMargin: '480px 0px' },
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [hasMore, loadMoreStep, filteredProducts.length, visibleCount]);
 
   return (
     <div className="sf-shop bg-[#f3f6f4] text-slate-900 antialiased min-h-screen">
@@ -399,11 +431,26 @@ export function ShopListing({
           <p className="sf-shop__sub md:block hidden">{subtitle.replace('{count}', String(shownCount))}</p>
 
           {visibleProducts.length > 0 ? (
-            <div className="sf-shop__grid">
-              {visibleProducts.map((product) => (
-                <FlowerShopCard key={product.id} product={product} />
-              ))}
-            </div>
+            <>
+              <div className="sf-shop__grid">
+                {visibleProducts.map((product) => (
+                  <FlowerShopCard key={product.id} product={product} />
+                ))}
+              </div>
+              {hasMore ? (
+                <div id="sf-shop-load-more" className="sf-shop__load-more" aria-hidden="true">
+                  <button
+                    type="button"
+                    className="sf-shop__load-more-btn"
+                    onClick={() =>
+                      setVisibleCount((n) => Math.min(n + loadMoreStep, filteredProducts.length))
+                    }
+                  >
+                    Load more flowers
+                  </button>
+                </div>
+              ) : null}
+            </>
           ) : (
             <div className="sf-shop__empty">
               <i className="fas fa-search" aria-hidden="true" />

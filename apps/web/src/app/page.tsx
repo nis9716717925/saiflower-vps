@@ -1,5 +1,3 @@
-import Link from 'next/link';
-import Script from 'next/script';
 import { HomeHero } from '@/components/home/HomeHero';
 import { HomeProductRail } from '@/components/home/HomeProductRail';
 import '@/styles/bundled-homepage';
@@ -15,8 +13,9 @@ import {
   TailoredOccasionsSection,
   TestimonialsSection,
 } from '@/components/home/HomeSections';
-import { fetchLandingBouquets } from '@/lib/bouquet';
-import type { Product } from '@/lib/types';
+import { loadHomepageRails } from '@/lib/homepage-rails';
+import Link from 'next/link';
+import Script from 'next/script';
 
 const STATS = [
   { value: '10K+', label: 'Happy Customers' },
@@ -36,31 +35,8 @@ const MOBILE_TRUST = [
   { icon: 'fa-shield-halved', title: '100% Secure Payments', sub: 'Safe checkout with trusted gateways' },
 ];
 
-async function loadProducts(
-  params: Record<string, string | number | undefined>,
-): Promise<Product[]> {
-  return fetchLandingBouquets({
-    limit: Number(params.limit ?? 12),
-    sort: String(params.sort ?? 'bestseller'),
-    search: params.search != null ? String(params.search) : undefined,
-  });
-}
-
 export default async function HomePage() {
-  const [bestSellers, sameDay, occasions, onDemand, newlyAdded, birthday] = await Promise.all([
-    loadProducts({ type: 'flower', limit: 12, sort: 'bestseller' }),
-    loadProducts({ type: 'flower', limit: 10, sort: 'bestseller', search: 'same' }),
-    loadProducts({ type: 'flower', limit: 10, sort: 'bestseller', search: 'birthday' }),
-    loadProducts({ type: 'flower', limit: 10, sort: 'bestseller', search: 'express' }),
-    loadProducts({ type: 'flower', limit: 10, sort: 'newest' }),
-    loadProducts({ type: 'flower', limit: 10, sort: 'bestseller', search: 'birthday' }),
-  ]);
-
-  const sameDayRail = sameDay.length > 0 ? sameDay : bestSellers.slice(0, 10);
-  const occasionsRail = occasions.length > 0 ? occasions : bestSellers.slice(0, 10);
-  const onDemandRail = onDemand.length > 0 ? onDemand : bestSellers.slice().reverse().slice(0, 10);
-  const newlyAddedRail = newlyAdded.length > 0 ? newlyAdded : bestSellers.slice(0, 10);
-  const birthdayProducts = birthday.length > 0 ? birthday : bestSellers.slice(0, 10);
+  const rails = await loadHomepageRails();
 
   return (
     <div className="homepage-premium">
@@ -72,13 +48,13 @@ export default async function HomePage() {
             sliderKey="best-sellers"
             title="Best Sellers"
             viewAllHref="/collection/best-sellers"
-            products={bestSellers}
+            products={rails.bestSellers}
           />
           <HomeProductRail
             sliderKey="same-day-surprises"
             title="Same Day Surprises"
             viewAllHref="/collection/same-day-delivery"
-            products={sameDayRail}
+            products={rails.sameDay}
           />
         </div>
 
@@ -89,12 +65,12 @@ export default async function HomePage() {
             sliderKey="on-demand"
             title="On Demand"
             viewAllHref="/collection/same-day-delivery"
-            products={onDemandRail}
+            products={rails.onDemand}
           />
         </div>
 
         <CelebrationsCalendarSection />
-        <TailoredOccasionsSection products={birthdayProducts} />
+        <TailoredOccasionsSection products={rails.birthday} />
 
         {/* Mobile only — desktop keeps trust in hero first-view */}
         <div className="hp-flow--trust-mobile">
@@ -120,7 +96,7 @@ export default async function HomePage() {
             sliderKey="newly-added"
             title="Newly Added"
             viewAllHref="/collection/new-arrivals"
-            products={newlyAddedRail}
+            products={rails.newlyAdded}
           />
         </div>
 
@@ -133,7 +109,7 @@ export default async function HomePage() {
             sliderKey="occasions"
             title="Occasions"
             viewAllHref="/occasion/birthday"
-            products={occasionsRail}
+            products={rails.occasions}
           />
         </div>
 
