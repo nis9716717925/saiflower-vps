@@ -8,6 +8,7 @@ import { getCustomer } from '@/lib/api';
 import { SiteIcon } from '@/components/icons/SiteIcon';
 import { useCart } from '@/components/providers/AppProviders';
 import { CatNav } from './CatNav';
+import { HeaderSearchBox } from './HeaderSearchBox';
 
 const NAV_LINKS = [
   { href: '/', label: 'Home', icon: 'home', match: ['/', '/index'] },
@@ -120,26 +121,10 @@ export function SiteHeader() {
           </div>
 
           <div className="sf-site-header__search">
-            <div className="sf-site-header__search-inner search-wrapper">
-              <form action="/search-results" method="GET" role="search">
-                <input
-                  name="q"
-                  id="desktopSearchInput"
-                  autoComplete="off"
-                  placeholder="Search flowers, occasions, gifts..."
-                  type="search"
-                  enterKeyHint="search"
-                />
-                <button type="submit" aria-label="Search">
-                  <SiteIcon name="search" size={20} />
-                </button>
-                <div
-                  id="desktopSearchSuggestions"
-                  className="search-suggestions absolute left-0 right-0 top-full mt-2 bg-white rounded-xl shadow-2xl border border-slate-100 overflow-hidden z-[10000] max-h-96 overflow-y-auto"
-                  style={{ display: 'none' }}
-                />
-              </form>
-            </div>
+            <HeaderSearchBox
+              inputId="desktopSearchInput"
+              formClassName="sf-site-header__search-inner"
+            />
           </div>
 
           <div className="sf-site-header__actions">
@@ -208,28 +193,11 @@ export function SiteHeader() {
           id="mobileSearch"
           className={`sf-site-header__mobile-search${searchOpen ? ' is-open' : ''}`}
         >
-          <div className="relative search-wrapper">
-            <form action="/search-results" method="GET" className="sf-site-header__search-inner" role="search">
-              <input
-                name="q"
-                id="mobileSearchInput"
-                autoComplete="off"
-                enterKeyHint="search"
-                inputMode="search"
-                placeholder="Search flowers, occasions, gifts..."
-                type="search"
-                style={{ borderRadius: '1rem', padding: '0.75rem 3rem 0.75rem 1.25rem' }}
-              />
-              <button type="submit" aria-label="Search">
-                <SiteIcon name="search" size={20} />
-              </button>
-              <div
-                id="mobileSearchSuggestions"
-                className="search-suggestions absolute left-0 right-0 top-full mt-2 bg-white rounded-xl shadow-2xl border border-slate-100 overflow-hidden z-[10000] max-h-[60vh] overflow-y-auto"
-                style={{ display: 'none' }}
-              />
-            </form>
-          </div>
+          <HeaderSearchBox
+            inputId="mobileSearchInput"
+            formClassName="sf-site-header__search-inner"
+            inputStyle={{ borderRadius: '1rem', padding: '0.75rem 3rem 0.75rem 1.25rem' }}
+          />
         </div>
       </header>
 
@@ -455,7 +423,6 @@ export function SiteHeader() {
       </div>
 
       <Script src="/assets/js/catnav.js?v=2" strategy="afterInteractive" />
-      <Script src="/assets/js/search-suggest.js?v=1" strategy="afterInteractive" />
     </>
   );
 }

@@ -22,7 +22,7 @@ function SearchResultsContent() {
         return;
       }
       try {
-        const res = await fetch(apiUrl(`/search?q=${encodeURIComponent(q)}`));
+        const res = await fetch(apiUrl(`/search?q=${encodeURIComponent(q)}&limit=36`));
         const data = (await res.json()) as SearchResponse;
         setResults(data.results ?? []);
       } catch {
@@ -97,7 +97,14 @@ function SearchResultsContent() {
                 className="sf-search-card"
               >
                 <span className="sf-search-card__media">
-                  <img src={resolveImageSrc(hit.image)} alt={hit.name} loading="lazy" />
+                  <img
+                    src={resolveImageSrc(hit.image)}
+                    alt={hit.name}
+                    width={320}
+                    height={400}
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </span>
                 <span className="sf-search-card__body">
                   {hit.badge ? <span className="sf-search-card__badge">{hit.badge}</span> : null}

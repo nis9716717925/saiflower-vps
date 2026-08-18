@@ -82,7 +82,8 @@ categoryRouter.get('/', async (_req, res, next) => {
 searchRouter.get('/', async (req, res, next) => {
   try {
     const q = typeof req.query.q === 'string' ? req.query.q : '';
-    const data = await searchService.searchSuggest(q);
+    const limit = req.query.limit != null ? Number(req.query.limit) : undefined;
+    const data = await searchService.searchSuggest(q, limit);
     // Match ajax_search.php top-level shape for drop-in clients
     res.json(data);
   } catch (err) {

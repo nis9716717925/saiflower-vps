@@ -77,3 +77,7 @@
 .sf-suggest-foot:hover {
   background: #eef5f0;
 }
+
+.sf-header-search__panel.search-suggestions {
+  display: block;
+}
