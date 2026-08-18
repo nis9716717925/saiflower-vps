@@ -12,6 +12,10 @@ import { countUploadFilesSync, resolveUploadsDirectory } from './utils/uploads';
 const app = express();
 const uploadsDir = resolveUploadsDirectory();
 
+// So express-rate-limit keys by real client IP from nginx X-Forwarded-For,
+// instead of collapsing every visitor into 127.0.0.1.
+app.set('trust proxy', 1);
+
 app.use(helmet());
 app.use(
   cors({

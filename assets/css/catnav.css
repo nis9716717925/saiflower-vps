@@ -118,11 +118,17 @@
     transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
 }
 
-.lx-catnav__item.is-open .lx-catnav__mega {
-    visibility: visible;
-    opacity: 1;
-    pointer-events: auto;
-    transform: translate(-50%, 0);
+/* Desktop: CSS hover/focus is the source of truth (JS is-open is a fallback).
+   Relying only on catnav.js breaks after React re-renders detach listeners. */
+@media (min-width: 1024px) {
+    .lx-catnav__item:hover > .lx-catnav__mega,
+    .lx-catnav__item:focus-within > .lx-catnav__mega,
+    .lx-catnav__item.is-open > .lx-catnav__mega {
+        visibility: visible;
+        opacity: 1;
+        pointer-events: auto;
+        transform: translate(-50%, 0);
+    }
 }
 
 .lx-catnav__mega-inner {

@@ -10,8 +10,9 @@ button,input,select,textarea{font:inherit;color:inherit}
 button{border:none;background:transparent;padding:0;cursor:pointer}
 .sf-site-header__icon-btn{display:inline-flex;align-items:center;justify-content:center;width:2.75rem;height:2.75rem;border-radius:999px;border:1px solid #e2e8f0;background:#fff;color:#374151}
 #mobileMenuBtn{display:inline-flex;align-items:center;justify-content:center;width:3rem;height:3rem;border:none;border-radius:999px;background:transparent;color:#374151}
-.lx-catnav__list{display:flex;align-items:center;flex-wrap:nowrap;overflow-x:auto;list-style:none;margin:0;padding:.35rem 1.5rem;border:1.5px solid rgba(194,160,90,.42);border-radius:999px;background:#fff}
-.lx-catnav__item{flex:0 0 auto;list-style:none}
+.lx-catnav__list{display:flex;align-items:center;flex-wrap:nowrap;overflow:visible;list-style:none;margin:0;padding:.35rem 1.5rem;border:1.5px solid rgba(194,160,90,.42);border-radius:999px;background:#fff}
+@media (max-width:1023.98px){.lx-catnav__list{overflow-x:auto;overflow-y:hidden}}
+.lx-catnav__item{flex:0 0 auto;list-style:none;position:relative}
 .lx-catnav__link{display:inline-flex;align-items:center;text-decoration:none;white-space:nowrap}
 .hp-fnp-icons__scroll{display:flex;gap:.65rem;overflow-x:auto;padding:.25rem .75rem}
 .hp-fnp-icons__item{display:flex;flex-direction:column;align-items:center;gap:.45rem;flex:0 0 auto;min-width:4.75rem;text-decoration:none;color:#1e293b}
