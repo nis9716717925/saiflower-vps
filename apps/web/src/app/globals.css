@@ -13,7 +13,7 @@ body {
   color: #2c3e50;
   font-family: 'Inter', sans-serif;
   max-width: 100%;
-  overflow-x: clip;
+  /* Do NOT set overflow-x here — it forces overflow-y:auto and clips header megas */
 }
 
 #sf-page {
