@@ -12,10 +12,14 @@ body {
   background: #fdfcf9;
   color: #2c3e50;
   font-family: 'Inter', sans-serif;
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 #sf-page {
   min-height: 40vh;
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 /* Prevent native button/input chrome before Tailwind CDN or page CSS loads. */

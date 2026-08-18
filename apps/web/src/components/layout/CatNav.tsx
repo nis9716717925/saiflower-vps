@@ -23,7 +23,7 @@ export function CatNav() {
                   {
                     '--lx-mega-cols': item.mega.cols ?? 2,
                     ...(item.mega.simple
-                      ? { width: 'min(420px, calc(100vw - 3rem))' }
+                      ? { width: 'min(420px, calc(100% - 2rem))' }
                       : {}),
                   } as CSSProperties
                 }

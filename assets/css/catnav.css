@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Universal category mega-nav (header-integrated).
  * Works on all pages; mega panels desktop-only; horizontal scroll on mobile.
  */
@@ -22,7 +22,15 @@
     background: #ffffff;
     padding: 0.45rem var(--lx-edge) 0.55rem;
     border-top: 1px solid #f1ece3;
-    overflow: visible;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: visible;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+}
+
+.lx-catnav::-webkit-scrollbar {
+    display: none;
 }
 
 .sf-site-header.is-scrolled .lx-catnav {
@@ -34,9 +42,9 @@
     align-items: center;
     justify-content: center;
     flex-wrap: nowrap;
-    width: max-content;
-    min-width: 100%;
-    max-width: 1520px;
+    width: 100%;
+    max-width: min(1520px, 100%);
+    min-width: 0;
     margin: 0 auto;
     padding: 0.35rem 1.5rem;
     gap: 0.15rem;
@@ -112,7 +120,7 @@
     top: calc(100% - 0.1rem);
     left: 50%;
     transform: translate(-50%, 10px);
-    width: min(920px, calc(100vw - 3rem));
+    width: min(920px, calc(100% - 2rem));
     padding-top: 0.5rem;
     z-index: 80;
     transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
@@ -300,3 +308,4 @@
     scrollbar-width: none;
 }
 .hide-scrollbar::-webkit-scrollbar { display: none; }
+
