@@ -2,15 +2,12 @@
 
 export type CatNavLink = { label: string; href: string };
 export type CatNavColumn = { title: string; links: CatNavLink[] };
-export type CatNavFeature = { label: string; sub: string; href: string; img: string };
 export type CatNavItem = {
   label: string;
   href: string;
   mega?: {
-    simple?: boolean;
     cols?: number;
     columns: CatNavColumn[];
-    feature?: CatNavFeature;
   };
 };
 
@@ -38,12 +35,6 @@ export const CATNAV_ITEMS: CatNavItem[] = [
           ],
         },
       ],
-      feature: {
-        label: 'Birthday Joy, Gift-Wrapped',
-        sub: 'Curated blooms & cakes',
-        href: '/occasion/birthday',
-        img: '/uploads/circles/img_69c0d1968393f_Untitleddesign10.webp',
-      },
     },
   },
   {
@@ -69,12 +60,6 @@ export const CATNAV_ITEMS: CatNavItem[] = [
           ],
         },
       ],
-      feature: {
-        label: 'Celebrate Your Love Story',
-        sub: 'Handcrafted romantic bouquets',
-        href: '/occasion/anniversary',
-        img: '/uploads/circles/img_69c0d67ec7a7d_Weddingeventgolden202603231127.webp',
-      },
     },
   },
   {
@@ -102,12 +87,6 @@ export const CATNAV_ITEMS: CatNavItem[] = [
           ],
         },
       ],
-      feature: {
-        label: 'Celebrations Calendar',
-        sub: 'Every gifting day, mapped',
-        href: '/celebration-calendar',
-        img: '/uploads/circles/img_69c0d432c0e63_Untitleddesign12.webp',
-      },
     },
   },
   {
@@ -135,12 +114,6 @@ export const CATNAV_ITEMS: CatNavItem[] = [
           ],
         },
       ],
-      feature: {
-        label: 'Fresh From Our Studio',
-        sub: 'Cut & arranged the same day',
-        href: '/collection/same-day-delivery',
-        img: '/uploads/circles/img_69c0ca5ed57d5_Untitleddesign7.webp',
-      },
     },
   },
   {
@@ -167,19 +140,12 @@ export const CATNAV_ITEMS: CatNavItem[] = [
           ],
         },
       ],
-      feature: {
-        label: 'Statement Luxury Blooms',
-        sub: 'Our most premium arrangements',
-        href: '/collection/luxury-flowers',
-        img: '/uploads/circles/img_69c0d432c0e63_Untitleddesign12.webp',
-      },
     },
   },
   {
     label: 'Personalised',
     href: '/personalized',
     mega: {
-      simple: true,
       cols: 1,
       columns: [
         {
@@ -192,19 +158,12 @@ export const CATNAV_ITEMS: CatNavItem[] = [
           ],
         },
       ],
-      feature: {
-        label: 'Make It Truly Theirs',
-        sub: 'Personalised gifts launching soon',
-        href: '/personalized',
-        img: '/uploads/circles/img_69c0d0e7c2d77_Untitleddesign9.webp',
-      },
     },
   },
   {
     label: 'Lifestyle',
     href: '/gifts',
     mega: {
-      simple: true,
       cols: 1,
       columns: [
         {
@@ -217,12 +176,6 @@ export const CATNAV_ITEMS: CatNavItem[] = [
           ],
         },
       ],
-      feature: {
-        label: 'Elevate Their Space',
-        sub: 'Thoughtful home & lifestyle picks',
-        href: '/gifts',
-        img: '/uploads/circles/img_69c0d06492a19_Untitleddesign8.webp',
-      },
     },
   },
   {
@@ -249,12 +202,6 @@ export const CATNAV_ITEMS: CatNavItem[] = [
           ],
         },
       ],
-      feature: {
-        label: 'Curated Gift Hampers',
-        sub: 'Flowers, treats & more in one box',
-        href: '/collection/hampers',
-        img: '/uploads/circles/img_69c0d7a4a7e88_Cakewithflowing202603231132.webp',
-      },
     },
   },
   { label: 'Same Day Delivery', href: '/collection/same-day-delivery' },
@@ -263,7 +210,6 @@ export const CATNAV_ITEMS: CatNavItem[] = [
     label: 'Combos',
     href: '/collection/flower-combos',
     mega: {
-      simple: true,
       cols: 1,
       columns: [
         {
@@ -281,7 +227,6 @@ export const CATNAV_ITEMS: CatNavItem[] = [
     label: 'International',
     href: '/flower-delivery-in-delhi',
     mega: {
-      simple: true,
       cols: 1,
       columns: [
         {

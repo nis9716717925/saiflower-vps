@@ -18,15 +18,9 @@ export function CatNav() {
 
             {item.mega ? (
               <div
-                className={`lx-catnav__mega${item.mega.simple ? ' lx-catnav__mega--simple' : ''}`}
-                style={
-                  {
-                    '--lx-mega-cols': item.mega.cols ?? 2,
-                    ...(item.mega.simple
-                      ? { width: 'min(420px, calc(100% - 2rem))' }
-                      : {}),
-                  } as CSSProperties
-                }
+                className="lx-catnav__mega lx-catnav__mega--simple"
+                data-cols={item.mega.cols ?? 2}
+                style={{ '--lx-mega-cols': item.mega.cols ?? 2 } as CSSProperties}
               >
                 <div className="lx-catnav__mega-inner">
                   {item.mega.columns.map((col) => (
@@ -39,23 +33,6 @@ export function CatNav() {
                       ))}
                     </div>
                   ))}
-
-                  {item.mega.feature ? (
-                    <a className="lx-catnav__feature" href={item.mega.feature.href}>
-                      <img
-                        src={item.mega.feature.img}
-                        alt=""
-                        width={240}
-                        height={240}
-                        loading="lazy"
-                        decoding="async"
-                      />
-                      <span className="lx-catnav__feature-label">
-                        {item.mega.feature.label}
-                        <span>{item.mega.feature.sub}</span>
-                      </span>
-                    </a>
-                  ) : null}
                 </div>
               </div>
             ) : null}

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Universal category mega-nav (header-integrated).
  * Works on all pages; mega panels desktop-only; horizontal scroll on mobile.
  */
@@ -114,10 +114,23 @@
     top: calc(100% - 0.1rem);
     left: 50%;
     transform: translate(-50%, 10px);
-    width: min(920px, calc(100% - 2rem));
+    /* Use vw — % width collapses when the absolute CB is the narrow pill item */
+    width: min(520px, calc(100vw - 2rem));
     padding-top: 0.5rem;
     z-index: 80;
     transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+}
+
+.lx-catnav__mega--simple {
+    width: min(420px, calc(100vw - 2rem));
+}
+
+.lx-catnav__mega[data-cols='1'] {
+    width: min(280px, calc(100vw - 2rem));
+}
+
+.lx-catnav__mega[data-cols='2'] {
+    width: min(480px, calc(100vw - 2rem));
 }
 
 /* Desktop: CSS hover/focus is the source of truth (JS is-open is a fallback).
@@ -135,17 +148,18 @@
 
 .lx-catnav__mega-inner {
     display: grid;
-    grid-template-columns: repeat(var(--lx-mega-cols, 3), minmax(0, 1fr)) 15rem;
-    gap: 1.75rem;
+    grid-template-columns: repeat(var(--lx-mega-cols, 2), minmax(9rem, 1fr));
+    gap: 1.25rem 1.75rem;
     background: #fff;
     border: 1px solid #ece7dd;
     border-radius: 1.25rem;
-    padding: 1.5rem 1.75rem;
+    padding: 1.25rem 1.5rem;
     box-shadow: 0 16px 48px rgba(32, 28, 23, 0.14);
+    box-sizing: border-box;
 }
 
 .lx-catnav__mega--simple .lx-catnav__mega-inner {
-    grid-template-columns: repeat(var(--lx-mega-cols, 2), minmax(0, 1fr));
+    grid-template-columns: repeat(var(--lx-mega-cols, 2), minmax(9rem, 1fr));
 }
 
 .lx-catnav__col-title {
@@ -174,48 +188,6 @@
     background: var(--lx-green-tint);
     color: var(--lx-green-deep);
     padding-left: 0.8rem;
-}
-
-.lx-catnav__feature {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    min-height: 12rem;
-    border-radius: 1rem;
-    overflow: hidden;
-    position: relative;
-    text-decoration: none;
-    background: var(--lx-gold-tint);
-    isolation: isolate;
-}
-
-.lx-catnav__feature img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: -1;
-    transition: transform 0.45s ease;
-}
-
-.lx-catnav__feature:hover img { transform: scale(1.06); }
-
-.lx-catnav__feature-label {
-    padding: 1.5rem 0.9rem 0.85rem;
-    background: linear-gradient(to top, rgba(24, 20, 14, 0.72), transparent);
-    color: #fff;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-}
-
-.lx-catnav__feature-label span {
-    display: block;
-    font-size: 0.65rem;
-    font-weight: 600;
-    opacity: 0.85;
-    margin-top: 0.15rem;
 }
 
 @media (min-width: 1024px) {
