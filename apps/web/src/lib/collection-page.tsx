@@ -33,7 +33,7 @@ export async function renderCollectionLanding(kind: CollectionKind, slug: string
           'This collection is being curated. Browse our bestselling bouquets below, or explore all flowers.',
         badge: 'Coming soon',
         cta_label: 'Shop flowers',
-        hero_image: '/assets/images/hero/hero-make-today-beautiful.webp',
+        hero_image: '/assets/images/hero/main-same-day.webp',
         filter: {},
         related: [],
         faqs: [],

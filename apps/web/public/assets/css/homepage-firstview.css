@@ -263,21 +263,10 @@
     height: 100%;
 }
 
-
-.hp-hero-slide__mobile img {
-    object-fit: contain !important;
-    object-position: center;
-    background: #f7f3ea;
-}
-
 /* Desktop: ~2.25 cards visible with peek */
 @media (min-width: 768px) {
     .hp-hero-carousel__outer {
         padding: 0.75rem 0.5rem 0.5rem;
-    }
-
-    .hp-hero-carousel--image-only .hp-hero-carousel__outer {
-        padding: 0;
     }
 
     .hp-hero-carousel__viewport {
@@ -298,40 +287,14 @@
         height: auto;
     }
 
-    .hp-hero-carousel--image-only .hp-hero-carousel__viewport {
-        aspect-ratio: 16 / 9;
-        max-height: none;
-    }
-
-    .hp-hero-carousel--image-only .hp-hero-carousel__track {
-        gap: 0;
-        height: 100%;
-    }
-
-    .hp-hero-carousel--image-only .hp-hero-slide {
-        flex: 0 0 100% !important;
-        min-width: 100% !important;
-        width: 100% !important;
-        height: 100%;
-    }
-
     @media (min-width: 1024px) {
         .hp-hero-carousel__outer {
             padding: 0.85rem 0.75rem 0.65rem;
         }
 
-        .hp-hero-carousel--image-only .hp-hero-carousel__outer {
-            padding: 0;
-        }
-
         .hp-hero-slide {
             flex: 0 0 calc(42% - 0.67rem);
             min-width: calc(42% - 0.67rem);
-        }
-
-        .hp-hero-carousel--image-only .hp-hero-slide {
-            flex: 0 0 100% !important;
-            min-width: 100% !important;
         }
     }
 
@@ -339,11 +302,6 @@
         .hp-hero-slide {
             flex: 0 0 calc(40% - 0.75rem);
             min-width: calc(40% - 0.75rem);
-        }
-
-        .hp-hero-carousel--image-only .hp-hero-slide {
-            flex: 0 0 100% !important;
-            min-width: 100% !important;
         }
     }
 

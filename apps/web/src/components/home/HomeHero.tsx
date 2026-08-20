@@ -43,61 +43,61 @@ const MAIN_SLIDES = [
   {
     theme: 'peach',
     kicker: 'Sai Flower',
-    title: 'Make Today Beautiful',
-    subtitle: '',
+    title: 'Same Day Delivery<br>in Delhi',
+    subtitle: 'Handpicked luxury bouquets for all special moments.',
     cta: 'Shop Now',
-    href: '/flowers',
-    img: '/assets/images/hero/hero-make-today-beautiful-mobile.webp',
+    href: '/collection/same-day-delivery',
+    img: '/assets/images/hero/main-same-day.webp',
   },
   {
     theme: 'cream',
     kicker: 'Sai Flower',
-    title: 'Because Some Surprises Can\'t Wait',
-    subtitle: '',
-    cta: 'Shop Now',
-    href: '/flowers',
-    img: '/assets/images/hero/hero-midnight-surprises-mobile.webp',
+    title: 'Premium Blooms,<br>Curated for You',
+    subtitle: 'Handpicked luxury bouquets for every special moment.',
+    cta: 'Order Now',
+    href: '/collection/premium-bouquets',
+    img: '/assets/images/hero/main-premium-blooms.webp',
   },
   {
     theme: 'blush',
     kicker: 'Sai Flower',
-    title: 'Beautiful Moments, Delivered Fast',
-    subtitle: '',
+    title: 'Birthday Joy,<br>Gift-Wrapped',
+    subtitle: 'Curated blooms, cakes & more for thoughtful celebrations.',
     cta: 'Shop Now',
-    href: '/flowers',
-    img: '/assets/images/hero/hero-beautiful-moments-mobile.webp',
+    href: '/occasion/birthday',
+    img: '/assets/images/hero/main-birthday-joy.webp',
   },
 ];
 
 const MAIN_BANNERS = [
   {
-    badge: '',
-    title: 'Make Today Beautiful',
-    subtitle: '',
-    offer: '',
-    cta: 'Shop Now',
-    href: '/flowers',
-    img: '/assets/images/hero/hero-make-today-beautiful.webp',
+    badge: 'Same-day delivery',
+    title: 'Order by 6 PM, delivered today',
+    subtitle: 'Fresh handcrafted bouquets across Delhi NCR.',
+    offer: 'Free message card',
+    cta: 'Shop same-day',
+    href: '/collection/same-day-delivery',
+    img: '/assets/images/hero/main-same-day.webp',
     tone: 'mint',
   },
   {
-    badge: '',
-    title: 'Because Some Surprises Can\'t Wait',
-    subtitle: '',
-    offer: '',
-    cta: 'Shop Now',
-    href: '/flowers',
-    img: '/assets/images/hero/hero-midnight-surprises.webp',
+    badge: 'Birthday bestsellers',
+    title: 'Make birthdays unforgettable',
+    subtitle: 'Bouquets, cakes & combos starting under ₹999.',
+    offer: 'Rated 4.8★',
+    cta: 'Shop birthday gifts',
+    href: '/occasion/birthday',
+    img: '/assets/images/hero/main-birthday-joy.webp',
     tone: 'blush',
   },
   {
-    badge: '',
-    title: 'Beautiful Moments, Delivered Fast',
-    subtitle: '',
-    offer: '',
-    cta: 'Shop Now',
-    href: '/flowers',
-    img: '/assets/images/hero/hero-beautiful-moments.webp',
+    badge: 'Premium collection',
+    title: 'Luxe blooms for special moments',
+    subtitle: 'Designer arrangements crafted to impress.',
+    offer: 'Handcrafted fresh',
+    cta: 'Explore luxe',
+    href: '/collection/luxury-flowers',
+    img: '/assets/images/hero/main-premium-blooms.webp',
     tone: 'cream',
   },
 ];
@@ -345,10 +345,10 @@ export function HomeHero() {
                             <picture className="w-full h-full block">
                               <img
                                 src={slide.img}
-                                className="w-full h-full block object-contain bg-[#f7f3ea]"
+                                className="w-full h-full block object-cover"
                                 alt={plainTitle(slide.title)}
-                                width={1200}
-                                height={675}
+                                width={1920}
+                                height={685}
                                 decoding="sync"
                                 loading={index === 0 ? 'eager' : 'lazy'}
                                 {...(index === 0 ? { fetchPriority: 'high' as const } : {})}
@@ -433,37 +433,37 @@ export function HomeHero() {
                 {MAIN_BANNERS.map((banner, index) => (
                   <article
                     key={banner.href + banner.title}
-                    className={`sf-banner__slide sf-banner__slide--${banner.tone} sf-banner__slide--media-only`}
+                    className={`sf-banner__slide sf-banner__slide--${banner.tone}`}
                     aria-hidden={index !== desktopCurrent}
                   >
-                    {/* Copy kept in DOM for structure; visually hidden — image is the CTA */}
-                    <div className="sf-banner__copy" aria-hidden="true">
-                      <span className="sf-banner__badge">{banner.badge || 'Sai Flower'}</span>
+                    <div className="sf-banner__copy">
+                      <span className="sf-banner__badge">{banner.badge}</span>
                       <h2 className="sf-banner__title">{banner.title}</h2>
-                      {banner.subtitle ? <p className="sf-banner__sub">{banner.subtitle}</p> : null}
-                      {banner.offer ? (
-                        <div className="sf-banner__meta">
-                          <span>
-                            <i className="fas fa-bolt" aria-hidden="true" /> {banner.offer}
-                          </span>
-                        </div>
-                      ) : null}
-                      <span className="sf-banner__cta">
+                      <p className="sf-banner__sub">{banner.subtitle}</p>
+                      <div className="sf-banner__meta">
+                        <span>
+                          <i className="fas fa-bolt" aria-hidden="true" /> {banner.offer}
+                        </span>
+                        <span>
+                          <i className="fas fa-truck-fast" aria-hidden="true" /> Delhi NCR
+                        </span>
+                      </div>
+                      <Link href={banner.href} className="sf-banner__cta">
                         {banner.cta}
                         <i className="fas fa-arrow-right" aria-hidden="true" />
-                      </span>
+                      </Link>
                     </div>
-                    <Link href={banner.href} className="sf-banner__media" aria-label={`${banner.title} — Shop now`}>
+                    <div className="sf-banner__media">
                       <img
                         src={banner.img}
                         alt={banner.title}
-                        width={1536}
-                        height={1024}
+                        width={900}
+                        height={700}
                         decoding={index === 0 ? 'sync' : 'async'}
                         loading={index === 0 ? 'eager' : 'lazy'}
                         {...(index === 0 ? { fetchPriority: 'high' as const } : {})}
                       />
-                    </Link>
+                    </div>
                   </article>
                 ))}
               </div>

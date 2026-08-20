@@ -40,19 +40,8 @@
         height: auto;
     }
 
-    /* Do NOT use content-visibility on imgs — blanks tiles in horizontal carousels until hover. */
     .homepage-premium img[loading="lazy"] {
-        content-visibility: visible;
-    }
-
-    /* Tile/carousel images must fill their aspect-ratio frame (override height:auto). */
-    .homepage-premium .lx-tile__img img,
-    .homepage-premium .hp-celebration-card__img-wrap img,
-    .homepage-premium .hp-occasion-track img,
-    .homepage-premium .sp-card__media img {
-        height: 100%;
-        width: 100%;
-        object-fit: cover;
+        content-visibility: auto;
     }
 
     /* Typography rhythm */
@@ -231,13 +220,11 @@
 
     .homepage-premium .lx-hero-split .hp-hero-carousel__viewport {
         aspect-ratio: 16 / 9;
-        width: 100%;
-        height: auto;
-        min-height: 0;
-        max-height: none;
+        min-height: var(--lx-hero-h, 14rem);
+        max-height: 18rem;
         box-shadow: 0 8px 28px rgba(32, 28, 23, 0.1);
         border: 1px solid rgba(236, 231, 221, 0.9);
-        background: #f7f3ea;
+        background: #f4f0e8;
     }
 
     .homepage-premium .lx-hero-split .hp-hero-slide__mobile {
@@ -246,16 +233,14 @@
         height: 100%;
         border-radius: 0;
         overflow: hidden;
-        background: #f7f3ea;
     }
 
     .homepage-premium .lx-hero-split .hp-hero-slide__mobile img {
         width: 100%;
         height: 100%;
-        object-fit: contain !important;
+        object-fit: cover;
         object-position: center;
         display: block;
-        background: #f7f3ea;
     }
 
     .homepage-premium .lx-hero-split .hp-hero-slide__card,
