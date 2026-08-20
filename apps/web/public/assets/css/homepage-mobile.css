@@ -40,8 +40,19 @@
         height: auto;
     }
 
+    /* Do NOT use content-visibility on imgs — blanks tiles in horizontal carousels until hover. */
     .homepage-premium img[loading="lazy"] {
-        content-visibility: auto;
+        content-visibility: visible;
+    }
+
+    /* Tile/carousel images must fill their aspect-ratio frame (override height:auto). */
+    .homepage-premium .lx-tile__img img,
+    .homepage-premium .hp-celebration-card__img-wrap img,
+    .homepage-premium .hp-occasion-track img,
+    .homepage-premium .sp-card__media img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
     }
 
     /* Typography rhythm */

@@ -17,6 +17,9 @@ import { loadHomepageRails } from '@/lib/homepage-rails';
 import Link from 'next/link';
 import Script from 'next/script';
 
+/** Cache the homepage HTML + catalog fetches for two minutes. */
+export const revalidate = 120;
+
 const STATS = [
   { value: '10K+', label: 'Happy Customers' },
   { value: '4.8★', label: 'Average Rating' },

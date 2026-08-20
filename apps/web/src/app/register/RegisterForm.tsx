@@ -63,7 +63,7 @@ export function RegisterForm({ googleClientId }: RegisterFormProps) {
       {toCheckout ? <CheckoutProgress current="address" /> : null}
 
       <Link href="/">
-        <img src="/assets/images/logo-transparent.png" alt="Sai Flower" className="qc-auth-logo" />
+        <img src="/assets/images/logo-transparent.webp" alt="Sai Flower" className="qc-auth-logo" />
       </Link>
       <h1 className="qc-title" style={{ textAlign: 'center', marginTop: '1rem', fontSize: '1.45rem' }}>
         Create account

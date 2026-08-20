@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FlowerShopCard } from '@/components/shop/FlowerShopCard';
+import { resolveImageSrc } from '@/lib/images';
 import type { Product, ShopCategory } from '@/lib/types';
 
 interface ShopListingProps {
@@ -298,7 +299,14 @@ export function ShopListing({
                 >
                   <span className="sf-shop__cat-icon">
                     {cat.image ? (
-                      <img src={cat.image} alt="" />
+                      <img
+                        src={resolveImageSrc(cat.image)}
+                        alt=""
+                        width={48}
+                        height={48}
+                        loading="lazy"
+                        decoding="async"
+                      />
                     ) : (
                       <i className="fas fa-spa" aria-hidden="true" />
                     )}

@@ -13,6 +13,16 @@ const ACCESS_KEY = 'saiflower_access_token';
 const REFRESH_KEY = 'saiflower_refresh_token';
 const CUSTOMER_KEY = 'saiflower_customer';
 
+/** Public catalog/content cache window (seconds) for Next.js fetch Data Cache. */
+const CATALOG_REVALIDATE = 120;
+
+function catalogFetchInit(extra?: RequestInit): RequestInit {
+  return {
+    ...extra,
+    next: { ...(extra?.next ?? {}), revalidate: CATALOG_REVALIDATE },
+  };
+}
+
 export class ApiError extends Error {
   status: number;
   errors?: Record<string, string[]>;
@@ -225,7 +235,7 @@ export async function fetchProducts(params: Record<string, string | number | und
   for (const [key, value] of Object.entries(params)) {
     if (value !== undefined && value !== '') url.searchParams.set(key, String(value));
   }
-  const res = await fetch(url.toString(), { cache: 'no-store' });
+  const res = await fetch(url.toString(), catalogFetchInit());
   const json = (await res.json()) as ApiResponse<import('./types').Product[]>;
   if (!res.ok || json.success === false) {
     throw new ApiError(
@@ -237,9 +247,10 @@ export async function fetchProducts(params: Record<string, string | number | und
 }
 
 export async function fetchProduct(type: string, slug: string): Promise<import('./types').Product> {
-  const res = await fetch(apiUrl(`/products/${type}/${encodeURIComponent(slug)}`), {
-    cache: 'no-store',
-  });
+  const res = await fetch(
+    apiUrl(`/products/${type}/${encodeURIComponent(slug)}`),
+    catalogFetchInit(),
+  );
   const json = (await res.json()) as ApiResponse<import('./types').Product>;
   if (!res.ok || json.success === false) {
     throw new ApiError(
@@ -252,7 +263,7 @@ export async function fetchProduct(type: string, slug: string): Promise<import('
 }
 
 export async function fetchCategories(): Promise<import('./types').ShopCategory[]> {
-  const res = await fetch(apiUrl('/categories'), { cache: 'no-store' });
+  const res = await fetch(apiUrl('/categories'), catalogFetchInit());
   const json = (await res.json()) as ApiResponse<import('./types').ShopCategory[]>;
   if (!res.ok || json.success === false) {
     throw new ApiError(
@@ -266,7 +277,7 @@ export async function fetchCategories(): Promise<import('./types').ShopCategory[
 export async function fetchBlogs(limit = 100): Promise<import('./types').BlogListItem[]> {
   const url = new URL(apiUrl('/blogs'));
   url.searchParams.set('limit', String(limit));
-  const res = await fetch(url.toString(), { cache: 'no-store' });
+  const res = await fetch(url.toString(), catalogFetchInit());
   const json = (await res.json()) as ApiResponse<import('./types').BlogListItem[]>;
   if (!res.ok || json.success === false) {
     throw new ApiError(
@@ -278,7 +289,7 @@ export async function fetchBlogs(limit = 100): Promise<import('./types').BlogLis
 }
 
 export async function fetchBlog(slug: string): Promise<import('./types').BlogPost> {
-  const res = await fetch(apiUrl(`/blogs/${encodeURIComponent(slug)}`), { cache: 'no-store' });
+  const res = await fetch(apiUrl(`/blogs/${encodeURIComponent(slug)}`), catalogFetchInit());
   const json = (await res.json()) as ApiResponse<import('./types').BlogPost>;
   if (!res.ok || json.success === false) {
     throw new ApiError(json.success === false ? json.message : 'Blog not found', res.status);
@@ -294,7 +305,7 @@ export async function fetchFaqs(
   const url = new URL(apiUrl('/faqs'));
   url.searchParams.set('page', page);
   url.searchParams.set('limit', String(limit));
-  const res = await fetch(url.toString(), { cache: 'no-store' });
+  const res = await fetch(url.toString(), catalogFetchInit());
   const json = (await res.json()) as ApiResponse<import('./types').FaqItem[]>;
   if (!res.ok || json.success === false) {
     throw new ApiError(json.success === false ? json.message : 'Failed to load FAQs', res.status);
@@ -327,7 +338,7 @@ export interface EventItem {
 export async function fetchGallery(limit = 100): Promise<GalleryItem[]> {
   const url = new URL(apiUrl('/gallery'));
   url.searchParams.set('limit', String(limit));
-  const res = await fetch(url.toString(), { cache: 'no-store' });
+  const res = await fetch(url.toString(), catalogFetchInit());
   const json = (await res.json()) as ApiResponse<GalleryItem[]>;
   if (!res.ok || json.success === false) {
     throw new ApiError(json.success === false ? json.message : 'Failed to load gallery', res.status);
@@ -336,7 +347,7 @@ export async function fetchGallery(limit = 100): Promise<GalleryItem[]> {
 }
 
 export async function fetchGalleryItem(id: number): Promise<GalleryItem> {
-  const res = await fetch(apiUrl(`/gallery/${id}`), { cache: 'no-store' });
+  const res = await fetch(apiUrl(`/gallery/${id}`), catalogFetchInit());
   const json = (await res.json()) as ApiResponse<GalleryItem>;
   if (!res.ok || json.success === false) {
     throw new ApiError(json.success === false ? json.message : 'Gallery item not found', res.status);
@@ -348,7 +359,7 @@ export async function fetchGalleryItem(id: number): Promise<GalleryItem> {
 export async function fetchEvents(limit = 100): Promise<EventItem[]> {
   const url = new URL(apiUrl('/events'));
   url.searchParams.set('limit', String(limit));
-  const res = await fetch(url.toString(), { cache: 'no-store' });
+  const res = await fetch(url.toString(), catalogFetchInit());
   const json = (await res.json()) as ApiResponse<EventItem[]>;
   if (!res.ok || json.success === false) {
     throw new ApiError(json.success === false ? json.message : 'Failed to load events', res.status);
@@ -357,7 +368,7 @@ export async function fetchEvents(limit = 100): Promise<EventItem[]> {
 }
 
 export async function fetchEvent(slug: string): Promise<EventItem> {
-  const res = await fetch(apiUrl(`/events/${encodeURIComponent(slug)}`), { cache: 'no-store' });
+  const res = await fetch(apiUrl(`/events/${encodeURIComponent(slug)}`), catalogFetchInit());
   const json = (await res.json()) as ApiResponse<EventItem>;
   if (!res.ok || json.success === false) {
     throw new ApiError(json.success === false ? json.message : 'Event not found', res.status);
@@ -397,7 +408,7 @@ export interface CmsPageListItem {
 }
 
 export async function fetchCmsPage(slug: string): Promise<CmsPage> {
-  const res = await fetch(apiUrl(`/pages/${encodeURIComponent(slug)}`), { cache: 'no-store' });
+  const res = await fetch(apiUrl(`/pages/${encodeURIComponent(slug)}`), catalogFetchInit());
   const json = (await res.json()) as ApiResponse<CmsPage>;
   if (!res.ok || json.success === false) {
     throw new ApiError(json.success === false ? json.message : 'Page not found', res.status);
@@ -409,7 +420,7 @@ export async function fetchCmsPage(slug: string): Promise<CmsPage> {
 export async function fetchCmsPages(limit = 200): Promise<CmsPageListItem[]> {
   const url = new URL(apiUrl('/pages'));
   url.searchParams.set('limit', String(limit));
-  const res = await fetch(url.toString(), { cache: 'no-store' });
+  const res = await fetch(url.toString(), catalogFetchInit());
   const json = (await res.json()) as ApiResponse<CmsPageListItem[]>;
   if (!res.ok || json.success === false) {
     throw new ApiError(json.success === false ? json.message : 'Failed to load pages', res.status);

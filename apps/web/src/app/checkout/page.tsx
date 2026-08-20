@@ -701,7 +701,14 @@ function CheckoutPageContent() {
       {cart.items.map((item) => (
         <div key={`${item.category}-${item.id}`} className="qc-item">
           <div className="qc-item__img">
-            <img alt={item.name} src={resolveImageSrc(item.image)} />
+            <img
+              alt={item.name}
+              src={resolveImageSrc(item.image)}
+              width={72}
+              height={72}
+              loading="lazy"
+              decoding="async"
+            />
           </div>
           <div className="qc-item__body">
             <h3 className="qc-item__name">{item.name}</h3>

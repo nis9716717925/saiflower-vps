@@ -40,6 +40,9 @@ export default async function EventDetailPage({ params }: PageProps) {
           src={resolveImageSrc(event.image)}
           alt={event.title}
           style={{ width: '100%', height: '70vh', objectFit: 'cover', display: 'block' }}
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
         />
         <div
           style={{

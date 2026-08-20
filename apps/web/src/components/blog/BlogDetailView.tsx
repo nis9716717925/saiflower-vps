@@ -62,6 +62,9 @@ export function BlogDetailView({ blog }: { blog: BlogPost }) {
               className="blog-detail__img"
               width={1200}
               height={500}
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
               onError={(e) => {
                 (e.target as HTMLImageElement).src = FALLBACK;
               }}

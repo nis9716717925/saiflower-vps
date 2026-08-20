@@ -11,7 +11,7 @@ export function CelebrationCalendarPage() {
   const months = celebrationsGroupByMonth(items);
   const upcoming = celebrationsUpcoming(items, 6);
   const waLink = 'https://wa.me/918802004527';
-  const heroImg = '/celebrations/valentines-day.jpg';
+  const heroImg = '/celebrations/valentines-day.webp';
 
   return (
     <div className="cc-page">

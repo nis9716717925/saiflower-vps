@@ -98,6 +98,8 @@ export function ProductDetailView({ product, listLabel, listHref }: ProductDetai
                 id="mainView"
                 width={800}
                 height={800}
+                loading="eager"
+                decoding="async"
                 fetchPriority="high"
                 className="visible-media"
                 alt={product.name}
@@ -114,7 +116,7 @@ export function ProductDetailView({ product, listLabel, listHref }: ProductDetai
                     aria-label="Show product image"
                     aria-pressed={selectedImage === src}
                   >
-                    <img src={src} alt="" loading="lazy" />
+                    <img src={src} alt="" width={80} height={80} loading="lazy" decoding="async" />
                   </button>
                 ))}
               </div>

@@ -325,7 +325,14 @@ export default function CartPage() {
             {cart.items.map((item, index) => (
               <div key={`${item.category}-${item.id}-${index}`} className="qc-item">
                 <div className="qc-item__img">
-                  <img src={resolveImageSrc(item.image)} alt={item.name} />
+                  <img
+                    src={resolveImageSrc(item.image)}
+                    alt={item.name}
+                    width={96}
+                    height={96}
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </div>
                 <div className="qc-item__body">
                   <h2 className="qc-item__name">{item.name}</h2>

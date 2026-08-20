@@ -110,18 +110,18 @@ const LUXURY = [
 ];
 
 const CELEBRATIONS = [
-  { date: '1ST JAN', title: "New Year's Day", image: '/celebrations/new-year.jpg', slug: 'new-years-day' },
-  { date: '7TH FEB', title: 'Rose Day', image: '/celebrations/rose-day.jpg', slug: 'rose-day' },
-  { date: '8TH FEB', title: 'Propose Day', image: '/celebrations/propose-day.jpg', slug: 'propose-day' },
-  { date: '9TH FEB', title: 'Chocolate Day', image: '/celebrations/chocolate-day.jpg', slug: 'chocolate-day' },
-  { date: '10TH FEB', title: 'Teddy Day', image: '/celebrations/teddy-day.jpg', slug: 'teddy-day' },
-  { date: '11TH FEB', title: 'Promise Day', image: '/celebrations/promise-day.jpg', slug: 'promise-day' },
-  { date: '12TH FEB', title: 'Hug Day', image: '/celebrations/hug-day.jpg', slug: 'hug-day' },
-  { date: '13TH FEB', title: 'Kiss Day', image: '/celebrations/kiss-day.jpg', slug: 'kiss-day' },
-  { date: '14TH FEB', title: "Valentine's Day", image: '/celebrations/valentines-day.jpg', slug: 'valentines-day' },
-  { date: '8TH MAR', title: "Women's Day", image: '/celebrations/womens-day.jpg', slug: 'womens-day' },
-  { date: '10TH MAY', title: "Mother's Day", image: '/celebrations/mothers-day.jpg', slug: 'mothers-day' },
-  { date: '21ST JUN', title: "Father's Day", image: '/celebrations/fathers-day.jpg', slug: 'fathers-day' },
+  { date: '1ST JAN', title: "New Year's Day", image: '/celebrations/new-year.webp', slug: 'new-years-day' },
+  { date: '7TH FEB', title: 'Rose Day', image: '/celebrations/rose-day.webp', slug: 'rose-day' },
+  { date: '8TH FEB', title: 'Propose Day', image: '/celebrations/propose-day.webp', slug: 'propose-day' },
+  { date: '9TH FEB', title: 'Chocolate Day', image: '/celebrations/chocolate-day.webp', slug: 'chocolate-day' },
+  { date: '10TH FEB', title: 'Teddy Day', image: '/celebrations/teddy-day.webp', slug: 'teddy-day' },
+  { date: '11TH FEB', title: 'Promise Day', image: '/celebrations/promise-day.webp', slug: 'promise-day' },
+  { date: '12TH FEB', title: 'Hug Day', image: '/celebrations/hug-day.webp', slug: 'hug-day' },
+  { date: '13TH FEB', title: 'Kiss Day', image: '/celebrations/kiss-day.webp', slug: 'kiss-day' },
+  { date: '14TH FEB', title: "Valentine's Day", image: '/celebrations/valentines-day.webp', slug: 'valentines-day' },
+  { date: '8TH MAR', title: "Women's Day", image: '/celebrations/womens-day.webp', slug: 'womens-day' },
+  { date: '10TH MAY', title: "Mother's Day", image: '/celebrations/mothers-day.webp', slug: 'mothers-day' },
+  { date: '21ST JUN', title: "Father's Day", image: '/celebrations/fathers-day.webp', slug: 'fathers-day' },
 ];
 
 const OCCASION_TABS = [
@@ -242,7 +242,7 @@ export function FavFlowersSection() {
                   alt={`${flower.title} bouquets`}
                   width={260}
                   height={347}
-                  loading="lazy"
+                  loading="eager"
                   decoding="async"
                 />
               </span>
@@ -392,7 +392,6 @@ export function CelebrationsCalendarSection() {
               className="hp-celebrations__track hide-scrollbar"
               id="hpCelebrationsTrack"
               role="list"
-              tabIndex={0}
               aria-label="Celebrations calendar carousel"
             >
               {CELEBRATIONS.map((item) => (

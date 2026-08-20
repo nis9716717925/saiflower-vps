@@ -1,10 +1,11 @@
 import {
   FLOWER_PLACEHOLDER_IMAGE,
   mediaUrl as sharedMediaUrl,
+  preferWebpSrc,
   resolveImageSrc as sharedResolveImageSrc,
 } from '@saiflower/shared';
 
-export { FLOWER_PLACEHOLDER_IMAGE };
+export { FLOWER_PLACEHOLDER_IMAGE, preferWebpSrc };
 
 /** Prefix uploads paths and normalize image src for Next/public URLs. */
 export function resolveImageSrc(

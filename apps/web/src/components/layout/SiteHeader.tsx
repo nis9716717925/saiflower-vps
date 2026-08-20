@@ -102,12 +102,13 @@ export function SiteHeader() {
 
             <Link className="sf-site-header__logo" href="/">
               <img
-                src="/assets/images/logo-transparent.png"
+                src="/assets/images/logo-transparent.webp"
                 alt="Sai Flower logo"
                 width={168}
                 height={43}
                 className="sf-site-header__logo-img"
                 decoding="async"
+                fetchPriority="high"
               />
             </Link>
 
@@ -222,7 +223,7 @@ export function SiteHeader() {
         <div className="sf-mnav-drawer__head">
           <Link className="sf-mnav-drawer__logo" href="/" onClick={closeMenu}>
             <img
-              src="/assets/images/logo-transparent.png"
+              src="/assets/images/logo-transparent.webp"
               alt="Sai Flower"
               width={128}
               height={33}

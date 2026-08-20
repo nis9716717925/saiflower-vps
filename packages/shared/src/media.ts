@@ -3,10 +3,16 @@
 export const FLOWER_PLACEHOLDER_IMAGE =
   'https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=600&q=80';
 
-export const SITE_LOGO_PATH = '/assets/images/logo-transparent.png';
+export const SITE_LOGO_PATH = '/assets/images/logo-transparent.webp';
+
+const RASTER_EXT_RE = /\.(jpe?g|png|gif)(\?|#|$)/i;
 
 function isLogoPath(value: string): boolean {
-  return value === SITE_LOGO_PATH || value.endsWith('/logo-transparent.png');
+  return (
+    value === SITE_LOGO_PATH ||
+    value.endsWith('/logo-transparent.png') ||
+    value.endsWith('/logo-transparent.webp')
+  );
 }
 
 function supabasePublicBase(): string | null {
@@ -27,22 +33,47 @@ function storageObjectKey(raw: string, defaultFolder: string): string {
   return key.replace(/ /g, '%20');
 }
 
+/**
+ * Prefer WebP for same-origin / storage raster paths.
+ * Leaves external CDNs (Unsplash, etc.) and already-webp URLs untouched.
+ */
+export function preferWebpSrc(src: string): string {
+  if (!src || !RASTER_EXT_RE.test(src)) return src;
+  if (/^https?:\/\//i.test(src)) {
+    try {
+      const host = new URL(src).hostname;
+      // Only rewrite our own hosts / storage — not Unsplash etc.
+      const ours =
+        host.includes('saiflower') ||
+        host.includes('supabase.co') ||
+        host === 'localhost' ||
+        host === '127.0.0.1';
+      if (!ours) return src;
+    } catch {
+      return src;
+    }
+  }
+  return src.replace(RASTER_EXT_RE, '.webp$2');
+}
+
 /** Build a public image URL from a DB path, filename, or full URL. */
 export function mediaUrl(path?: string | null, defaultFolder = ''): string | null {
   if (!path?.trim()) return null;
   const raw = path.trim();
   if (isLogoPath(raw)) return null;
-  if (/^https?:\/\//i.test(raw)) return raw.replace(/ /g, '%20');
-  if (raw.startsWith('/') && !raw.startsWith('/uploads/')) return raw.replace(/ /g, '%20');
+  if (/^https?:\/\//i.test(raw)) return preferWebpSrc(raw.replace(/ /g, '%20'));
+  if (raw.startsWith('/') && !raw.startsWith('/uploads/')) {
+    return preferWebpSrc(raw.replace(/ /g, '%20'));
+  }
 
   const storageBase = supabasePublicBase();
   if (storageBase) {
-    return `${storageBase}/${storageObjectKey(raw, defaultFolder)}`;
+    return preferWebpSrc(`${storageBase}/${storageObjectKey(raw, defaultFolder)}`);
   }
 
-  if (raw.startsWith('uploads/')) return `/${raw}`.replace(/ /g, '%20');
+  if (raw.startsWith('uploads/')) return preferWebpSrc(`/${raw}`.replace(/ /g, '%20'));
   const folder = defaultFolder ? `${defaultFolder.replace(/^\/|\/$/g, '')}/` : '';
-  return `/uploads/${folder}${raw}`.replace(/ /g, '%20');
+  return preferWebpSrc(`/uploads/${folder}${raw}`.replace(/ /g, '%20'));
 }
 
 /** Normalize image src for `<img>` tags; use placeholder only when truly missing. */
@@ -53,7 +84,11 @@ export function resolveImageSrc(
   if (!src?.trim()) return fallback;
   const trimmed = src.trim();
   if (isLogoPath(trimmed)) return fallback;
-  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) return trimmed;
-  if (trimmed.startsWith('/') && !trimmed.startsWith('/uploads/')) return trimmed;
-  return mediaUrl(trimmed) ?? fallback;
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+    return preferWebpSrc(trimmed);
+  }
+  if (trimmed.startsWith('/') && !trimmed.startsWith('/uploads/')) {
+    return preferWebpSrc(trimmed);
+  }
+  return preferWebpSrc(mediaUrl(trimmed) ?? fallback);
 }

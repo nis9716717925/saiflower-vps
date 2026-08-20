@@ -81,7 +81,7 @@ export async function searchSuggest(qRaw: string, limitRaw?: number) {
       id: 0,
       name: 'Celebrations Calendar',
       slug: 'celebration-calendar',
-      image: '/celebrations/valentines-day.jpg',
+      image: '/celebrations/valentines-day.webp',
       type: 'page',
       link: '/celebration-calendar',
       badge: 'Guide',

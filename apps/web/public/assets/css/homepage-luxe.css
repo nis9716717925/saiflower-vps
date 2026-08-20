@@ -872,6 +872,8 @@
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     padding: 0.35rem 0 1.1rem;
+    touch-action: pan-x pan-y;
+    overscroll-behavior-x: contain;
 }
 
 .lx-tiles__track::-webkit-scrollbar { display: none; }
@@ -896,6 +898,7 @@
 
 .lx-tile__img {
     display: block;
+    position: relative;
     width: 100%;
     border-radius: 1.1rem;
     overflow: hidden;
@@ -909,6 +912,8 @@
 .lx-tile--square   .lx-tile__img { aspect-ratio: 1 / 1; }
 
 .lx-tile__img img {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -2236,12 +2241,22 @@
     gap: 0.85rem;
 }
 
+.sf-firstview-desktop .sf-shop__grid--banner-only {
+    grid-template-columns: 1fr;
+    max-width: 1600px;
+}
+
 @media (min-width: 900px) {
     .sf-firstview-desktop .sf-shop__grid {
         grid-template-columns: minmax(15rem, 0.92fr) minmax(0, 2.1fr);
         gap: 1rem;
         align-items: stretch;
         --sf-banner-h: clamp(17.5rem, 28vw, 22rem);
+    }
+
+    .sf-firstview-desktop .sf-shop__grid--banner-only {
+        grid-template-columns: 1fr;
+        --sf-banner-h: clamp(20rem, 32vw, 26rem);
     }
 }
 
@@ -2543,6 +2558,40 @@
     object-position: center;
     border-radius: 1rem;
     box-shadow: 0 12px 28px rgba(20, 38, 28, 0.14);
+}
+
+/* Full-bleed image-only hero banner (no copy overlay) */
+.sf-banner--image-only {
+    min-height: 16.5rem;
+}
+
+.sf-banner--image-only .sf-banner__slide {
+    display: block;
+    grid-template-columns: none;
+    background: #f7f3ea;
+}
+
+.sf-banner--image-only .sf-banner__full-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+}
+
+.sf-banner--image-only .sf-banner__full-link img {
+    width: 100%;
+    height: 100%;
+    min-height: var(--sf-banner-h, 20rem);
+    object-fit: cover;
+    object-position: center right;
+    display: block;
+    border-radius: 0;
+    box-shadow: none;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sf-banner--image-only:hover .sf-banner__full-link img {
+    transform: scale(1.02);
 }
 
 .sf-banner__nav {

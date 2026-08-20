@@ -4,7 +4,7 @@
 
 .hp-celebrations {
     background: #fff;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .hp-celebrations-head {
@@ -87,8 +87,10 @@
     padding: 0.35rem 0.25rem 1.25rem;
     margin: 0 -0.25rem;
     scrollbar-width: none;
-    cursor: grab;
-    touch-action: pan-x;
+    /* Allow vertical page scroll while still permitting horizontal swipe */
+    touch-action: pan-x pan-y;
+    overscroll-behavior-x: contain;
+    overscroll-behavior-y: auto;
 }
 
 .hp-celebrations__track.is-dragging {
@@ -183,6 +185,7 @@
 
 .hp-celebration-card__img-wrap {
     display: block;
+    position: relative;
     width: 100%;
     aspect-ratio: 4 / 5;
     border-radius: 0.875rem;
@@ -192,6 +195,8 @@
 }
 
 .hp-celebration-card__img-wrap img {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;

@@ -21,8 +21,10 @@ import {
 import { blogRouter, faqRouter } from './blog.routes';
 import { galleryRouter, eventsRouter } from './catalog-content.routes';
 import { pagesRouter } from './pages.routes';
+import { publicCatalogCache } from '../middleware/cacheHeaders';
 
 const router = Router();
+const catalogCache = publicCatalogCache(120);
 
 router.get('/', (_req, res) => {
   res.json(
@@ -66,8 +68,8 @@ router.get('/', (_req, res) => {
 });
 
 router.use('/auth', authRoutes);
-router.use('/products', productRoutes);
-router.use('/categories', categoryRouter);
+router.use('/products', catalogCache, productRoutes);
+router.use('/categories', catalogCache, categoryRouter);
 router.use('/search', searchRouter);
 router.use('/cart', cartRoutes);
 router.use('/addresses', addressRoutes);
@@ -77,11 +79,11 @@ router.use('/checkout', checkoutRouter);
 router.use('/orders', orderRouter);
 router.use('/wishlist', wishlistRouter);
 router.use('/reviews', reviewRouter);
-router.use('/settings', settingsRouter);
-router.use('/blogs', blogRouter);
-router.use('/faqs', faqRouter);
-router.use('/gallery', galleryRouter);
-router.use('/events', eventsRouter);
-router.use('/pages', pagesRouter);
+router.use('/settings', catalogCache, settingsRouter);
+router.use('/blogs', catalogCache, blogRouter);
+router.use('/faqs', catalogCache, faqRouter);
+router.use('/gallery', catalogCache, galleryRouter);
+router.use('/events', catalogCache, eventsRouter);
+router.use('/pages', catalogCache, pagesRouter);
 
 export default router;

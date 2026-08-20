@@ -59,7 +59,7 @@ export default async function PersonalizedSlugPage({ params }: PageProps) {
           status_label: 'Available Soon',
           short:
             'This personalised gift line is launching soon. Explore bouquet ideas below while we finish crafting it.',
-          hero: '/assets/images/hero/main-same-day.jpg',
+          hero: '/assets/images/hero/hero-make-today-beautiful.webp',
           recommend_line: 'Meanwhile, these bouquets make a heartfelt gift today.',
           bouquet_keywords: null,
           canonical_path: `/personalized/${slug}`,

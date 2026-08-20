@@ -13,13 +13,22 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: path.join(__dirname, '../..'),
   transpilePackages: ['@saiflower/shared'],
   images: {
+    formats: ['image/avif', 'image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 60 * 60 * 24 * 30,
     remotePatterns: [
       { protocol: 'https', hostname: 'saiflower.com' },
       { protocol: 'https', hostname: 'www.saiflower.com' },
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'wcoeimnhzzjmftnqpzwo.supabase.co' },
     ],
+    // Pre-converted WebP on disk + nginx/express cache; avoid sharp resize CPU on VPS.
     unoptimized: true,
+  },
+  compress: true,
+  experimental: {
+    optimizePackageImports: ['@saiflower/shared'],
   },
   async redirects() {
     return [
@@ -57,18 +66,36 @@ const nextConfig: NextConfig = {
     ];
   },
   async headers() {
+    const longCache = 'public, max-age=2592000, stale-while-revalidate=86400';
+    const weekCache = 'public, max-age=604800, stale-while-revalidate=86400';
     return [
       {
         source: '/assets/:path*',
-        headers: [{ key: 'Cache-Control', value: 'public, max-age=604800, stale-while-revalidate=86400' }],
+        headers: [{ key: 'Cache-Control', value: weekCache }],
+      },
+      {
+        source: '/assets/images/:path*',
+        headers: [{ key: 'Cache-Control', value: longCache }],
       },
       {
         source: '/celebrations/:path*',
-        headers: [{ key: 'Cache-Control', value: 'public, max-age=2592000, stale-while-revalidate=86400' }],
+        headers: [{ key: 'Cache-Control', value: longCache }],
+      },
+      {
+        source: '/uploads/:path*',
+        headers: [{ key: 'Cache-Control', value: longCache }],
+      },
+      {
+        source: '/sw.js',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=0, must-revalidate' }],
       },
       {
         source: '/favicon.png',
         headers: [{ key: 'Cache-Control', value: 'public, max-age=2592000' }],
+      },
+      {
+        source: '/_next/static/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
       },
     ];
   },

@@ -42,10 +42,20 @@ app.use(globalRateLimiter);
 app.use(
   '/uploads',
   express.static(uploadsDir, {
-    maxAge: config.isProduction ? '7d' : 0,
+    maxAge: config.isProduction ? '30d' : 0,
+    etag: true,
+    lastModified: true,
     fallthrough: false,
     setHeaders(res, filePath) {
       if (filePath.endsWith('.webp')) res.setHeader('Content-Type', 'image/webp');
+      else if (filePath.endsWith('.avif')) res.setHeader('Content-Type', 'image/avif');
+      // Long-lived immutable cache for hashed/upload filenames (content-addressed enough in practice)
+      if (config.isProduction) {
+        res.setHeader(
+          'Cache-Control',
+          'public, max-age=2592000, stale-while-revalidate=86400',
+        );
+      }
     },
   }),
 );

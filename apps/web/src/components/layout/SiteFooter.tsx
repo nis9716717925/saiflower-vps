@@ -58,7 +58,7 @@ export function SiteFooter() {
             <div className="text-center md:text-left">
               <Link className="inline-flex items-center gap-2 mb-6" href="/">
                 <img
-                  src="/assets/images/logo-transparent.png"
+                  src="/assets/images/logo-transparent.webp"
                   alt="Sai Flower Logo"
                   width={220}
                   height={64}

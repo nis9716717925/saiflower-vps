@@ -983,3 +983,10 @@
     content-visibility: auto;
     contain-intrinsic-size: auto 420px;
 }
+
+/* Never skip painting for product/tile images — causes white boxes until hover. */
+.homepage-premium .lx-tile__img img,
+.homepage-premium .hp-celebration-card__img-wrap img,
+.homepage-premium img[loading="lazy"] {
+    content-visibility: visible;
+}

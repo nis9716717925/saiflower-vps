@@ -8,6 +8,7 @@ import { CriticalRouteStyles } from '@/components/layout/CriticalRouteStyles';
 import { NavigationPaintGuard } from '@/components/layout/NavigationPaintGuard';
 import { RouteStyles } from '@/components/layout/RouteStyles';
 import { ServerBody } from '@/components/layout/ServerBody';
+import { ServiceWorkerRegister } from '@/components/layout/ServiceWorkerRegister';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { getThemePrimary, themeCssVars } from '@/lib/theme';
@@ -31,8 +32,12 @@ export const metadata: Metadata = {
     'Sai Flower',
   ],
   icons: {
-    icon: '/favicon.png',
-    apple: '/favicon.png',
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon.png', type: 'image/png' },
+      { url: '/favicon.png', type: 'image/png' },
+    ],
+    apple: [{ url: '/apple-icon.png', sizes: '180x180', type: 'image/png' }],
   },
 };
 
@@ -90,6 +95,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           <ChunkLoadRecovery />
           <NavigationPaintGuard />
           <BodyClass />
+          <ServiceWorkerRegister />
           <SiteHeader />
           <div id="sf-page">
             <OrderSuccessBanner />

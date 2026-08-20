@@ -103,6 +103,10 @@ export default function WishlistPage() {
                     src={resolveImageSrc(item.image)}
                     alt={item.name}
                     className="w-full h-56 object-cover"
+                    width={400}
+                    height={224}
+                    loading="lazy"
+                    decoding="async"
                   />
                 </Link>
                 <div className="p-4">
