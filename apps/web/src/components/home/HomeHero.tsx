@@ -47,7 +47,7 @@ const MAIN_SLIDES = [
     subtitle: '',
     cta: 'Shop Now',
     href: '/flowers',
-    img: '/assets/images/hero/hero-make-today-beautiful.webp',
+    img: '/assets/images/hero/hero-make-today-beautiful-mobile.webp',
   },
   {
     theme: 'cream',
@@ -56,7 +56,7 @@ const MAIN_SLIDES = [
     subtitle: '',
     cta: 'Shop Now',
     href: '/flowers',
-    img: '/assets/images/hero/hero-midnight-surprises.webp',
+    img: '/assets/images/hero/hero-midnight-surprises-mobile.webp',
   },
   {
     theme: 'blush',
@@ -65,7 +65,7 @@ const MAIN_SLIDES = [
     subtitle: '',
     cta: 'Shop Now',
     href: '/flowers',
-    img: '/assets/images/hero/hero-beautiful-moments.webp',
+    img: '/assets/images/hero/hero-beautiful-moments-mobile.webp',
   },
 ];
 
@@ -347,8 +347,8 @@ export function HomeHero() {
                                 src={slide.img}
                                 className="w-full h-full block object-contain bg-[#f7f3ea]"
                                 alt={plainTitle(slide.title)}
-                                width={1920}
-                                height={1280}
+                                width={1200}
+                                height={675}
                                 decoding="sync"
                                 loading={index === 0 ? 'eager' : 'lazy'}
                                 {...(index === 0 ? { fetchPriority: 'high' as const } : {})}
