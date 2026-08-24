@@ -60,6 +60,9 @@ checkoutRouter.post(
         recipient_phone: req.body.recipient_phone,
         delivery_time: req.body.delivery_time ?? req.body.time,
         address_id: req.body.address_id != null ? Number(req.body.address_id) : undefined,
+        ordering_for_me: Boolean(req.body.ordering_for_me),
+        latitude: req.body.latitude != null ? Number(req.body.latitude) : null,
+        longitude: req.body.longitude != null ? Number(req.body.longitude) : null,
         userId: req.user?.id,
         guestId: req.guestId,
       });

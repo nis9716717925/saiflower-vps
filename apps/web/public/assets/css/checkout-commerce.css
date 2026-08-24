@@ -924,6 +924,51 @@ body.checkout-funnel-body .sf-bottom-nav {
   font-size: 0.82rem;
 }
 
+.qc-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  margin: 0 0 1rem;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid #d8e2dc;
+  border-radius: 0.9rem;
+  background: #f7faf8;
+  cursor: pointer;
+}
+
+.qc-check input {
+  margin-top: 0.2rem;
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: #1f6a4a;
+  flex-shrink: 0;
+}
+
+.qc-check strong {
+  display: block;
+  color: #14261c;
+  font-size: 0.92rem;
+}
+
+.qc-check__hint {
+  display: block;
+  margin-top: 0.2rem;
+  color: #6b7670;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.qc-self-address {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid #cfe3d8;
+  border-radius: 0.9rem;
+  background: #f3faf6;
+}
+
 .qc-divider {
   height: 1px;
   background: #eef2ef;

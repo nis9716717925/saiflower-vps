@@ -206,7 +206,7 @@ export function pageCss(pathname: string): string[] {
     pathname.startsWith('/login') ||
     pathname.startsWith('/register')
   ) {
-    return ['/assets/css/checkout-commerce.css?v=2'];
+    return ['/assets/css/checkout-commerce.css?v=3'];
   }
 
   // CMS + location catch-all pages at /:slug

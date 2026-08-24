@@ -2,11 +2,49 @@ import { config } from '../config';
 import { prisma, num } from '../db/client';
 import { AppError, ValidationError } from '../utils/errors';
 import { clearCart, getCart } from './cart.service';
+import { getProductById } from './product.service';
 import {
   assertShippingReady,
   calculateShippingFromAddress,
+  geocodeAddress,
   requireAddressFields,
 } from './shipping.service';
+
+function mapsLinkForLocation(opts: {
+  address: string;
+  latitude?: number | null;
+  longitude?: number | null;
+}): string {
+  const lat = opts.latitude;
+  const lng = opts.longitude;
+  if (typeof lat === 'number' && typeof lng === 'number' && Number.isFinite(lat) && Number.isFinite(lng)) {
+    return `https://www.google.com/maps?q=${lat},${lng}`;
+  }
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(opts.address.trim())}`;
+}
+
+async function buildCartItemsTextWithUrls(
+  items: Array<{ qty: number; name: string; category: string; id: number }>,
+): Promise<string> {
+  if (!items.length) return '';
+  const lines: string[] = [];
+  for (const item of items) {
+    let productPage = '';
+    try {
+      const product = await getProductById(item.category, item.id);
+      if (product.url) {
+        productPage = product.url.startsWith('http')
+          ? product.url
+          : `${config.app.publicUrl}${product.url.startsWith('/') ? '' : '/'}${product.url}`;
+      }
+    } catch {
+      // Keep order text even if a catalog lookup fails.
+    }
+    lines.push(`${item.qty}x ${item.name}`);
+    if (productPage) lines.push(`🔗 ${productPage}`);
+  }
+  return lines.join('\n');
+}
 
 function mapOrderRow(o: {
   id: number;
@@ -52,6 +90,9 @@ export async function placeOrder(input: {
   recipient_phone?: string;
   delivery_time?: string;
   address_id?: number;
+  ordering_for_me?: boolean;
+  latitude?: number | null;
+  longitude?: number | null;
   userId?: number;
   guestId?: string;
 }) {
@@ -148,8 +189,34 @@ export async function placeOrder(input: {
 
   await clearCart(input.userId, input.guestId);
 
+  const itemsWithUrls =
+    (await buildCartItemsTextWithUrls(cart.items)) ||
+    cart.items.map((i) => `${i.qty}x ${i.name}`).join('\n') ||
+    itemsText;
+
+  let latitude = input.latitude ?? null;
+  let longitude = input.longitude ?? null;
+  if (
+    (typeof latitude !== 'number' || typeof longitude !== 'number') &&
+    input.address.trim()
+  ) {
+    const geocoded = await geocodeAddress(input.address);
+    if (geocoded) {
+      latitude = geocoded.latitude;
+      longitude = geocoded.longitude;
+    }
+  }
+
+  const orderingForMe = Boolean(input.ordering_for_me);
+  const recipientName = orderingForMe
+    ? input.name
+    : (input.recipient_name ?? input.name);
+  const recipientPhone = orderingForMe
+    ? input.phone
+    : (input.recipient_phone ?? input.phone);
+
   const whatsappMessage = buildWhatsAppMessage({
-    itemsText: cart.items.map((i) => `${i.qty}x ${i.name}`).join('\n') || itemsText,
+    itemsText: itemsWithUrls,
     total,
     shippingFee: shippingResult.shipping_fee,
     distanceText: shippingResult.distance_text,
@@ -157,9 +224,15 @@ export async function placeOrder(input: {
     time: input.delivery_time ?? '',
     senderName: input.name,
     senderPhone: input.phone,
-    recipientName: input.recipient_name ?? input.name,
-    recipientPhone: input.recipient_phone ?? input.phone,
+    recipientName,
+    recipientPhone,
     address: input.address,
+    orderingForMe,
+    mapsUrl: mapsLinkForLocation({
+      address: input.address,
+      latitude,
+      longitude,
+    }),
   });
 
   const whatsappUrl = `https://wa.me/${config.checkout.whatsappE164}?text=${encodeURIComponent(whatsappMessage)}`;
@@ -186,15 +259,24 @@ function buildWhatsAppMessage(p: {
   recipientName: string;
   recipientPhone: string;
   address: string;
+  orderingForMe?: boolean;
+  mapsUrl?: string;
 }) {
   let msg = `*✨ NEW ORDER ✨*\n\n`;
   msg += `*🛍️ ITEMS:*\n${p.itemsText}\n\n`;
   msg += `*💰 TOTAL: ₹${p.total}*\n`;
   msg += `*(Incl. Shipping: ₹${p.shippingFee} for ${p.distanceText})*\n\n`;
   msg += `*📍 DELIVERY:* ${p.date} | ${p.time}\n`;
-  msg += `*👤 SENDER:* ${p.senderName} (${p.senderPhone})\n`;
-  msg += `*🎁 RECIPIENT:* ${p.recipientName} (${p.recipientPhone})\n`;
+  if (p.orderingForMe) {
+    msg += `*👤 CUSTOMER (ordering for self):* ${p.senderName} (${p.senderPhone})\n`;
+  } else {
+    msg += `*👤 SENDER:* ${p.senderName} (${p.senderPhone})\n`;
+    msg += `*🎁 RECIPIENT:* ${p.recipientName} (${p.recipientPhone})\n`;
+  }
   msg += `*📍 ADDRESS:* ${p.address}`;
+  if (p.mapsUrl) {
+    msg += `\n*🗺 GOOGLE MAPS:* ${p.mapsUrl}`;
+  }
   return msg;
 }
 

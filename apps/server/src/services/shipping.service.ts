@@ -22,6 +22,7 @@ type GoogleAddressComponent = {
 type GoogleAddressResult = {
   formatted_address?: string;
   address_components?: GoogleAddressComponent[];
+  geometry?: { location?: { lat?: number; lng?: number } };
 };
 
 function requireMapsKey() {
@@ -56,12 +57,16 @@ function mapGoogleAddress(result: GoogleAddressResult) {
   const localityParts = [route, neighborhood, locality, state].filter(
     (value, index, values) => value && values.indexOf(value) === index,
   );
+  const lat = result.geometry?.location?.lat;
+  const lng = result.geometry?.location?.lng;
 
   return {
     flatHouseNo: streetNumber,
     apartmentStreetLocality: localityParts.join(', ') || result.formatted_address || '',
     pincode,
     formattedAddress: result.formatted_address ?? '',
+    latitude: typeof lat === 'number' ? lat : null,
+    longitude: typeof lng === 'number' ? lng : null,
   };
 }
 
@@ -111,7 +116,7 @@ export async function getPlaceAddress(placeIdRaw: string) {
 
   const params = new URLSearchParams({
     place_id: placeId,
-    fields: 'formatted_address,address_component',
+    fields: 'formatted_address,address_component,geometry',
     key: requireMapsKey(),
   });
   const data = await fetchGoogleJson<{
@@ -146,7 +151,41 @@ export async function reverseGeocode(latitude: number, longitude: number) {
   if (data.status !== 'OK' || !result) {
     throw new AppError(data.error_message ?? 'Could not detect an address at this location', 422);
   }
-  return mapGoogleAddress(result);
+  const mapped = mapGoogleAddress(result);
+  // Prefer the GPS fix the browser already gave us when Google omits geometry.
+  return {
+    ...mapped,
+    latitude: mapped.latitude ?? latitude,
+    longitude: mapped.longitude ?? longitude,
+  };
+}
+
+/** Geocode a free-text address to coordinates (for Maps links on orders). */
+export async function geocodeAddress(addressRaw: string): Promise<{
+  latitude: number;
+  longitude: number;
+} | null> {
+  const address = addressRaw.trim();
+  if (!address || !config.shipping.googleMapsApiKey) return null;
+
+  const params = new URLSearchParams({
+    address,
+    key: config.shipping.googleMapsApiKey,
+    components: 'country:IN',
+  });
+  try {
+    const data = await fetchGoogleJson<{
+      status?: string;
+      results?: GoogleAddressResult[];
+    }>(`https://maps.googleapis.com/maps/api/geocode/json?${params}`);
+    const loc = data.results?.[0]?.geometry?.location;
+    if (data.status !== 'OK' || typeof loc?.lat !== 'number' || typeof loc?.lng !== 'number') {
+      return null;
+    }
+    return { latitude: loc.lat, longitude: loc.lng };
+  } catch {
+    return null;
+  }
 }
 
 /** Mirrors includes/shipping_helper.php calculate_shipping_from_address(). */

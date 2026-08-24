@@ -38,6 +38,9 @@ type CheckoutAddressSnapshot = {
   apartmentStreetLocality: string;
   pincode: string;
   addressType: AddressType;
+  latitude?: number | null;
+  longitude?: number | null;
+  orderingForMe?: boolean;
 };
 
 const ADDRESS_TYPES: AddressType[] = ['Home', 'Work', 'Other'];
@@ -99,6 +102,10 @@ function CheckoutPageContent() {
   const [apartmentStreetLocality, setApartmentStreetLocality] = useState('');
   const [pincode, setPincode] = useState('');
   const [addressType, setAddressType] = useState<AddressType>('Home');
+  const [orderingForMe, setOrderingForMe] = useState(false);
+  const [deliveryLatitude, setDeliveryLatitude] = useState<number | null>(null);
+  const [deliveryLongitude, setDeliveryLongitude] = useState<number | null>(null);
+  const [showAddressDetails, setShowAddressDetails] = useState(false);
   const [formError, setFormError] = useState('');
   const [addressSuggestions, setAddressSuggestions] = useState<AddressSuggestion[]>([]);
   const [addressSearchActive, setAddressSearchActive] = useState(false);
@@ -181,8 +188,28 @@ function CheckoutPageContent() {
     setApartmentStreetLocality(address.apartmentStreetLocality);
     setPincode(address.pincode);
     setAddressType(address.addressType);
+    setDeliveryLatitude(null);
+    setDeliveryLongitude(null);
     setAddressSearchActive(false);
     setAddressSuggestions([]);
+  }
+
+  function applyOrderingForMe(next: boolean) {
+    setOrderingForMe(next);
+    setFormError('');
+    if (next) {
+      const profile = getCustomer();
+      if (profile?.name && !recipientName.trim()) setRecipientName(profile.name);
+      if (profile?.phone) setMobile(profile.phone);
+      if (profile?.email) setEmail(profile.email);
+      setAddressType('Home');
+      setShowAddressDetails(false);
+      if (!flatHouseNo.trim() && !apartmentStreetLocality.trim() && !pincode.trim()) {
+        void detectCurrentLocation().catch(() => undefined);
+      }
+    } else {
+      setShowAddressDetails(true);
+    }
   }
 
   useEffect(() => {
@@ -226,6 +253,10 @@ function CheckoutPageContent() {
     if (address.flatHouseNo) setFlatHouseNo(address.flatHouseNo);
     setApartmentStreetLocality(address.apartmentStreetLocality);
     if (address.pincode) setPincode(address.pincode);
+    if (typeof address.latitude === 'number' && typeof address.longitude === 'number') {
+      setDeliveryLatitude(address.latitude);
+      setDeliveryLongitude(address.longitude);
+    }
     setAddressSearchActive(false);
     setAddressSuggestions([]);
     setAddressSearchError('');
@@ -372,23 +403,37 @@ function CheckoutPageContent() {
     setSavingAddress(true);
     try {
       if (isGuest) {
+        const profile = getCustomer();
+        const resolvedName = recipientName.trim() || profile?.name?.trim() || '';
+        const resolvedMobile = (orderingForMe ? mobile.trim() || profile?.phone || '' : mobile.trim()).trim();
+        const resolvedEmail = (orderingForMe ? email.trim() || profile?.email || '' : email.trim()) || null;
         const snapshot: CheckoutAddressSnapshot = {
-          recipientName: recipientName.trim(),
-          mobile: mobile.trim(),
-          email: email.trim() || null,
+          recipientName: resolvedName,
+          mobile: resolvedMobile,
+          email: resolvedEmail,
           flatHouseNo: flatHouseNo.trim(),
           apartmentStreetLocality: apartmentStreetLocality.trim(),
           pincode: pincode.trim(),
-          addressType,
+          addressType: orderingForMe ? 'Home' : addressType,
+          latitude: deliveryLatitude,
+          longitude: deliveryLongitude,
+          orderingForMe,
         };
-        if (
-          !snapshot.recipientName ||
-          !snapshot.mobile ||
-          !snapshot.flatHouseNo ||
-          !snapshot.apartmentStreetLocality ||
-          !snapshot.pincode
-        ) {
-          setFormError('Please fill all required delivery fields.');
+        if (!snapshot.recipientName) {
+          setFormError('Please enter your name.');
+          return;
+        }
+        if (!snapshot.mobile) {
+          setFormError('Please enter your mobile number.');
+          return;
+        }
+        if (!snapshot.flatHouseNo || !snapshot.apartmentStreetLocality || !snapshot.pincode) {
+          setFormError(
+            orderingForMe
+              ? 'We need your delivery location. Tap “Use my location” or enter your address.'
+              : 'Please fill all required delivery fields.',
+          );
+          setShowAddressDetails(true);
           return;
         }
 
@@ -407,26 +452,49 @@ function CheckoutPageContent() {
       }
 
       let saved: CustomerAddress;
+      const profile = getCustomer();
+      const resolvedName = recipientName.trim() || profile?.name?.trim() || '';
+      const resolvedMobile = (orderingForMe ? mobile.trim() || profile?.phone || '' : mobile.trim()).trim();
+      const resolvedEmail = (orderingForMe ? email.trim() || profile?.email || '' : email.trim()) || null;
+
+      if (!resolvedName) {
+        setFormError('Please enter your name.');
+        return;
+      }
+      if (!resolvedMobile) {
+        setFormError('Please enter your mobile number.');
+        return;
+      }
+      if (!flatHouseNo.trim() || !apartmentStreetLocality.trim() || !pincode.trim()) {
+        setFormError(
+          orderingForMe
+            ? 'We need your delivery location. Tap “Use my location” or enter your address.'
+            : 'Please fill all required delivery fields.',
+        );
+        setShowAddressDetails(true);
+        return;
+      }
+
       if (!showNewAddressForm && selectedAddressId) {
         saved = await apiSend<CustomerAddress>(`/addresses/${selectedAddressId}`, 'PATCH', {
-          recipientName,
-          mobile,
-          email: email.trim() || null,
+          recipientName: resolvedName,
+          mobile: resolvedMobile,
+          email: resolvedEmail,
           flatHouseNo,
           apartmentStreetLocality,
           pincode,
-          addressType,
+          addressType: orderingForMe ? 'Home' : addressType,
           isDefault: true,
         });
       } else {
         saved = await apiSend<CustomerAddress>('/addresses', 'POST', {
-          recipientName,
-          mobile,
-          email: email.trim() || null,
+          recipientName: resolvedName,
+          mobile: resolvedMobile,
+          email: resolvedEmail,
           flatHouseNo,
           apartmentStreetLocality,
           pincode,
-          addressType,
+          addressType: orderingForMe ? 'Home' : addressType,
           isDefault: true,
         });
       }
@@ -465,15 +533,18 @@ function CheckoutPageContent() {
   function startNewAddress() {
     setShowNewAddressForm(true);
     setSelectedAddressId(null);
-    setRecipientName('');
+    setRecipientName(orderingForMe ? customer?.name ?? '' : '');
     setMobile(customer?.phone ?? '');
     setEmail(customer?.email ?? '');
     setFlatHouseNo('');
     setApartmentStreetLocality('');
     setPincode('');
     setAddressType('Home');
+    setDeliveryLatitude(null);
+    setDeliveryLongitude(null);
     setAddressSearchActive(false);
     setAddressSuggestions([]);
+    setShowAddressDetails(!orderingForMe);
   }
 
   async function handleWhatsAppOrder() {
@@ -507,17 +578,34 @@ function CheckoutPageContent() {
     );
     const payable = Math.max(0, subtotal + fee - discount);
     const sender = getCustomer();
+    const forMe =
+      orderingForMe ||
+      Boolean('orderingForMe' in paymentAddress && paymentAddress.orderingForMe);
+    const customerName = forMe
+      ? paymentAddress.recipientName
+      : sender?.name || paymentAddress.recipientName;
+    const customerPhone = forMe
+      ? paymentAddress.mobile
+      : sender?.phone || paymentAddress.mobile;
+    const lat =
+      ('latitude' in paymentAddress ? paymentAddress.latitude : null) ?? deliveryLatitude;
+    const lng =
+      ('longitude' in paymentAddress ? paymentAddress.longitude : null) ?? deliveryLongitude;
 
     try {
       const result = await apiSend<PlaceOrderResult>('/checkout/place-order', 'POST', {
-        name: sender?.name || paymentAddress.recipientName,
-        phone: sender?.phone || paymentAddress.mobile,
+        name: customerName,
+        phone: customerPhone,
         email: paymentAddress.email || sender?.email || '',
         address,
         date: delDate,
         delivery_time: delTime,
-        recipient_name: paymentAddress.recipientName,
-        recipient_phone: paymentAddress.mobile,
+        recipient_name: forMe ? customerName : paymentAddress.recipientName,
+        recipient_phone: forMe ? customerPhone : paymentAddress.mobile,
+        ordering_for_me: forMe,
+        ...(typeof lat === 'number' && typeof lng === 'number'
+          ? { latitude: lat, longitude: lng }
+          : {}),
         ...(isGuest || !('id' in paymentAddress)
           ? {}
           : { address_id: (paymentAddress as CustomerAddress).id }),
@@ -566,42 +654,96 @@ function CheckoutPageContent() {
         </button>
       </div>
 
+      <label className="qc-check">
+        <input
+          type="checkbox"
+          checked={orderingForMe}
+          onChange={(e) => applyOrderingForMe(e.target.checked)}
+        />
+        <span>
+          <strong>Ordering for me</strong>
+          <span className="qc-check__hint">
+            Only enter your name — we&apos;ll deliver to your location
+          </span>
+        </span>
+      </label>
+
       <div className="qc-grid qc-grid--2">
-        <div className="qc-field">
-          <label className="qc-label">Recipient name</label>
+        <div className="qc-field" style={orderingForMe ? { gridColumn: '1 / -1' } : undefined}>
+          <label className="qc-label">{orderingForMe ? 'Your name' : 'Recipient name'}</label>
           <input
             className="qc-input"
             value={recipientName}
             onChange={(e) => setRecipientName(e.target.value)}
+            placeholder={orderingForMe ? 'Your full name' : undefined}
             required
           />
         </div>
-        <div className="qc-field">
-          <label className="qc-label">Mobile number</label>
-          <input
-            className="qc-input"
-            type="tel"
-            inputMode="numeric"
-            value={mobile}
-            onChange={(e) => setMobile(e.target.value)}
-            required
-          />
-        </div>
-        <div className="qc-field" style={{ gridColumn: '1 / -1' }}>
-          <label className="qc-label">Email id (optional)</label>
-          <input
-            className="qc-input"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
+        {!(orderingForMe && (mobile.trim() || customer?.phone)) && (
+          <div className="qc-field" style={orderingForMe ? { gridColumn: '1 / -1' } : undefined}>
+            <label className="qc-label">Mobile number</label>
+            <input
+              className="qc-input"
+              type="tel"
+              inputMode="numeric"
+              value={mobile}
+              onChange={(e) => setMobile(e.target.value)}
+              required
+            />
+          </div>
+        )}
+        {!orderingForMe && (
+          <div className="qc-field" style={{ gridColumn: '1 / -1' }}>
+            <label className="qc-label">Email id (optional)</label>
+            <input
+              className="qc-input"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+        )}
+
+        {orderingForMe &&
+          Boolean(flatHouseNo.trim() && apartmentStreetLocality.trim() && pincode.trim()) &&
+          !showAddressDetails && (
+            <div className="qc-field" style={{ gridColumn: '1 / -1' }}>
+              <div className="qc-self-address">
+                <div>
+                  <strong>Delivering to your location</strong>
+                  <p className="qc-muted" style={{ margin: '0.25rem 0 0', lineHeight: 1.45 }}>
+                    {flatHouseNo}, {apartmentStreetLocality}
+                    <br />
+                    PIN {pincode}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  className="qc-link-btn"
+                  onClick={() => setShowAddressDetails(true)}
+                >
+                  Edit address
+                </button>
+              </div>
+            </div>
+          )}
+
+        {(!orderingForMe ||
+          showAddressDetails ||
+          !flatHouseNo.trim() ||
+          !apartmentStreetLocality.trim() ||
+          !pincode.trim()) && (
+          <>
         <div className="qc-field">
           <label className="qc-label">Flat / House no.</label>
           <input
             className="qc-input"
             value={flatHouseNo}
-            onChange={(e) => setFlatHouseNo(e.target.value)}
+            onChange={(e) => {
+              setFlatHouseNo(e.target.value);
+              setDeliveryLatitude(null);
+              setDeliveryLongitude(null);
+            }}
             required
           />
         </div>
@@ -610,7 +752,11 @@ function CheckoutPageContent() {
           <input
             className="qc-input"
             value={pincode}
-            onChange={(e) => setPincode(e.target.value)}
+            onChange={(e) => {
+              setPincode(e.target.value);
+              setDeliveryLatitude(null);
+              setDeliveryLongitude(null);
+            }}
             required
           />
         </div>
@@ -627,6 +773,8 @@ function CheckoutPageContent() {
               onChange={(e) => {
                 setApartmentStreetLocality(e.target.value);
                 setAddressSearchActive(true);
+                setDeliveryLatitude(null);
+                setDeliveryLongitude(null);
               }}
               placeholder="Search with Google Maps"
               autoComplete="off"
@@ -670,6 +818,7 @@ function CheckoutPageContent() {
             </p>
           )}
         </div>
+        {!orderingForMe && (
         <div className="qc-field" style={{ gridColumn: '1 / -1' }}>
           <label className="qc-label">Type of address</label>
           <div className="qc-chips">
@@ -685,6 +834,9 @@ function CheckoutPageContent() {
             ))}
           </div>
         </div>
+        )}
+          </>
+        )}
       </div>
     </div>
   );

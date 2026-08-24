@@ -154,6 +154,8 @@ export interface GoogleAddressDetails {
   apartmentStreetLocality: string;
   pincode: string;
   formattedAddress: string;
+  latitude?: number | null;
+  longitude?: number | null;
 }
 
 export interface PlaceOrderResult {
