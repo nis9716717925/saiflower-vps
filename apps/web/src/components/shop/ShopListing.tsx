@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { FlowerShopCard } from '@/components/shop/FlowerShopCard';
-import { resolveImageSrc } from '@/lib/images';
 import type { Product, ShopCategory } from '@/lib/types';
 
 interface ShopListingProps {
@@ -86,58 +85,24 @@ function priceChecked(
   return Number(priceMin) === min && Number(priceMax) === max;
 }
 
-/** Prefer original raster files for categories — WebP copies were never uploaded. */
-function categoryIconSrcCandidates(image: string): string[] {
-  const primary = resolveImageSrc(image);
-  if (!/categories\//i.test(primary) && !/categories\//i.test(image)) {
-    return [primary];
-  }
-  const ordered: string[] = [];
-  // Try common originals first when the URL was rewritten to a missing .webp
-  const extOrder = /\.webp(\?|#|$)/i.test(primary)
-    ? ['.png', '.jpeg', '.jpg', '.webp']
-    : null;
-  if (extOrder) {
-    for (const ext of extOrder) {
-      const next = primary.replace(/\.(webp|jpe?g|png|gif)(\?|#|$)/i, `${ext}$2`);
-      if (!ordered.includes(next)) ordered.push(next);
-    }
-    return ordered;
-  }
-  ordered.push(primary);
-  for (const ext of ['.png', '.jpeg', '.jpg', '.webp']) {
-    const next = primary.replace(/\.(webp|jpe?g|png|gif)(\?|#|$)/i, `${ext}$2`);
-    if (!ordered.includes(next)) ordered.push(next);
-  }
-  return ordered;
-}
-
-function ShopCategoryIcon({ image }: { image?: string | null }) {
-  const candidates = useMemo(
-    () => (image ? categoryIconSrcCandidates(image) : []),
-    [image],
-  );
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    setIndex(0);
-  }, [image]);
-
-  if (!image || index >= candidates.length) {
-    return <i className="fas fa-spa" aria-hidden="true" />;
-  }
-
-  return (
-    <img
-      src={candidates[index]}
-      alt=""
-      width={48}
-      height={48}
-      loading="lazy"
-      decoding="async"
-      onError={() => setIndex((i) => i + 1)}
-    />
-  );
+/** Homepage-style Font Awesome icons for shop category badges. */
+function shopCategoryFaIcon(name: string): string {
+  const n = name.toLowerCase();
+  if (/same.?day|express|bolt/.test(n)) return 'fa-bolt';
+  if (/chocolate|choco/.test(n)) return 'fa-candy-cane';
+  if (/sympath|condolen|funeral/.test(n)) return 'fa-dove';
+  if (/rose/.test(n)) return 'fa-spa';
+  if (/love|romance|valentine/.test(n)) return 'fa-heart';
+  if (/wedding|jai.?mala|mala/.test(n)) return 'fa-ring';
+  if (/car/.test(n)) return 'fa-car';
+  if (/jewell?ery|jewel/.test(n)) return 'fa-gem';
+  if (/decor|decoration|stage|event/.test(n)) return 'fa-wand-magic-sparkles';
+  if (/first.?night|honeymoon|room/.test(n)) return 'fa-moon';
+  if (/crochet|plant/.test(n)) return 'fa-leaf';
+  if (/birthday|cake/.test(n)) return 'fa-cake-candles';
+  if (/annivers/.test(n)) return 'fa-heart';
+  if (/gift|hamper/.test(n)) return 'fa-gift';
+  return 'fa-spa';
 }
 
 export function ShopListing({
@@ -329,37 +294,38 @@ export function ShopListing({
             </Link>
           ) : null}
         </div>
+
+        {/* Homepage-style circular category badges (mobile) */}
+        <div className="sf-shop__cat-badges hide-scrollbar md:hidden" aria-label="Categories">
+          <Link
+            href={hrefWith({ category: undefined })}
+            className={`sf-shop__cat-badge${!activeCategory ? ' is-active' : ''}`}
+          >
+            <span className="sf-shop__cat-badge-icon">
+              <i className="fas fa-border-all" aria-hidden="true" />
+            </span>
+            <span className="sf-shop__cat-badge-label">All</span>
+          </Link>
+          {orderedCats.map((cat) => {
+            const active = activeCategory === cat.id;
+            return (
+              <Link
+                key={cat.id}
+                href={hrefWith({ category: String(cat.id) })}
+                className={`sf-shop__cat-badge${active ? ' is-active' : ''}`}
+              >
+                <span className="sf-shop__cat-badge-icon">
+                  <i className={`fas ${shopCategoryFaIcon(cat.name)}`} aria-hidden="true" />
+                </span>
+                <span className="sf-shop__cat-badge-label">{cat.name}</span>
+              </Link>
+            );
+          })}
+        </div>
       </div>
 
       <main className="sf-shop__main">
-        <aside className="sf-shop__aside" aria-label="Categories">
-          <div className="sf-shop__cat-rail hide-scrollbar md:hidden">
-            <Link
-              href={hrefWith({ category: undefined })}
-              className={`sf-shop__cat${!activeCategory ? ' is-active' : ''}`}
-            >
-              <span className="sf-shop__cat-icon">
-                <i className="fas fa-border-all" aria-hidden="true" />
-              </span>
-              <span>All</span>
-            </Link>
-            {orderedCats.map((cat) => {
-              const active = activeCategory === cat.id;
-              return (
-                <Link
-                  key={cat.id}
-                  href={hrefWith({ category: String(cat.id) })}
-                  className={`sf-shop__cat${active ? ' is-active' : ''}`}
-                >
-                  <span className="sf-shop__cat-icon">
-                    <ShopCategoryIcon image={cat.image} />
-                  </span>
-                  <span>{cat.name}</span>
-                </Link>
-              );
-            })}
-          </div>
-
+        <aside className="sf-shop__aside" aria-label="Filters">
           <div className="sf-shop__filters">
             <div className="sf-shop__filters-head">
               <h2>Filters</h2>
