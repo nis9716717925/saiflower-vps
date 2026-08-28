@@ -168,11 +168,11 @@ export function pageCss(pathname: string): string[] {
   }
 
   if (pathname === '/flowers' || pathname === '/cakes' || pathname === '/gifts') {
-    return ['/assets/css/shop-commerce.css?v=5', '/assets/css/shop-luxe.css', '/assets/css/category-page.css'];
+    return ['/assets/css/shop-commerce.css?v=6', '/assets/css/shop-luxe.css', '/assets/css/category-page.css'];
   }
 
   if (pathname === '/search-results' || pathname.startsWith('/search-results')) {
-    return ['/assets/css/shop-commerce.css?v=5'];
+    return ['/assets/css/shop-commerce.css?v=6'];
   }
 
   if (

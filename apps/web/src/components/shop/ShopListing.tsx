@@ -294,38 +294,37 @@ export function ShopListing({
             </Link>
           ) : null}
         </div>
-
-        {/* Homepage-style circular category badges (mobile) */}
-        <div className="sf-shop__cat-badges hide-scrollbar md:hidden" aria-label="Categories">
-          <Link
-            href={hrefWith({ category: undefined })}
-            className={`sf-shop__cat-badge${!activeCategory ? ' is-active' : ''}`}
-          >
-            <span className="sf-shop__cat-badge-icon">
-              <i className="fas fa-border-all" aria-hidden="true" />
-            </span>
-            <span className="sf-shop__cat-badge-label">All</span>
-          </Link>
-          {orderedCats.map((cat) => {
-            const active = activeCategory === cat.id;
-            return (
-              <Link
-                key={cat.id}
-                href={hrefWith({ category: String(cat.id) })}
-                className={`sf-shop__cat-badge${active ? ' is-active' : ''}`}
-              >
-                <span className="sf-shop__cat-badge-icon">
-                  <i className={`fas ${shopCategoryFaIcon(cat.name)}`} aria-hidden="true" />
-                </span>
-                <span className="sf-shop__cat-badge-label">{cat.name}</span>
-              </Link>
-            );
-          })}
-        </div>
       </div>
 
       <main className="sf-shop__main">
-        <aside className="sf-shop__aside" aria-label="Filters">
+        <aside className="sf-shop__aside" aria-label="Categories">
+          <div className="sf-shop__cat-rail hide-scrollbar md:hidden">
+            <Link
+              href={hrefWith({ category: undefined })}
+              className={`sf-shop__cat${!activeCategory ? ' is-active' : ''}`}
+            >
+              <span className="sf-shop__cat-icon">
+                <i className="fas fa-border-all" aria-hidden="true" />
+              </span>
+              <span>All</span>
+            </Link>
+            {orderedCats.map((cat) => {
+              const active = activeCategory === cat.id;
+              return (
+                <Link
+                  key={cat.id}
+                  href={hrefWith({ category: String(cat.id) })}
+                  className={`sf-shop__cat${active ? ' is-active' : ''}`}
+                >
+                  <span className="sf-shop__cat-icon">
+                    <i className={`fas ${shopCategoryFaIcon(cat.name)}`} aria-hidden="true" />
+                  </span>
+                  <span>{cat.name}</span>
+                </Link>
+              );
+            })}
+          </div>
+
           <div className="sf-shop__filters">
             <div className="sf-shop__filters-head">
               <h2>Filters</h2>
