@@ -36,9 +36,13 @@ function storageObjectKey(raw: string, defaultFolder: string): string {
 /**
  * Prefer WebP for same-origin / storage raster paths.
  * Leaves external CDNs (Unsplash, etc.) and already-webp URLs untouched.
+ *
+ * Category icons were uploaded as jpg/png/jpeg only (never batch-converted),
+ * so rewriting those paths to .webp breaks the shop category rail.
  */
 export function preferWebpSrc(src: string): string {
   if (!src || !RASTER_EXT_RE.test(src)) return src;
+  if (/(?:^|\/)categories\//i.test(src)) return src;
   if (/^https?:\/\//i.test(src)) {
     try {
       const host = new URL(src).hostname;

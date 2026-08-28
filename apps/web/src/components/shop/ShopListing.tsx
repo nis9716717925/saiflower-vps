@@ -86,6 +86,60 @@ function priceChecked(
   return Number(priceMin) === min && Number(priceMax) === max;
 }
 
+/** Prefer original raster files for categories — WebP copies were never uploaded. */
+function categoryIconSrcCandidates(image: string): string[] {
+  const primary = resolveImageSrc(image);
+  if (!/categories\//i.test(primary) && !/categories\//i.test(image)) {
+    return [primary];
+  }
+  const ordered: string[] = [];
+  // Try common originals first when the URL was rewritten to a missing .webp
+  const extOrder = /\.webp(\?|#|$)/i.test(primary)
+    ? ['.png', '.jpeg', '.jpg', '.webp']
+    : null;
+  if (extOrder) {
+    for (const ext of extOrder) {
+      const next = primary.replace(/\.(webp|jpe?g|png|gif)(\?|#|$)/i, `${ext}$2`);
+      if (!ordered.includes(next)) ordered.push(next);
+    }
+    return ordered;
+  }
+  ordered.push(primary);
+  for (const ext of ['.png', '.jpeg', '.jpg', '.webp']) {
+    const next = primary.replace(/\.(webp|jpe?g|png|gif)(\?|#|$)/i, `${ext}$2`);
+    if (!ordered.includes(next)) ordered.push(next);
+  }
+  return ordered;
+}
+
+function ShopCategoryIcon({ image }: { image?: string | null }) {
+  const candidates = useMemo(
+    () => (image ? categoryIconSrcCandidates(image) : []),
+    [image],
+  );
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    setIndex(0);
+  }, [image]);
+
+  if (!image || index >= candidates.length) {
+    return <i className="fas fa-spa" aria-hidden="true" />;
+  }
+
+  return (
+    <img
+      src={candidates[index]}
+      alt=""
+      width={48}
+      height={48}
+      loading="lazy"
+      decoding="async"
+      onError={() => setIndex((i) => i + 1)}
+    />
+  );
+}
+
 export function ShopListing({
   title,
   subtitle,
@@ -298,18 +352,7 @@ export function ShopListing({
                   className={`sf-shop__cat${active ? ' is-active' : ''}`}
                 >
                   <span className="sf-shop__cat-icon">
-                    {cat.image ? (
-                      <img
-                        src={resolveImageSrc(cat.image)}
-                        alt=""
-                        width={48}
-                        height={48}
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    ) : (
-                      <i className="fas fa-spa" aria-hidden="true" />
-                    )}
+                    <ShopCategoryIcon image={cat.image} />
                   </span>
                   <span>{cat.name}</span>
                 </Link>
