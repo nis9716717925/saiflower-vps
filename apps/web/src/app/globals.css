@@ -11,7 +11,7 @@ body {
   padding: 0;
   background: #fdfcf9;
   color: #2c3e50;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-inter), sans-serif;
   max-width: 100%;
   /* Do NOT set overflow-x here — it forces overflow-y:auto and clips header megas */
 }

@@ -1,16 +1,15 @@
 import Link from 'next/link';
+import { OptimizedImage } from '@/components/ui/OptimizedImage';
 import {
   discountPercent,
   formatInr,
   productHref,
-  resolveImageSrc,
 } from '@/lib/images';
 import type { Product } from '@/lib/types';
 
 /** Homepage product card — matches PHP `homepage_render_occasion_cards` markup. */
 export function HomeOccasionCard({ product }: { product: Product }) {
   const href = product.url ?? productHref(product.type, product.slug);
-  const img = resolveImageSrc(product.image);
   const discount = discountPercent(product.price, product.originalPrice);
   const ratingRaw = product.rating && product.rating > 0 ? product.rating : 4.8;
   const rating = ratingRaw.toFixed(1);
@@ -19,7 +18,7 @@ export function HomeOccasionCard({ product }: { product: Product }) {
   return (
     <article className="hp-occasion-card snap-start">
       <Link href={href} className="hp-occasion-card__media">
-        <img src={img} alt={product.name} width={280} height={350} loading="lazy" decoding="async" />
+        <OptimizedImage src={product.image} alt={product.name} width={280} height={350} />
         {discount > 0 ? <span className="hp-occasion-card__badge">{discount}% OFF</span> : null}
         <span className="hp-occasion-card__trust">
           <i className="fas fa-shield-halved" aria-hidden="true" /> Secure checkout

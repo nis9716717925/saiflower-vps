@@ -1,4 +1,5 @@
 import { pageMetadata } from '@/lib/site-metadata';
+import '@/styles/bundled-shop-search';
 
 export const metadata = pageMetadata({
   title: 'Search Results | Sai Flower',

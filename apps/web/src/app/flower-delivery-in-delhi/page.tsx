@@ -11,6 +11,8 @@ export const metadata = pageMetadata({
   canonical: '/flower-delivery-in-delhi',
 });
 
+export const revalidate = 120;
+
 export default async function DelhiDeliveryPage() {
   const location = locationGet('flower-delivery-in-delhi') ?? {
     area: 'Delhi',

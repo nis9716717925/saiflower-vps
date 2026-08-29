@@ -7,6 +7,7 @@ import { useMemo, useRef, useState } from 'react';
 import { apiSend } from '@/lib/api';
 import { useCart } from '@/components/providers/AppProviders';
 import { ProductCard } from '@/components/shop/ProductCard';
+import { OptimizedImage } from '@/components/ui/OptimizedImage';
 import { discountPercent, formatInr, productGalleryUrls, resolveImageSrc } from '@/lib/images';
 import type { Product } from '@/lib/types';
 
@@ -92,15 +93,13 @@ export function ProductDetailView({ product, listLabel, listHref }: ProductDetai
             <div className="pd-media-wrap is-zoomable" id="mediaContainer">
               {discount > 0 ? <span className="pd-media-sale">{discount}% OFF</span> : null}
               <span className="pd-zoom-hint">Tap to enlarge</span>
-              <img
+              <OptimizedImage
                 key={selectedImage}
                 src={selectedImage}
                 id="mainView"
                 width={800}
                 height={800}
-                loading="eager"
-                decoding="async"
-                fetchPriority="high"
+                priority
                 className="visible-media"
                 alt={product.name}
               />
@@ -116,7 +115,7 @@ export function ProductDetailView({ product, listLabel, listHref }: ProductDetai
                     aria-label="Show product image"
                     aria-pressed={selectedImage === src}
                   >
-                    <img src={src} alt="" width={80} height={80} loading="lazy" decoding="async" />
+                    <OptimizedImage src={src} alt="" width={80} height={80} webp={false} />
                   </button>
                 ))}
               </div>

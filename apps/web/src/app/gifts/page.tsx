@@ -10,6 +10,8 @@ export const metadata = pageMetadata({
   canonical: '/gifts',
 });
 
+export const revalidate = 120;
+
 interface PageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }

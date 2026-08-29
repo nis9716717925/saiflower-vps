@@ -10,6 +10,8 @@ export const metadata = pageMetadataForPath('/flowers', {
     'Order fresh flower bouquets online from Sai Flower. Same-day delivery in Delhi. Roses, orchids, wedding & event flowers.',
 });
 
+export const revalidate = 120;
+
 interface PageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }

@@ -5,7 +5,7 @@
   --cc-muted: #6a6258;
   --cc-card: #ffffff;
   --cc-line: rgba(28, 24, 20, 0.08);
-  font-family: 'Manrope', system-ui, sans-serif;
+  font-family: var(--font-manrope), system-ui, sans-serif;
   color: var(--cc-ink);
   background:
     radial-gradient(900px 420px at 8% -8%, rgba(47, 111, 78, 0.09), transparent 55%),
@@ -17,7 +17,7 @@
 .cc-page h1,
 .cc-page h2,
 .cc-page h3 {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-cormorant), Georgia, serif;
   letter-spacing: -0.015em;
   font-weight: 700;
 }
@@ -258,7 +258,7 @@
 }
 
 .cc-card__title {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-cormorant), Georgia, serif;
   font-size: 1.05rem;
   font-weight: 700;
   line-height: 1.2;

@@ -3,6 +3,8 @@ import {
   renderCollectionLanding,
 } from '@/lib/collection-page';
 
+export const revalidate = 120;
+
 interface PageProps {
   params: Promise<{ slug: string }>;
 }

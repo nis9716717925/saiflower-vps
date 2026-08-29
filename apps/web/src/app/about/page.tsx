@@ -11,6 +11,8 @@ export const metadata = pageMetadata({
   canonical: '/about',
 });
 
+export const revalidate = 120;
+
 const FALLBACK_FAQS = [
   {
     id: 1,

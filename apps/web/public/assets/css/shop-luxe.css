@@ -9,7 +9,7 @@
   --sp-surface: #fff;
   --sp-radius: 1.15rem;
   --sp-shadow: 0 8px 28px rgba(32, 28, 23, 0.07);
-  font-family: 'Manrope', 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-family: var(--font-manrope), var(--font-plus-jakarta), system-ui, sans-serif;
   color: var(--sp-ink);
   background:
     radial-gradient(1000px 420px at 0% -5%, rgba(194, 160, 90, 0.16), transparent 55%),
@@ -21,7 +21,7 @@
 .shop-luxe h1,
 .shop-luxe h2,
 .shop-luxe .sp-display {
-  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  font-family: var(--font-cormorant), 'Playfair Display', Georgia, serif;
 }
 
 .sp-wrap {

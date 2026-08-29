@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { fetchGalleryItem } from '@/lib/api';
 import { fetchLandingBouquets } from '@/lib/bouquet';
-import { formatInr, productHref, resolveImageSrc } from '@/lib/images';
+import { OptimizedImage } from '@/components/ui/OptimizedImage';
+import { formatInr, productHref } from '@/lib/images';
 import { pageMetadata } from '@/lib/site-metadata';
 
 export async function buildGalleryDetailMetadata(id: string): Promise<Metadata> {
@@ -65,9 +66,10 @@ export async function GalleryDetailView({ id }: { id: string }) {
               boxShadow: '0 12px 32px rgba(28,24,20,0.06)',
             }}
           >
-            <img
-              src={resolveImageSrc(item.image)}
+            <OptimizedImage
+              src={item.image}
               alt={item.title}
+              priority
               style={{ width: '100%', maxHeight: '70vh', objectFit: 'cover', display: 'block' }}
             />
           </div>
@@ -111,7 +113,7 @@ export async function GalleryDetailView({ id }: { id: string }) {
               {recommend.map((p) => (
                 <Link key={`${p.type}-${p.id}`} className="cat-card" href={productHref(p.type, p.slug)}>
                   <span className="cat-card__media">
-                    <img src={resolveImageSrc(p.image)} alt={p.name} width={320} height={320} loading="lazy" />
+                    <OptimizedImage src={p.image} alt={p.name} width={320} height={320} />
                   </span>
                   <span className="cat-card__body">
                     <span className="cat-card__name">{p.name}</span>

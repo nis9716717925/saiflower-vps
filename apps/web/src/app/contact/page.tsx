@@ -10,6 +10,8 @@ export const metadata = pageMetadataForPath('/contact', {
     'Reach Sai Flowers on Lodhi Road, New Delhi by phone, email or WhatsApp for bespoke floral arrangements and same-day delivery.',
 });
 
+export const revalidate = 120;
+
 const FALLBACK_FAQS = [
   {
     id: 1,

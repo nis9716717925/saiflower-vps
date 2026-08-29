@@ -13,9 +13,9 @@ import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { GlobalSiteSchema } from '@/components/seo/GlobalSiteSchema';
 import { rootMetadata } from '@/lib/site-metadata';
+import { siteFontClassName } from '@/lib/fonts';
 import { getThemePrimary, themeCssVars } from '@/lib/theme';
 import '@/styles/bundled-core';
-import '@/styles/bundled-pages';
 import '../styles/site-header.css';
 import '../styles/not-found-page.css';
 import './tailwind.css';
@@ -27,14 +27,10 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   const themePrimary = await getThemePrimary();
 
   return (
-    <html lang="en" style={themeCssVars(themePrimary)}>
+    <html lang="en" className={siteFontClassName} style={themeCssVars(themePrimary)}>
       <head>
         <CriticalPaintGuard />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
-        <link rel="preconnect" href="https://accounts.google.com" />
-        <script src="https://accounts.google.com/gsi/client" async defer />
         <link
           rel="preload"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-solid-900.woff2"
@@ -55,10 +51,6 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           as="font"
           type="font/woff2"
           crossOrigin=""
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&family=Manrope:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
         />
         <link
           href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined&display=swap"

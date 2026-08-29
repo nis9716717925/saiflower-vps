@@ -2,13 +2,13 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { OptimizedImage } from '@/components/ui/OptimizedImage';
 import { apiSend } from '@/lib/api';
 import { useCart } from '@/components/providers/AppProviders';
 import {
   discountPercent,
   formatInr,
   productHref,
-  resolveImageSrc,
   reviewCountEstimate,
 } from '@/lib/images';
 import type { Product } from '@/lib/types';
@@ -42,7 +42,6 @@ export function ProductCard({ product, variant = 'grid' }: ProductCardProps) {
   }
 
   const href = product.url ?? productHref(product.type, product.slug);
-  const img = resolveImageSrc(product.image);
   const discount = discountPercent(product.price, product.originalPrice);
   const rating = product.rating ?? 4.8;
   const reviews = reviewCountEstimate(product.id);
@@ -91,13 +90,11 @@ export function ProductCard({ product, variant = 'grid' }: ProductCardProps) {
         </button>
 
         <Link className="sp-card__img-link" href={href} title={product.name}>
-          <img
-            src={img}
+          <OptimizedImage
+            src={product.image}
             alt={product.name}
             width={420}
             height={520}
-            loading="lazy"
-            decoding="async"
           />
         </Link>
 

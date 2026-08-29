@@ -11,6 +11,8 @@ export const metadata = pageMetadata({
   canonical: '/events',
 });
 
+export const revalidate = 120;
+
 export default async function EventsPage() {
   let items: Awaited<ReturnType<typeof fetchEvents>> = [];
   let recommend: Awaited<ReturnType<typeof fetchLandingBouquets>> = [];

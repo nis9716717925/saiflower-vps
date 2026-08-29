@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { useMemo } from 'react';
-import { formatInr, productHref, resolveImageSrc } from '@/lib/images';
+import { OptimizedImage } from '@/components/ui/OptimizedImage';
+import { formatInr, productHref } from '@/lib/images';
 import type { Product } from '@/lib/types';
 
 export interface CmsPageData {
@@ -130,7 +131,7 @@ export function DynamicCmsPage({ page, products = [] }: DynamicCmsPageProps) {
               {products.map((p) => (
                 <Link key={`${p.type}-${p.id}`} className="cat-card" href={productHref(p.type, p.slug)}>
                   <span className="cat-card__media">
-                    <img src={resolveImageSrc(p.image)} alt={p.name} width={320} height={320} loading="lazy" />
+                    <OptimizedImage src={p.image} alt={p.name} width={320} height={320} />
                   </span>
                   <span className="cat-card__body">
                     <span className="cat-card__name">{p.name}</span>

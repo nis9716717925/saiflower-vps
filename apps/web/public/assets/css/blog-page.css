@@ -100,7 +100,7 @@ a.blog-card:hover {
   background: #f8fafc;
   color: #334155;
   padding: 2rem 0 4rem;
-  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-family: var(--font-plus-jakarta), system-ui, sans-serif;
 }
 
 .blog-detail .serif {

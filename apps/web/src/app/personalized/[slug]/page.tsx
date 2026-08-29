@@ -6,6 +6,8 @@ import {
 import { fetchLandingBouquets } from '@/lib/bouquet';
 import { pageMetadata } from '@/lib/site-metadata';
 
+export const revalidate = 120;
+
 interface PageProps {
   params: Promise<{ slug: string }>;
 }

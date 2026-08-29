@@ -11,6 +11,8 @@ export const metadata = pageMetadata({
   canonical: '/gallery-by-tag',
 });
 
+export const revalidate = 120;
+
 interface PageProps {
   searchParams: Promise<{ tag?: string | string[] }>;
 }

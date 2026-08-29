@@ -4,6 +4,8 @@ import { BlogDetailView } from '@/components/blog/BlogDetailView';
 import { fetchBlog } from '@/lib/api';
 import { pageMetadata } from '@/lib/site-metadata';
 
+export const revalidate = 120;
+
 interface PageProps {
   params: Promise<{ slug: string }>;
 }

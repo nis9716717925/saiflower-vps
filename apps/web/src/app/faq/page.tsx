@@ -10,6 +10,8 @@ export const metadata = pageMetadata({
   canonical: '/faq',
 });
 
+export const revalidate = 120;
+
 const FALLBACK = [
   {
     id: 1,

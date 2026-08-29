@@ -1,4 +1,5 @@
 import { pageMetadata } from '@/lib/site-metadata';
+import '@/styles/bundled-checkout';
 
 export const metadata = pageMetadata({
   title: 'Checkout | Sai Flower',

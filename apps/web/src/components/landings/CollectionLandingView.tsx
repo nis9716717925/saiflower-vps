@@ -11,12 +11,12 @@ import {
   collectionUrl,
   type CollectionEntry,
 } from '@/lib/collection';
-import { discountPercent, formatInr, productHref, resolveImageSrc } from '@/lib/images';
+import { OptimizedImage } from '@/components/ui/OptimizedImage';
+import { discountPercent, formatInr, productHref } from '@/lib/images';
 import type { Product } from '@/lib/types';
 
 function ClCard({ product }: { product: Product }) {
   const href = product.url ?? productHref(product.type, product.slug);
-  const img = resolveImageSrc(product.image);
   const discount = discountPercent(product.price, product.originalPrice);
   const rating = product.rating ?? 0;
   const typeLabel = product.type.charAt(0).toUpperCase() + product.type.slice(1);
@@ -24,7 +24,7 @@ function ClCard({ product }: { product: Product }) {
   return (
     <Link className="cl-card" href={href} title={product.name}>
       <span className="cl-card__media">
-        <img src={img} alt={product.name} width={320} height={320} loading="lazy" decoding="async" />
+        <OptimizedImage src={product.image} alt={product.name} width={320} height={320} />
         <span className="cl-card__type">{typeLabel}</span>
       </span>
       <span className="cl-card__body">

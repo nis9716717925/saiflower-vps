@@ -13,7 +13,7 @@ body.n4-body {
   --n4-muted: #6a6258;
   --n4-bg: #f6f2ea;
   margin: 0;
-  font-family: 'Manrope', system-ui, sans-serif;
+  font-family: var(--font-manrope), system-ui, sans-serif;
   color: var(--n4-ink);
   background: transparent;
   min-height: calc(100vh - 8rem);
@@ -101,7 +101,7 @@ body.n4-body {
 
 .n4-brand {
   margin: 0 0 0.65rem;
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-cormorant), Georgia, serif;
   font-size: clamp(1.35rem, 3.5vw, 1.85rem);
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -125,7 +125,7 @@ body.n4-body {
 }
 
 .n4-title {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-cormorant), Georgia, serif;
   font-size: clamp(2.35rem, 7.5vw, 3.85rem);
   line-height: 1.05;
   margin: 0 0 0.75rem;

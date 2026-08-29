@@ -9,6 +9,8 @@ export const metadata = pageMetadata({
   canonical: '/celebration-calendar',
 });
 
+export const revalidate = 120;
+
 export default function Page() {
   return <CelebrationCalendarPage />;
 }

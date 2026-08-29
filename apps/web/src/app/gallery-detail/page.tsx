@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { buildGalleryDetailMetadata, GalleryDetailView } from '@/components/shop/GalleryDetailView';
 import { pageMetadata } from '@/lib/site-metadata';
+export const revalidate = 120;
 
 interface PageProps {
   searchParams: Promise<{ id?: string | string[] }>;
@@ -23,6 +24,7 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   }
   return buildGalleryDetailMetadata(id);
 }
+
 
 /** PHP canonical: /gallery-detail?id= */
 export default async function GalleryDetailQueryPage({ searchParams }: PageProps) {

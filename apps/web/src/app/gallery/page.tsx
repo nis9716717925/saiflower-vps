@@ -11,6 +11,8 @@ export const metadata = pageMetadata({
   canonical: '/gallery',
 });
 
+export const revalidate = 120;
+
 export default async function GalleryPage() {
   let items: Awaited<ReturnType<typeof fetchGallery>> = [];
   let recommend: Awaited<ReturnType<typeof fetchLandingBouquets>> = [];

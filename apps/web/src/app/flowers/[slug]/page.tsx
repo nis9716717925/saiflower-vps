@@ -11,6 +11,8 @@ import { fetchProduct } from '@/lib/api';
 import { pageMetadata, productMetadata } from '@/lib/site-metadata';
 import { ProductJsonLd } from '@/components/seo/ProductJsonLd';
 
+export const revalidate = 120;
+
 interface PageProps {
   params: Promise<{ slug: string }>;
 }

@@ -13,6 +13,8 @@ export const metadata = pageMetadata({
   canonical: '/personalized',
 });
 
+export const revalidate = 120;
+
 export default async function PersonalizedHubPage() {
   const entry = personalizedGet('');
   if (!entry) return null;
