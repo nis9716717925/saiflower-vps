@@ -18,7 +18,6 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
     return pageMetadata({
       title: 'Gallery | Sai Flowers',
       description: 'Browse floral inspiration and event styling from the Sai Flowers gallery.',
-      keywords: ['gallery', 'floral inspiration'],
       canonical: '/gallery',
     });
   }

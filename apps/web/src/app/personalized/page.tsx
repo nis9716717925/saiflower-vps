@@ -10,7 +10,6 @@ export const metadata = pageMetadata({
   title: 'Personalised Gifts | Sai Flowers',
   description:
     'Photo frames, engraved keepsakes and custom message cards — coming soon. Meanwhile, surprise them with a fresh bouquet today.',
-  keywords: ['personalised gifts', 'custom gifts', 'photo frames'],
   canonical: '/personalized',
 });
 

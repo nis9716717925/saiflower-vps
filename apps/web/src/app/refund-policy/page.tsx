@@ -5,7 +5,6 @@ import { pageMetadata } from '@/lib/site-metadata';
 export const metadata = pageMetadata({
   title: 'Refund & Cancellation Policy | Sai Flower',
   description: 'Cancellation windows, replacements, and refund processing for Sai Flower orders.',
-  keywords: ['refund policy', 'cancellation', 'returns'],
   canonical: '/refund-policy',
 });
 

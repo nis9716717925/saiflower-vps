@@ -25,7 +25,6 @@ export const metadata = pageMetadata({
   title: 'Sai Flower | Online Flower & Bouquet Delivery Delhi',
   description:
     'Order fresh flowers and bouquets online from Sai Flower. Same-day flower delivery for birthdays, anniversaries, weddings, and special occasions in Delhi NCR.',
-  keywords: ['fresh flowers', 'bouquet delivery', 'birthday flowers', 'anniversary gifts'],
   canonical: '/',
 });
 

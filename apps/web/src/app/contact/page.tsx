@@ -1,16 +1,13 @@
-import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ContactFaqList } from '@/components/pages/PageFaqs';
 import { NeighborhoodMap } from '@/components/pages/NeighborhoodMap';
 import { fetchFaqs } from '@/lib/api';
-import { pageMetadata } from '@/lib/site-metadata';
+import { pageMetadataForPath } from '@/lib/site-metadata';
 
-export const metadata = pageMetadata({
+export const metadata = pageMetadataForPath('/contact', {
   title: 'Contact Us | Sai Flowers Delhi',
   description:
     'Reach Sai Flowers on Lodhi Road, New Delhi by phone, email or WhatsApp for bespoke floral arrangements and same-day delivery.',
-  keywords: ['contact Sai Flowers', 'florist Delhi', 'WhatsApp flowers'],
-  canonical: '/contact',
 });
 
 const FALLBACK_FAQS = [

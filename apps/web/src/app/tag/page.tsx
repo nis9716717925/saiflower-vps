@@ -8,7 +8,6 @@ import type { Product } from '@/lib/types';
 export const metadata = pageMetadata({
   title: 'Shop by Tag | Sai Flowers',
   description: 'Find flowers, cakes and gifts by tag.',
-  keywords: ['shop by tag', 'flower tags', 'gift tags'],
   canonical: '/tag',
 });
 

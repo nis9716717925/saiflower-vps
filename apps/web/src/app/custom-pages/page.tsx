@@ -6,7 +6,6 @@ import { pageMetadata } from '@/lib/site-metadata';
 export const metadata = pageMetadata({
   title: 'Custom Pages & Local Delivery | Sai Flowers',
   description: 'Browse Sai Flowers SEO and local flower delivery pages across Delhi NCR.',
-  keywords: ['local delivery', 'custom pages', 'Delhi NCR'],
   canonical: '/custom-pages',
 });
 

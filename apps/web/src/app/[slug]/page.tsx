@@ -18,7 +18,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return pageMetadata({
       title: `Flower Delivery in ${location.local} | Same Day — Sai Flower`,
       description: `Order fresh flowers for same-day delivery in ${location.local}, ${location.region}. Handcrafted bouquets from Sai Flowers.`,
-      keywords: [`flower delivery ${location.local}`, location.region, 'same day delivery'],
       canonical: `/${slug}`,
     });
   }
@@ -28,14 +27,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return pageMetadata({
       title: page.metaTitle || `${page.title} | Sai Flowers`,
       description: page.metaDescription || page.shortDescription || `${page.title} — Sai Flowers.`,
-      keywords: [page.title, 'Sai Flowers'],
       canonical: page.url,
     });
   } catch {
     return pageMetadata({
       title: 'Page Not Found | Sai Flowers',
       description: 'The page you are looking for could not be found on Sai Flowers.',
-      keywords: ['not found'],
       noIndex: true,
     });
   }

@@ -5,7 +5,6 @@ import { pageMetadata } from '@/lib/site-metadata';
 export const metadata = pageMetadata({
   title: 'Privacy Policy | Sai Flower',
   description: 'How Sai Flower collects, uses, and protects your personal information.',
-  keywords: ['privacy policy', 'data protection'],
   canonical: '/privacy',
 });
 

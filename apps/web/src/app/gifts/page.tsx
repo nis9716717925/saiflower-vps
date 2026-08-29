@@ -7,7 +7,6 @@ export const metadata = pageMetadata({
   title: 'Gifts Online | Hampers & Gift Combos — Sai Flower',
   description:
     'Browse curated gift hampers, combos, and thoughtful presents with same-day delivery in Delhi NCR.',
-  keywords: ['gifts online', 'gift hampers', 'gift combos', 'send gifts Delhi'],
   canonical: '/gifts',
 });
 

@@ -66,7 +66,6 @@ export async function collectionLandingMetadata(
     return pageMetadata({
       title: `${title || 'Collection'} | Sai Flower`,
       description: 'Explore handcrafted flowers from Sai Flower for same-day delivery in Delhi NCR.',
-      keywords: [title || 'collection', slug.replace(/-/g, ' '), 'flowers'],
       canonical:
         kind === 'flower'
           ? `/flowers/${slug}`
@@ -83,7 +82,6 @@ export async function collectionLandingMetadata(
     ...pageMetadata({
       title,
       description,
-      keywords: [entry.h1, entry.slug.replace(/-/g, ' '), entry.kind, 'flowers Delhi'],
       canonical: entry.canonical_path,
     }),
     openGraph: {

@@ -8,7 +8,6 @@ import { pageMetadata } from '@/lib/site-metadata';
 export const metadata = pageMetadata({
   title: 'Sitemap | Sai Flowers',
   description: 'Explore the full structure of Sai Flowers website. Find all our pages, products, and categories easily.',
-  keywords: ['sitemap', 'site navigation'],
   canonical: '/sitemap',
 });
 

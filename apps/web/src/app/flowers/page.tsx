@@ -1,15 +1,13 @@
 import { ShopListing } from '@/components/shop/ShopListing';
 import { orderShopProductsForConversion } from '@/lib/bouquet';
 import { fetchCategories, fetchProducts } from '@/lib/api';
-import { pageMetadata } from '@/lib/site-metadata';
+import { pageMetadataForPath } from '@/lib/site-metadata';
 import type { Product } from '@/lib/types';
 
-export const metadata = pageMetadata({
-  title: 'Buy Flowers Online | Fresh Bouquets — Sai Flower',
+export const metadata = pageMetadataForPath('/flowers', {
+  title: 'Fresh Flowers & Bouquets Online | Sai Flower Delhi',
   description:
-    'Shop fresh flower bouquets, roses, orchids, and designer arrangements with same-day delivery across Delhi NCR.',
-  keywords: ['buy flowers online', 'fresh bouquets', 'roses', 'orchids', 'flower shop Delhi'],
-  canonical: '/flowers',
+    'Order fresh flower bouquets online from Sai Flower. Same-day delivery in Delhi. Roses, orchids, wedding & event flowers.',
 });
 
 interface PageProps {

@@ -6,7 +6,6 @@ import { pageMetadata } from '@/lib/site-metadata';
 export const metadata = pageMetadata({
   title: 'Blog | Floral Tips & Updates — Sai Flowers',
   description: 'Latest floral tips, gifting ideas and Sai Flowers updates for Delhi NCR.',
-  keywords: ['floral blog', 'gifting ideas', 'flower care tips'],
   canonical: '/blog',
 });
 

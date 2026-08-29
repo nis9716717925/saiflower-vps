@@ -8,7 +8,6 @@ export const metadata = pageMetadata({
   title: 'Floral Gallery | Sai Flowers',
   description:
     'Browse our portfolio of wedding décor, event styling and bespoke floral installations — then order a matching bouquet for same-day delivery.',
-  keywords: ['floral gallery', 'wedding decor', 'event styling'],
   canonical: '/gallery',
 });
 

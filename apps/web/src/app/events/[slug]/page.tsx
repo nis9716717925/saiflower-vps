@@ -18,14 +18,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description:
         event.metaDescription ||
         (event.description ? event.description.replace(/<[^>]+>/g, '').slice(0, 160) : `Event package: ${event.title}`),
-      keywords: [event.title, 'events', 'floral decor', 'workshops'],
       canonical: event.url,
     });
   } catch {
     return pageMetadata({
       title: 'Events | Sai Flowers',
       description: 'Floral events, workshops, and decor packages from Sai Flowers.',
-      keywords: ['events'],
     });
   }
 }

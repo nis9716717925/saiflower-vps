@@ -5,7 +5,6 @@ import { pageMetadata } from '@/lib/site-metadata';
 export const metadata = pageMetadata({
   title: 'Delivery Policy | Sai Flower',
   description: 'Delhi NCR delivery areas, same-day slots, and midnight delivery guidelines.',
-  keywords: ['delivery policy', 'same day delivery', 'Delhi NCR'],
   canonical: '/delivery-policy',
 });
 

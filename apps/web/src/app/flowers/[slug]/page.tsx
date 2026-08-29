@@ -9,6 +9,7 @@ import {
 } from '@/lib/collection';
 import { fetchProduct } from '@/lib/api';
 import { pageMetadata, productMetadata } from '@/lib/site-metadata';
+import { ProductJsonLd } from '@/components/seo/ProductJsonLd';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -22,19 +23,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       return pageMetadata({
         title: `${entry.h1} | Sai Flower`,
         description: entry.short_description,
-        keywords: [entry.h1, slug.replace(/-/g, ' '), 'flowers'],
         canonical: entry.canonical_path,
       });
     }
   }
   try {
     const product = await fetchProduct('flower', slug);
-    return productMetadata(product, 'flowers');
+    return productMetadata(product, `/flowers/${slug}`);
   } catch {
     return pageMetadata({
       title: 'Flower | Sai Flower',
       description: 'Shop fresh flowers and bouquets from Sai Flower with same-day delivery in Delhi NCR.',
-      keywords: ['flowers'],
     });
   }
 }
@@ -53,7 +52,12 @@ export default async function FlowerSlugPage({ params }: PageProps) {
 
   try {
     const product = await fetchProduct('flower', slug);
-    return <ProductDetailView product={product} listLabel="Flowers" listHref="/flowers" />;
+    return (
+      <>
+        <ProductJsonLd product={product} category="flower" pageUrl={`/flowers/${slug}`} />
+        <ProductDetailView product={product} listLabel="Flowers" listHref="/flowers" />
+      </>
+    );
   } catch {
     notFound();
   }

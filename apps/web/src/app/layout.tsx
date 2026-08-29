@@ -10,6 +10,7 @@ import { ServerBody } from '@/components/layout/ServerBody';
 import { ServiceWorkerRegister } from '@/components/layout/ServiceWorkerRegister';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
+import { GlobalSiteSchema } from '@/components/seo/GlobalSiteSchema';
 import { rootMetadata } from '@/lib/site-metadata';
 import { getThemePrimary, themeCssVars } from '@/lib/theme';
 import '@/styles/bundled-core';
@@ -67,6 +68,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         />
         <CriticalRouteStyles />
+        <GlobalSiteSchema />
       </head>
       <ServerBody>
         {/* saiflower-build: fouc-v4 */}

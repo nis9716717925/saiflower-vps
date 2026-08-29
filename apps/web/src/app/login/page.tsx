@@ -6,7 +6,6 @@ import { LoginForm } from './LoginForm';
 export const metadata = pageMetadata({
   title: 'Login | Sai Flower',
   description: 'Sign in to your Sai Flower account to track orders and checkout faster.',
-  keywords: ['login', 'sign in', 'customer account'],
   canonical: '/login',
   noIndex: true,
 });

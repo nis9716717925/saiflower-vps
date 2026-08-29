@@ -8,7 +8,6 @@ export const metadata = pageMetadata({
   title: 'Events & Workshops | Sai Flowers',
   description:
     'Weddings, stage décor and celebrations — book florists for big moments, or send a bouquet today for smaller ones.',
-  keywords: ['events', 'wedding decor', 'floral workshops'],
   canonical: '/events',
 });
 

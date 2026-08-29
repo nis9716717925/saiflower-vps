@@ -15,14 +15,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return pageMetadata({
       title: `${blog.metaTitle || blog.title} | Sai Flowers`,
       description: blog.metaDescription || blog.excerpt || 'Floral tips and gifting ideas from Sai Flowers.',
-      keywords: [blog.title, 'floral blog', 'gifting tips'],
       canonical: `/blog/${blog.slug}`,
     });
   } catch {
     return pageMetadata({
       title: 'Blog | Sai Flowers',
       description: 'Latest floral tips, gifting ideas and Sai Flowers updates for Delhi NCR.',
-      keywords: ['blog'],
     });
   }
 }

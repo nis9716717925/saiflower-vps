@@ -5,7 +5,6 @@ import { pageMetadata } from '@/lib/site-metadata';
 export const metadata = pageMetadata({
   title: 'Terms and Conditions | Sai Flower',
   description: 'Terms governing use of saiflower.com and Sai Flower orders.',
-  keywords: ['terms and conditions', 'user agreement'],
   canonical: '/terms',
 });
 

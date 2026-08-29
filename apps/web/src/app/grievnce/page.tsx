@@ -6,7 +6,6 @@ export const metadata = pageMetadata({
   title: 'Grievance Redressal Mechanism | Sai Flowers',
   description:
     'Contact Sai Flower’s Grievance Officer for order, delivery, or service complaints under the Consumer Protection (E-Commerce) Rules, 2020.',
-  keywords: ['grievance', 'customer complaints', 'support'],
   canonical: '/grievnce',
 });
 

@@ -8,7 +8,6 @@ export const metadata = pageMetadata({
   title: 'About Us | Behind the Blooms — Sai Flowers',
   description:
     'Sai Flowers is a premium floral boutique in New Delhi, specializing in hand-crafted bouquets and luxury event styling since 2015.',
-  keywords: ['about Sai Flowers', 'florist New Delhi', 'boutique flowers'],
   canonical: '/about',
 });
 

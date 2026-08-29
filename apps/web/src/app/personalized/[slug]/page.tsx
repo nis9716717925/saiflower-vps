@@ -23,13 +23,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title: `${title || 'Personalised Gifts'} | Sai Flowers`,
       description:
         'Personalised gifts from Sai Flower — launching soon. Fresh bouquets available today.',
-      keywords: [title || 'personalised gifts', 'custom gifts'],
     });
   }
   return pageMetadata({
     title: `${entry.title} | Sai Flowers`,
     description: entry.short,
-    keywords: [entry.title, 'personalised gifts'],
     canonical: entry.canonical_path,
   });
 }

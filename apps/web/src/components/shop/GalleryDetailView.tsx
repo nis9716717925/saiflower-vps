@@ -12,14 +12,12 @@ export async function buildGalleryDetailMetadata(id: string): Promise<Metadata> 
     return pageMetadata({
       title: item.metaTitle || `${item.title} | Floral Gallery — Sai Flowers`,
       description: item.metaDescription || `Inspiration look: ${item.title} from Sai Flowers gallery.`,
-      keywords: [item.title, 'floral gallery', 'event styling'],
       canonical: `/gallery-detail?id=${item.id}`,
     });
   } catch {
     return pageMetadata({
       title: 'Gallery | Sai Flowers',
       description: 'Browse floral inspiration and event styling from the Sai Flowers gallery.',
-      keywords: ['gallery'],
     });
   }
 }

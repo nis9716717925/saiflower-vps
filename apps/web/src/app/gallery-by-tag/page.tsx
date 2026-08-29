@@ -8,7 +8,6 @@ import { pageMetadata } from '@/lib/site-metadata';
 export const metadata = pageMetadata({
   title: 'Gallery by Tag | Sai Flowers',
   description: 'Browse Sai Flowers gallery looks filtered by tag.',
-  keywords: ['gallery tags', 'floral inspiration'],
   canonical: '/gallery-by-tag',
 });
 

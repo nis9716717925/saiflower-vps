@@ -7,7 +7,6 @@ import type { FaqItem } from '@/lib/types';
 export const metadata = pageMetadata({
   title: 'Help Center | Sai Flowers',
   description: 'Answers about delivery, ordering, payments, and floral services from Sai Flowers.',
-  keywords: ['FAQ', 'help center', 'delivery questions'],
   canonical: '/faq',
 });
 
