@@ -73,6 +73,7 @@ export function mediaUrl(path?: string | null, defaultFolder = ''): string | nul
   const raw = path.trim();
   if (isLogoPath(raw)) return null;
   if (/^https?:\/\//i.test(raw)) return preferWebpSrc(raw.replace(/ /g, '%20'));
+  if (raw.startsWith('/uploads/')) return preferWebpSrc(raw.replace(/ /g, '%20'));
   if (raw.startsWith('/') && !raw.startsWith('/uploads/')) {
     return preferWebpSrc(raw.replace(/ /g, '%20'));
   }
@@ -166,6 +167,9 @@ export function resolveImageSrc(
   if (isLogoPath(trimmed)) return preferWebpSrc(trimmed);
   if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
     return preferWebpSrc(trimmed);
+  }
+  if (trimmed.startsWith('/uploads/')) {
+    return preferWebpSrc(trimmed.replace(/ /g, '%20'));
   }
   if (trimmed.startsWith('/') && !trimmed.startsWith('/uploads/')) {
     return preferWebpSrc(trimmed);
