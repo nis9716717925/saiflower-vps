@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { HomepageSlide } from '@/lib/homepage-slides';
 
 const THEMES: Record<string, string> = {
   lavender: 'linear-gradient(165deg, #ece4f8 0%, #ddd5ee 55%, #d4cbe8 100%)',
@@ -147,7 +148,38 @@ function plainTitle(html: string): string {
   return html.replace(/<br\s*\/?>/gi, ' ').replace(/<[^>]+>/g, '');
 }
 
-export function HomeHero() {
+function buildSlidesFromDb(dbSlides: HomepageSlide[]) {
+  if (!dbSlides.length) {
+    return { mainSlides: MAIN_SLIDES, mainBanners: MAIN_BANNERS };
+  }
+
+  const mainSlides = dbSlides.map((slide, index) => {
+    const defaults = MAIN_SLIDES[index % MAIN_SLIDES.length];
+    return {
+      ...defaults,
+      img: slide.mobileImage || slide.image,
+      href: slide.link || defaults.href,
+    };
+  });
+
+  const mainBanners = dbSlides.map((slide, index) => {
+    const defaults = MAIN_BANNERS[index % MAIN_BANNERS.length];
+    return {
+      ...defaults,
+      img: slide.image,
+      href: slide.link || defaults.href,
+    };
+  });
+
+  return { mainSlides, mainBanners };
+}
+
+type HomeHeroProps = {
+  slides?: HomepageSlide[];
+};
+
+export function HomeHero({ slides = [] }: HomeHeroProps) {
+  const { mainSlides, mainBanners } = useMemo(() => buildSlidesFromDb(slides), [slides]);
   const trackRef = useRef<HTMLDivElement>(null);
   const sideTrackRef = useRef<HTMLDivElement>(null);
   const [mobileCurrent, setMobileCurrent] = useState(0);
@@ -172,22 +204,22 @@ export function HomeHero() {
   }, []);
 
   const moveMobileSlide = useCallback((dir: number) => {
-    setMobileCurrent((prev) => (prev + dir + MAIN_SLIDES.length) % MAIN_SLIDES.length);
-  }, []);
+    setMobileCurrent((prev) => (prev + dir + mainSlides.length) % mainSlides.length);
+  }, [mainSlides.length]);
 
   const goToMobile = useCallback((index: number) => {
-    setMobileCurrent(((index % MAIN_SLIDES.length) + MAIN_SLIDES.length) % MAIN_SLIDES.length);
-  }, []);
+    setMobileCurrent(((index % mainSlides.length) + mainSlides.length) % mainSlides.length);
+  }, [mainSlides.length]);
 
   const moveDesktopSlide = useCallback((dir: number) => {
-    setDesktopCurrent((prev) => (prev + dir + MAIN_BANNERS.length) % MAIN_BANNERS.length);
-  }, []);
+    setDesktopCurrent((prev) => (prev + dir + mainBanners.length) % mainBanners.length);
+  }, [mainBanners.length]);
 
   const goToDesktop = useCallback((index: number) => {
     setDesktopCurrent(
-      ((index % MAIN_BANNERS.length) + MAIN_BANNERS.length) % MAIN_BANNERS.length,
+      ((index % mainBanners.length) + mainBanners.length) % mainBanners.length,
     );
-  }, []);
+  }, [mainBanners.length]);
 
   const stopAuto = useCallback(() => {
     if (timerRef.current) {
@@ -332,9 +364,9 @@ export function HomeHero() {
                         startAuto();
                       }}
                     >
-                      {MAIN_SLIDES.map((slide, index) => (
+                      {mainSlides.map((slide, index) => (
                         <div
-                          key={slide.img}
+                          key={`${slide.img}-${index}`}
                           className="hp-hero-slide flex-shrink-0"
                           data-theme={slide.theme}
                         >
@@ -364,7 +396,7 @@ export function HomeHero() {
                     className="hp-hero-carousel__dots lx-hero-split__dots absolute bottom-2 left-0 right-0 flex justify-center items-center gap-2 z-20 pb-2"
                     id="sliderTracker"
                   >
-                    {MAIN_SLIDES.map((slide, i) => (
+                    {mainSlides.map((slide, i) => (
                       <div
                         key={slide.img}
                         className={i === mobileCurrent ? 'slider-dot active-pill' : 'slider-dot'}
@@ -430,9 +462,9 @@ export function HomeHero() {
                 className="sf-banner__track"
                 style={{ transform: `translateX(-${desktopCurrent * 100}%)` }}
               >
-                {MAIN_BANNERS.map((banner, index) => (
+                {mainBanners.map((banner, index) => (
                   <article
-                    key={banner.href + banner.title}
+                    key={`${banner.img}-${index}`}
                     className={`sf-banner__slide sf-banner__slide--${banner.tone}`}
                     aria-hidden={index !== desktopCurrent}
                   >
@@ -487,7 +519,7 @@ export function HomeHero() {
             </button>
 
             <div className="sf-banner__dots" role="tablist" aria-label="Promotion slides">
-              {MAIN_BANNERS.map((banner, i) => (
+              {mainBanners.map((banner, i) => (
                 <button
                   key={banner.title}
                   type="button"

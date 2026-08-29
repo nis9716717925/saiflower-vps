@@ -20,6 +20,7 @@ import {
 } from './misc.routes';
 import { blogRouter, faqRouter } from './blog.routes';
 import { galleryRouter, eventsRouter } from './catalog-content.routes';
+import { homepageRouter } from './homepage.routes';
 import { pagesRouter } from './pages.routes';
 import { publicCatalogCache } from '../middleware/cacheHeaders';
 
@@ -60,6 +61,7 @@ router.get('/', (_req, res) => {
         'GET /gallery/:id',
         'GET /events',
         'GET /events/:slug',
+        'GET /homepage/slides',
         'GET /pages',
         'GET /pages/:slug',
       ],
@@ -84,6 +86,7 @@ router.use('/blogs', catalogCache, blogRouter);
 router.use('/faqs', catalogCache, faqRouter);
 router.use('/gallery', catalogCache, galleryRouter);
 router.use('/events', catalogCache, eventsRouter);
+router.use('/homepage', catalogCache, homepageRouter);
 router.use('/pages', catalogCache, pagesRouter);
 
 export default router;
