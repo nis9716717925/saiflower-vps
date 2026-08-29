@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { buildGalleryDetailMetadata, GalleryDetailView } from '@/components/shop/GalleryDetailView';
+import { pageMetadata } from '@/lib/site-metadata';
 
 interface PageProps {
   searchParams: Promise<{ id?: string | string[] }>;
@@ -13,7 +14,14 @@ function idParam(value: string | string[] | undefined): string | null {
 
 export async function generateMetadata({ searchParams }: PageProps): Promise<Metadata> {
   const id = idParam((await searchParams).id);
-  if (!id) return { title: 'Gallery | Sai Flowers' };
+  if (!id) {
+    return pageMetadata({
+      title: 'Gallery | Sai Flowers',
+      description: 'Browse floral inspiration and event styling from the Sai Flowers gallery.',
+      keywords: ['gallery', 'floral inspiration'],
+      canonical: '/gallery',
+    });
+  }
   return buildGalleryDetailMetadata(id);
 }
 

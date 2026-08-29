@@ -4,17 +4,23 @@ import { redirect } from 'next/navigation';
 import { fetchGalleryItem } from '@/lib/api';
 import { fetchLandingBouquets } from '@/lib/bouquet';
 import { formatInr, productHref, resolveImageSrc } from '@/lib/images';
+import { pageMetadata } from '@/lib/site-metadata';
 
 export async function buildGalleryDetailMetadata(id: string): Promise<Metadata> {
   try {
     const item = await fetchGalleryItem(Number(id));
-    return {
+    return pageMetadata({
       title: item.metaTitle || `${item.title} | Floral Gallery — Sai Flowers`,
       description: item.metaDescription || `Inspiration look: ${item.title} from Sai Flowers gallery.`,
-      alternates: { canonical: `/gallery-detail?id=${item.id}` },
-    };
+      keywords: [item.title, 'floral gallery', 'event styling'],
+      canonical: `/gallery-detail?id=${item.id}`,
+    });
   } catch {
-    return { title: 'Gallery | Sai Flowers' };
+    return pageMetadata({
+      title: 'Gallery | Sai Flowers',
+      description: 'Browse floral inspiration and event styling from the Sai Flowers gallery.',
+      keywords: ['gallery'],
+    });
   }
 }
 

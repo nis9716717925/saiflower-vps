@@ -1,12 +1,14 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { fetchCmsPages } from '@/lib/api';
+import { pageMetadata } from '@/lib/site-metadata';
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: 'Custom Pages & Local Delivery | Sai Flowers',
   description: 'Browse Sai Flowers SEO and local flower delivery pages across Delhi NCR.',
-  alternates: { canonical: '/custom-pages' },
-};
+  keywords: ['local delivery', 'custom pages', 'Delhi NCR'],
+  canonical: '/custom-pages',
+});
 
 export default async function CustomPagesIndex() {
   let pages: Awaited<ReturnType<typeof fetchCmsPages>> = [];

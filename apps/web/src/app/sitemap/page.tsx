@@ -3,12 +3,14 @@ import Link from 'next/link';
 import { fetchBlogs, fetchCmsPages, fetchEvents, fetchGallery } from '@/lib/api';
 import taxonomyJson from '@/lib/data/collection-taxonomy.json';
 import { LOCATION_REGISTRY } from '@/lib/locations';
+import { pageMetadata } from '@/lib/site-metadata';
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: 'Sitemap | Sai Flowers',
   description: 'Explore the full structure of Sai Flowers website. Find all our pages, products, and categories easily.',
-  alternates: { canonical: '/sitemap' },
-};
+  keywords: ['sitemap', 'site navigation'],
+  canonical: '/sitemap',
+});
 
 const STATIC_MAIN = [
   { path: '/', title: 'Home' },

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { ProductDetailView } from '@/components/shop/ProductDetailView';
 import { fetchProduct } from '@/lib/api';
+import { pageMetadata, productMetadata } from '@/lib/site-metadata';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -11,12 +12,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   try {
     const { slug } = await params;
     const product = await fetchProduct('gift', slug);
-    return {
-      title: product.metaTitle ?? `${product.name} | Sai Flower`,
-      description: product.metaDescription ?? product.description?.slice(0, 160),
-    };
+    return productMetadata(product, 'gifts');
   } catch {
-    return { title: 'Gift | Sai Flower' };
+    return pageMetadata({
+      title: 'Gift | Sai Flower',
+      description: 'Shop thoughtful gifts and hampers from Sai Flower with same-day delivery in Delhi NCR.',
+      keywords: ['gifts'],
+    });
   }
 }
 

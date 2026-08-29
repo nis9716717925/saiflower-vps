@@ -1,12 +1,14 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { pageMetadata } from '@/lib/site-metadata';
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: 'Grievance Redressal Mechanism | Sai Flowers',
   description:
     'Contact Sai Flower’s Grievance Officer for order, delivery, or service complaints under the Consumer Protection (E-Commerce) Rules, 2020.',
-  alternates: { canonical: '/grievnce' },
-};
+  keywords: ['grievance', 'customer complaints', 'support'],
+  canonical: '/grievnce',
+});
 
 export default function GrievancePage() {
   return (

@@ -2,13 +2,15 @@ import type { Metadata } from 'next';
 import { AboutFaqList } from '@/components/pages/PageFaqs';
 import { NeighborhoodMap } from '@/components/pages/NeighborhoodMap';
 import { fetchFaqs } from '@/lib/api';
+import { pageMetadata } from '@/lib/site-metadata';
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: 'About Us | Behind the Blooms — Sai Flowers',
   description:
     'Sai Flowers is a premium floral boutique in New Delhi, specializing in hand-crafted bouquets and luxury event styling since 2015.',
-  alternates: { canonical: '/about' },
-};
+  keywords: ['about Sai Flowers', 'florist New Delhi', 'boutique flowers'],
+  canonical: '/about',
+});
 
 const FALLBACK_FAQS = [
   {

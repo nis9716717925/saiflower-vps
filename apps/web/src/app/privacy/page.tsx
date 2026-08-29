@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
 import { LegalDocument } from '@/components/legal/LegalDocument';
+import { pageMetadata } from '@/lib/site-metadata';
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: 'Privacy Policy | Sai Flower',
   description: 'How Sai Flower collects, uses, and protects your personal information.',
-};
+  keywords: ['privacy policy', 'data protection'],
+  canonical: '/privacy',
+});
 
 export default function PrivacyPage() {
   return (

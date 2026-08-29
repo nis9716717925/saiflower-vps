@@ -4,13 +4,15 @@ import {
   personalizedGet,
 } from '@/components/landings/PersonalizedLandingView';
 import { fetchLandingBouquets } from '@/lib/bouquet';
+import { pageMetadata } from '@/lib/site-metadata';
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: 'Personalised Gifts | Sai Flowers',
   description:
     'Photo frames, engraved keepsakes and custom message cards — coming soon. Meanwhile, surprise them with a fresh bouquet today.',
-  alternates: { canonical: '/personalized' },
-};
+  keywords: ['personalised gifts', 'custom gifts', 'photo frames'],
+  canonical: '/personalized',
+});
 
 export default async function PersonalizedHubPage() {
   const entry = personalizedGet('');

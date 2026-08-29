@@ -3,11 +3,14 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { fetchGallery } from '@/lib/api';
 import { resolveImageSrc } from '@/lib/images';
+import { pageMetadata } from '@/lib/site-metadata';
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: 'Gallery by Tag | Sai Flowers',
   description: 'Browse Sai Flowers gallery looks filtered by tag.',
-};
+  keywords: ['gallery tags', 'floral inspiration'],
+  canonical: '/gallery-by-tag',
+});
 
 interface PageProps {
   searchParams: Promise<{ tag?: string | string[] }>;

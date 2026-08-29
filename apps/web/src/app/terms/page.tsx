@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
 import { LegalDocument } from '@/components/legal/LegalDocument';
+import { pageMetadata } from '@/lib/site-metadata';
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: 'Terms and Conditions | Sai Flower',
   description: 'Terms governing use of saiflower.com and Sai Flower orders.',
-};
+  keywords: ['terms and conditions', 'user agreement'],
+  canonical: '/terms',
+});
 
 export default function TermsPage() {
   return (

@@ -1,6 +1,15 @@
 import { CategoryShopListing } from '@/components/shop/CategoryShopListing';
 import { fetchProducts } from '@/lib/api';
 import { fetchLandingBouquets } from '@/lib/bouquet';
+import { pageMetadata } from '@/lib/site-metadata';
+
+export const metadata = pageMetadata({
+  title: 'Order Cakes Online | Birthday & Celebration Cakes — Sai Flower',
+  description:
+    'Celebrate with designer cakes and sweet treats from Sai Flower, delivered same-day across Delhi NCR.',
+  keywords: ['cakes online', 'birthday cake delivery', 'celebration cakes', 'cake shop Delhi'],
+  canonical: '/cakes',
+});
 
 interface PageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;

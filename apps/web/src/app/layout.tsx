@@ -1,4 +1,3 @@
-import type { Metadata } from 'next';
 import { AppProviders } from '@/components/providers/AppProviders';
 import { OrderSuccessBanner } from '@/components/home/OrderSuccessBanner';
 import { BodyClass } from '@/components/layout/BodyClass';
@@ -11,6 +10,7 @@ import { ServerBody } from '@/components/layout/ServerBody';
 import { ServiceWorkerRegister } from '@/components/layout/ServiceWorkerRegister';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
+import { rootMetadata } from '@/lib/site-metadata';
 import { getThemePrimary, themeCssVars } from '@/lib/theme';
 import '@/styles/bundled-core';
 import '@/styles/bundled-pages';
@@ -19,27 +19,7 @@ import '../styles/not-found-page.css';
 import './tailwind.css';
 import './globals.css';
 
-export const metadata: Metadata = {
-  title: 'Sai Flower | Online Flower & Bouquet Delivery Delhi',
-  description:
-    'Order fresh flowers and bouquets online from Sai Flower. Same-day flower delivery for birthdays, anniversaries, weddings, and special occasions in Delhi NCR.',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://saiflower.com'),
-  keywords: [
-    'flower delivery Delhi',
-    'online bouquets',
-    'same day delivery',
-    'wedding flowers',
-    'Sai Flower',
-  ],
-  icons: {
-    icon: [
-      { url: '/favicon.ico', sizes: 'any' },
-      { url: '/icon.png', type: 'image/png' },
-      { url: '/favicon.png', type: 'image/png' },
-    ],
-    apple: [{ url: '/apple-icon.png', sizes: '180x180', type: 'image/png' }],
-  },
-};
+export const metadata = rootMetadata;
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const themePrimary = await getThemePrimary();

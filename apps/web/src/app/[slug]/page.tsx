@@ -5,6 +5,7 @@ import { LocationLandingView } from '@/components/landings/LocationLandingView';
 import { fetchCmsPage, fetchProducts } from '@/lib/api';
 import { fetchLandingBouquets } from '@/lib/bouquet';
 import { isLocationSlug, locationGet } from '@/lib/locations';
+import { pageMetadata } from '@/lib/site-metadata';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -14,22 +15,29 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const location = locationGet(slug);
   if (location) {
-    return {
+    return pageMetadata({
       title: `Flower Delivery in ${location.local} | Same Day — Sai Flower`,
       description: `Order fresh flowers for same-day delivery in ${location.local}, ${location.region}. Handcrafted bouquets from Sai Flowers.`,
-      alternates: { canonical: `/${slug}` },
-    };
+      keywords: [`flower delivery ${location.local}`, location.region, 'same day delivery'],
+      canonical: `/${slug}`,
+    });
   }
 
   try {
     const page = await fetchCmsPage(slug);
-    return {
+    return pageMetadata({
       title: page.metaTitle || `${page.title} | Sai Flowers`,
-      description: page.metaDescription || page.shortDescription || undefined,
-      alternates: { canonical: page.url },
-    };
+      description: page.metaDescription || page.shortDescription || `${page.title} — Sai Flowers.`,
+      keywords: [page.title, 'Sai Flowers'],
+      canonical: page.url,
+    });
   } catch {
-    return { title: 'Not found' };
+    return pageMetadata({
+      title: 'Page Not Found | Sai Flowers',
+      description: 'The page you are looking for could not be found on Sai Flowers.',
+      keywords: ['not found'],
+      noIndex: true,
+    });
   }
 }
 

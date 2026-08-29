@@ -1,7 +1,16 @@
 import { ShopListing } from '@/components/shop/ShopListing';
 import { orderShopProductsForConversion } from '@/lib/bouquet';
 import { fetchCategories, fetchProducts } from '@/lib/api';
+import { pageMetadata } from '@/lib/site-metadata';
 import type { Product } from '@/lib/types';
+
+export const metadata = pageMetadata({
+  title: 'Buy Flowers Online | Fresh Bouquets — Sai Flower',
+  description:
+    'Shop fresh flower bouquets, roses, orchids, and designer arrangements with same-day delivery across Delhi NCR.',
+  keywords: ['buy flowers online', 'fresh bouquets', 'roses', 'orchids', 'flower shop Delhi'],
+  canonical: '/flowers',
+});
 
 interface PageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;

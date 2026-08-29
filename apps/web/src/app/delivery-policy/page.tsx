@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
 import { LegalDocument } from '@/components/legal/LegalDocument';
+import { pageMetadata } from '@/lib/site-metadata';
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: 'Delivery Policy | Sai Flower',
   description: 'Delhi NCR delivery areas, same-day slots, and midnight delivery guidelines.',
-};
+  keywords: ['delivery policy', 'same day delivery', 'Delhi NCR'],
+  canonical: '/delivery-policy',
+});
 
 export default function DeliveryPolicyPage() {
   return (

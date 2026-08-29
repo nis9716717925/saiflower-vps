@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { fetchEvent } from '@/lib/api';
 import { resolveImageSrc } from '@/lib/images';
+import { pageMetadata } from '@/lib/site-metadata';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -12,15 +13,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   try {
     const event = await fetchEvent(slug);
-    return {
+    return pageMetadata({
       title: event.metaTitle || `${event.title} | Sai Flowers Events`,
       description:
         event.metaDescription ||
         (event.description ? event.description.replace(/<[^>]+>/g, '').slice(0, 160) : `Event package: ${event.title}`),
-      alternates: { canonical: event.url },
-    };
+      keywords: [event.title, 'events', 'floral decor', 'workshops'],
+      canonical: event.url,
+    });
   } catch {
-    return { title: 'Events | Sai Flowers' };
+    return pageMetadata({
+      title: 'Events | Sai Flowers',
+      description: 'Floral events, workshops, and decor packages from Sai Flowers.',
+      keywords: ['events'],
+    });
   }
 }
 

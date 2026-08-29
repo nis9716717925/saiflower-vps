@@ -6,6 +6,7 @@ import {
   type CollectionKind,
 } from '@/lib/collection';
 import { fetchLandingBouquets } from '@/lib/bouquet';
+import { pageMetadata } from '@/lib/site-metadata';
 
 export async function renderCollectionLanding(kind: CollectionKind, slug: string) {
   const entry = collectionGet(kind, slug);
@@ -62,17 +63,29 @@ export async function collectionLandingMetadata(
       .filter(Boolean)
       .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
       .join(' ');
-    return {
+    return pageMetadata({
       title: `${title || 'Collection'} | Sai Flower`,
       description: 'Explore handcrafted flowers from Sai Flower for same-day delivery in Delhi NCR.',
-    };
+      keywords: [title || 'collection', slug.replace(/-/g, ' '), 'flowers'],
+      canonical:
+        kind === 'flower'
+          ? `/flowers/${slug}`
+          : kind === 'occasion'
+            ? `/occasion/${slug}`
+            : kind === 'relation'
+              ? `/relation/${slug}`
+              : `/collection/${slug}`,
+    });
   }
   const title = `${entry.h1} | Sai Flower`;
   const description = entry.short_description;
   return {
-    title,
-    description,
-    alternates: { canonical: entry.canonical_path },
+    ...pageMetadata({
+      title,
+      description,
+      keywords: [entry.h1, entry.slug.replace(/-/g, ' '), entry.kind, 'flowers Delhi'],
+      canonical: entry.canonical_path,
+    }),
     openGraph: {
       title: entry.h1,
       description,

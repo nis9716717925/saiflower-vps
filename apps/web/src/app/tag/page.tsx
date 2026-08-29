@@ -2,12 +2,15 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { fetchProducts } from '@/lib/api';
 import { formatInr, productHref, resolveImageSrc } from '@/lib/images';
+import { pageMetadata } from '@/lib/site-metadata';
 import type { Product } from '@/lib/types';
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: 'Shop by Tag | Sai Flowers',
   description: 'Find flowers, cakes and gifts by tag.',
-};
+  keywords: ['shop by tag', 'flower tags', 'gift tags'],
+  canonical: '/tag',
+});
 
 interface PageProps {
   searchParams: Promise<{ name?: string | string[] }>;

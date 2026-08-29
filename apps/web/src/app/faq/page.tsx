@@ -1,13 +1,15 @@
 import type { Metadata } from 'next';
 import { FaqHelpCenter } from '@/components/pages/FaqHelpCenter';
 import { fetchFaqs } from '@/lib/api';
+import { pageMetadata } from '@/lib/site-metadata';
 import type { FaqItem } from '@/lib/types';
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: 'Help Center | Sai Flowers',
   description: 'Answers about delivery, ordering, payments, and floral services from Sai Flowers.',
-  alternates: { canonical: '/faq' },
-};
+  keywords: ['FAQ', 'help center', 'delivery questions'],
+  canonical: '/faq',
+});
 
 const FALLBACK = [
   {

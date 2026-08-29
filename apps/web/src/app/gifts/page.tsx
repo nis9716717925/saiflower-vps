@@ -1,6 +1,15 @@
 import { CategoryShopListing } from '@/components/shop/CategoryShopListing';
 import { fetchProducts } from '@/lib/api';
 import { fetchLandingBouquets } from '@/lib/bouquet';
+import { pageMetadata } from '@/lib/site-metadata';
+
+export const metadata = pageMetadata({
+  title: 'Gifts Online | Hampers & Gift Combos — Sai Flower',
+  description:
+    'Browse curated gift hampers, combos, and thoughtful presents with same-day delivery in Delhi NCR.',
+  keywords: ['gifts online', 'gift hampers', 'gift combos', 'send gifts Delhi'],
+  canonical: '/gifts',
+});
 
 interface PageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;

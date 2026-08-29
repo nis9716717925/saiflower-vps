@@ -4,6 +4,7 @@ import {
   personalizedGet,
 } from '@/components/landings/PersonalizedLandingView';
 import { fetchLandingBouquets } from '@/lib/bouquet';
+import { pageMetadata } from '@/lib/site-metadata';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -18,17 +19,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       .filter(Boolean)
       .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
       .join(' ');
-    return {
+    return pageMetadata({
       title: `${title || 'Personalised Gifts'} | Sai Flowers`,
       description:
         'Personalised gifts from Sai Flower — launching soon. Fresh bouquets available today.',
-    };
+      keywords: [title || 'personalised gifts', 'custom gifts'],
+    });
   }
-  return {
+  return pageMetadata({
     title: `${entry.title} | Sai Flowers`,
     description: entry.short,
-    alternates: { canonical: entry.canonical_path },
-  };
+    keywords: [entry.title, 'personalised gifts'],
+    canonical: entry.canonical_path,
+  });
 }
 
 export default async function PersonalizedSlugPage({ params }: PageProps) {

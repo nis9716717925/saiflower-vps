@@ -1,4 +1,12 @@
 import { redirect } from 'next/navigation';
+import { pageMetadata } from '@/lib/site-metadata';
+
+export const metadata = pageMetadata({
+  title: 'Gallery | Sai Flowers',
+  description: 'Browse floral inspiration and event styling from the Sai Flowers gallery.',
+  keywords: ['gallery', 'floral inspiration'],
+  canonical: '/gallery',
+});
 
 interface PageProps {
   params: Promise<{ id: string }>;

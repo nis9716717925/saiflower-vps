@@ -1,6 +1,15 @@
 import { Suspense } from 'react';
 import { getGoogleClientId } from '@/lib/google-client-id';
+import { pageMetadata } from '@/lib/site-metadata';
 import { RegisterForm } from './RegisterForm';
+
+export const metadata = pageMetadata({
+  title: 'Create Account | Sai Flower',
+  description: 'Register for a Sai Flower account to save addresses, track orders, and checkout quickly.',
+  keywords: ['register', 'create account', 'sign up'],
+  canonical: '/register',
+  noIndex: true,
+});
 
 export default function RegisterPage() {
   const googleClientId = getGoogleClientId();

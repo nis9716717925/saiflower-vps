@@ -1,6 +1,15 @@
 import { Suspense } from 'react';
 import { getGoogleClientId } from '@/lib/google-client-id';
+import { pageMetadata } from '@/lib/site-metadata';
 import { LoginForm } from './LoginForm';
+
+export const metadata = pageMetadata({
+  title: 'Login | Sai Flower',
+  description: 'Sign in to your Sai Flower account to track orders and checkout faster.',
+  keywords: ['login', 'sign in', 'customer account'],
+  canonical: '/login',
+  noIndex: true,
+});
 
 export default function LoginPage() {
   const googleClientId = getGoogleClientId();

@@ -1,4 +1,6 @@
 import { HomeHero } from '@/components/home/HomeHero';
+import { loadHomepageSlides } from '@/lib/homepage-slides';
+import { pageMetadata } from '@/lib/site-metadata';
 import { HomeProductRail } from '@/components/home/HomeProductRail';
 import '@/styles/bundled-homepage';
 import {
@@ -6,7 +8,6 @@ import {
   CelebrationsCalendarSection,
   FaqSection,
   FavFlowersSection,
-  GiftFinderSection,
   HowItWorksSection,
   RelationshipsSection,
   SendGiftsAnywhereSection,
@@ -19,6 +20,14 @@ import Script from 'next/script';
 
 /** Cache the homepage HTML + catalog fetches for two minutes. */
 export const revalidate = 120;
+
+export const metadata = pageMetadata({
+  title: 'Sai Flower | Online Flower & Bouquet Delivery Delhi',
+  description:
+    'Order fresh flowers and bouquets online from Sai Flower. Same-day flower delivery for birthdays, anniversaries, weddings, and special occasions in Delhi NCR.',
+  keywords: ['fresh flowers', 'bouquet delivery', 'birthday flowers', 'anniversary gifts'],
+  canonical: '/',
+});
 
 const STATS = [
   { value: '10K+', label: 'Happy Customers' },
@@ -39,12 +48,12 @@ const MOBILE_TRUST = [
 ];
 
 export default async function HomePage() {
-  const rails = await loadHomepageRails();
+  const [rails, heroSlides] = await Promise.all([loadHomepageRails(), loadHomepageSlides()]);
 
   return (
     <div className="homepage-premium">
       <div className="hp-home-flow">
-        <HomeHero />
+        <HomeHero slides={heroSlides} />
 
         <div className="hp-product-sliders">
           <HomeProductRail
@@ -104,8 +113,6 @@ export default async function HomePage() {
         </div>
 
         <RelationshipsSection />
-
-        <GiftFinderSection />
 
         <div className="hp-product-sliders">
           <HomeProductRail

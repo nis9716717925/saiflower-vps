@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
 import { LegalDocument } from '@/components/legal/LegalDocument';
+import { pageMetadata } from '@/lib/site-metadata';
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: 'Refund & Cancellation Policy | Sai Flower',
   description: 'Cancellation windows, replacements, and refund processing for Sai Flower orders.',
-};
+  keywords: ['refund policy', 'cancellation', 'returns'],
+  canonical: '/refund-policy',
+});
 
 export default function RefundPolicyPage() {
   return (

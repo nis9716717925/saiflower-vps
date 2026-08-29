@@ -2,13 +2,15 @@ import type { Metadata } from 'next';
 import { LookbookPage } from '@/components/shop/LookbookPage';
 import { fetchGallery } from '@/lib/api';
 import { fetchLandingBouquets } from '@/lib/bouquet';
+import { pageMetadata } from '@/lib/site-metadata';
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: 'Floral Gallery | Sai Flowers',
   description:
     'Browse our portfolio of wedding décor, event styling and bespoke floral installations — then order a matching bouquet for same-day delivery.',
-  alternates: { canonical: '/gallery' },
-};
+  keywords: ['floral gallery', 'wedding decor', 'event styling'],
+  canonical: '/gallery',
+});
 
 export default async function GalleryPage() {
   let items: Awaited<ReturnType<typeof fetchGallery>> = [];

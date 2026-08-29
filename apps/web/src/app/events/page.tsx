@@ -2,13 +2,15 @@ import type { Metadata } from 'next';
 import { LookbookPage } from '@/components/shop/LookbookPage';
 import { fetchEvents } from '@/lib/api';
 import { fetchLandingBouquets } from '@/lib/bouquet';
+import { pageMetadata } from '@/lib/site-metadata';
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: 'Events & Workshops | Sai Flowers',
   description:
     'Weddings, stage décor and celebrations — book florists for big moments, or send a bouquet today for smaller ones.',
-  alternates: { canonical: '/events' },
-};
+  keywords: ['events', 'wedding decor', 'floral workshops'],
+  canonical: '/events',
+});
 
 export default async function EventsPage() {
   let items: Awaited<ReturnType<typeof fetchEvents>> = [];

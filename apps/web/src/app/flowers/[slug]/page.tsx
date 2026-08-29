@@ -8,6 +8,7 @@ import {
   collectionIsFlowerTypeSlug,
 } from '@/lib/collection';
 import { fetchProduct } from '@/lib/api';
+import { pageMetadata, productMetadata } from '@/lib/site-metadata';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -18,21 +19,23 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (collectionIsFlowerTypeSlug(slug)) {
     const entry = collectionGet('flower', slug);
     if (entry) {
-      return {
+      return pageMetadata({
         title: `${entry.h1} | Sai Flower`,
         description: entry.short_description,
-        alternates: { canonical: entry.canonical_path },
-      };
+        keywords: [entry.h1, slug.replace(/-/g, ' '), 'flowers'],
+        canonical: entry.canonical_path,
+      });
     }
   }
   try {
     const product = await fetchProduct('flower', slug);
-    return {
-      title: product.metaTitle ?? `${product.name} | Sai Flower`,
-      description: product.metaDescription ?? product.description?.slice(0, 160),
-    };
+    return productMetadata(product, 'flowers');
   } catch {
-    return { title: 'Flower | Sai Flower' };
+    return pageMetadata({
+      title: 'Flower | Sai Flower',
+      description: 'Shop fresh flowers and bouquets from Sai Flower with same-day delivery in Delhi NCR.',
+      keywords: ['flowers'],
+    });
   }
 }
 

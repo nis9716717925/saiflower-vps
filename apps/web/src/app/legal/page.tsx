@@ -1,10 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { pageMetadata } from '@/lib/site-metadata';
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: 'Legal & Compliance | Sai Flower',
   description: 'Sai Flower policies for terms, delivery, privacy, and refunds.',
-};
+  keywords: ['legal', 'policies', 'compliance'],
+  canonical: '/legal',
+});
 
 const CARDS = [
   {
