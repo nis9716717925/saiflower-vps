@@ -8,6 +8,7 @@ import { NavigationPaintGuard } from '@/components/layout/NavigationPaintGuard';
 import { RouteStyles } from '@/components/layout/RouteStyles';
 import { ServerBody } from '@/components/layout/ServerBody';
 import { ServiceWorkerRegister } from '@/components/layout/ServiceWorkerRegister';
+import { CookieConsent } from '@/components/layout/CookieConsent';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { GlobalSiteSchema } from '@/components/seo/GlobalSiteSchema';
@@ -84,6 +85,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             {children}
             <SiteFooter />
           </div>
+          <CookieConsent />
         </AppProviders>
       </ServerBody>
     </html>

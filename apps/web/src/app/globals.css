@@ -461,3 +461,125 @@ code {
 .faq-item-box summary {
   list-style: none;
 }
+
+/* Cookie consent banner */
+.sf-cookie-banner {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10050;
+  padding: 0.75rem 0.75rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  pointer-events: none;
+}
+
+.sf-cookie-banner__inner {
+  pointer-events: auto;
+  max-width: 1120px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 1.25rem;
+  padding: 1rem 1.15rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(194, 160, 90, 0.35);
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 12px 40px rgba(44, 62, 80, 0.18);
+  backdrop-filter: blur(8px);
+}
+
+.sf-cookie-banner__text {
+  flex: 1 1 280px;
+  min-width: 0;
+}
+
+.sf-cookie-banner__title {
+  margin: 0 0 0.35rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.sf-cookie-banner__title i {
+  color: var(--primary, #b8860b);
+}
+
+.sf-cookie-banner__desc {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: #64748b;
+}
+
+.sf-cookie-banner__desc a {
+  color: var(--primary, #b8860b);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.sf-cookie-banner__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  flex: 0 0 auto;
+}
+
+.sf-cookie-banner__btn {
+  border-radius: 999px;
+  padding: 0.62rem 1.1rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.sf-cookie-banner__btn--ghost {
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #475569;
+}
+
+.sf-cookie-banner__btn--ghost:hover {
+  border-color: #94a3b8;
+  color: #1e293b;
+}
+
+.sf-cookie-banner__btn--primary {
+  border: 1px solid var(--primary, #b8860b);
+  background: var(--primary, #b8860b);
+  color: #fff;
+}
+
+.sf-cookie-banner__btn--primary:hover {
+  filter: brightness(0.95);
+}
+
+@media (max-width: 767.98px) {
+  html.sf-cookie-pending #mobileBottomNav {
+    bottom: 7.25rem;
+  }
+
+  .sf-cookie-banner {
+    bottom: 4.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .sf-cookie-banner__inner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .sf-cookie-banner__actions {
+    width: 100%;
+  }
+
+  .sf-cookie-banner__btn {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+}
