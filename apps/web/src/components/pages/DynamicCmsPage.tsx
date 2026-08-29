@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useMemo } from 'react';
-import { OptimizedImage } from '@/components/ui/OptimizedImage';
+import { OptimizedImage, IMAGE_SIZE_PRESETS } from '@/components/ui/OptimizedImage';
 import { formatInr, productHref } from '@/lib/images';
 import type { Product } from '@/lib/types';
 
@@ -81,12 +81,12 @@ export function DynamicCmsPage({ page, products = [] }: DynamicCmsPageProps) {
       <main className="cat-wrap" style={{ padding: '1.75rem 1rem 3rem' }}>
         {page.midgridImage ? (
           <figure className="cat-midgrid" style={{ margin: '0 0 2rem' }}>
-            <img
+            <OptimizedImage
               src={page.midgridImage}
               alt={page.midgridImageAlt || page.title}
               width={1200}
               height={640}
-              loading="lazy"
+              sizes={IMAGE_SIZE_PRESETS.gallery}
               style={{ width: '100%', borderRadius: '1rem', display: 'block' }}
             />
           </figure>
@@ -107,13 +107,13 @@ export function DynamicCmsPage({ page, products = [] }: DynamicCmsPageProps) {
               style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(10rem, 1fr))' }}
             >
               {page.extraImages.map((src) => (
-                <img
+                <OptimizedImage
                   key={src}
                   src={src}
                   alt=""
                   width={320}
                   height={320}
-                  loading="lazy"
+                  sizes={IMAGE_SIZE_PRESETS.gallery}
                   style={{ width: '100%', borderRadius: '0.75rem', aspectRatio: '1', objectFit: 'cover' }}
                 />
               ))}

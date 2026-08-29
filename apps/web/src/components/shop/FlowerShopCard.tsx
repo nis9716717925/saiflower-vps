@@ -2,9 +2,10 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { OptimizedImage, IMAGE_SIZE_PRESETS } from '@/components/ui/OptimizedImage';
 import { apiSend } from '@/lib/api';
 import { useCart } from '@/components/providers/AppProviders';
-import { discountPercent, formatInr, productHref, resolveImageSrc } from '@/lib/images';
+import { discountPercent, formatInr, productHref } from '@/lib/images';
 import type { Product } from '@/lib/types';
 
 /** Matches live PHP flowers.php product card (Tailwind), not shop-luxe sp-card. */
@@ -35,7 +36,6 @@ export function FlowerShopCard({ product }: { product: Product }) {
   const [wished, setWished] = useState(false);
 
   const href = product.url ?? productHref(product.type, product.slug);
-  const img = resolveImageSrc(product.image);
   const discount = discountPercent(product.price, product.originalPrice);
   const rating = product.rating && product.rating > 0 ? product.rating : 4.8;
   const inStock = product.inStock !== false;
@@ -106,13 +106,12 @@ export function FlowerShopCard({ product }: { product: Product }) {
         ) : null}
 
         <Link href={href} className="sf-pcard__img-link" title={product.name}>
-          <img
-            src={img}
+          <OptimizedImage
+            src={product.image}
             width={400}
             height={500}
-            loading="lazy"
-            decoding="async"
             alt={product.name}
+            sizes={IMAGE_SIZE_PRESETS.productCard}
           />
         </Link>
 

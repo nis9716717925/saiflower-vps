@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { resolveImageSrc } from '@/lib/images';
+import { OptimizedImage, IMAGE_SIZE_PRESETS } from '@/components/ui/OptimizedImage';
 import type { BlogListItem } from '@/lib/types';
 
 const FALLBACK =
@@ -20,15 +20,13 @@ export function BlogListingView({ blogs }: { blogs: BlogListItem[] }) {
         ) : (
           blogs.map((b) => (
             <Link key={b.id} href={b.url || `/blog/${b.slug}`} className="blog-card">
-              <img
-                src={resolveImageSrc(b.image, FALLBACK)}
+              <OptimizedImage
+                src={b.image}
+                fallback={FALLBACK}
                 alt={b.title}
                 width={600}
                 height={400}
-                loading="lazy"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = FALLBACK;
-                }}
+                sizes={IMAGE_SIZE_PRESETS.gallery}
               />
               <div className="blog-content">
                 <h3>{b.title}</h3>

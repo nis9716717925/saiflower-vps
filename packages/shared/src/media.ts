@@ -80,9 +80,38 @@ export function mediaUrl(path?: string | null, defaultFolder = ''): string | nul
   return preferWebpSrc(`/uploads/${folder}${raw}`.replace(/ /g, '%20'));
 }
 
-const RESPONSIVE_WIDTHS = [320, 640, 828, 1080] as const;
+export const RESPONSIVE_WIDTHS = [320, 640, 828, 1080] as const;
 
-/** Build srcset for hosts that support width params (Unsplash). Local uploads stay single-URL. */
+const UPLOAD_VARIANT_RE = /-w\d+(?=\.[^.]+$)/;
+
+function isUploadImagePath(src: string): boolean {
+  if (/(?:^|\/)categories\//i.test(src)) return false;
+  if (/^\/uploads\//i.test(src)) return true;
+  try {
+    const { pathname } = new URL(src);
+    return /^\/uploads\//i.test(pathname);
+  } catch {
+    return false;
+  }
+}
+
+/** e.g. /uploads/flowers/rose.webp → /uploads/flowers/rose-w640.webp */
+export function uploadWidthVariantUrl(src: string, width: number): string {
+  const trimmed = preferWebpSrc(src.trim());
+  const hashIdx = trimmed.indexOf('#');
+  const hash = hashIdx >= 0 ? trimmed.slice(hashIdx) : '';
+  const withoutHash = hashIdx >= 0 ? trimmed.slice(0, hashIdx) : trimmed;
+  const queryIdx = withoutHash.indexOf('?');
+  const query = queryIdx >= 0 ? withoutHash.slice(queryIdx) : '';
+  const pathOnly = queryIdx >= 0 ? withoutHash.slice(0, queryIdx) : withoutHash;
+  const lastDot = pathOnly.lastIndexOf('.');
+  if (lastDot === -1) return trimmed;
+  const base = pathOnly.slice(0, lastDot).replace(UPLOAD_VARIANT_RE, '');
+  const ext = pathOnly.slice(lastDot);
+  return `${base}-w${width}${ext}${query}${hash}`;
+}
+
+/** Build srcset for Unsplash URLs and on-disk /uploads/ width variants. */
 export function buildResponsiveSrcSet(src: string): string | undefined {
   if (!src?.trim()) return undefined;
   const trimmed = preferWebpSrc(src.trim());
@@ -100,6 +129,10 @@ export function buildResponsiveSrcSet(src: string): string | undefined {
     } catch {
       return undefined;
     }
+  }
+
+  if (isUploadImagePath(trimmed)) {
+    return RESPONSIVE_WIDTHS.map((w) => `${uploadWidthVariantUrl(trimmed, w)} ${w}w`).join(', ');
   }
 
   return undefined;

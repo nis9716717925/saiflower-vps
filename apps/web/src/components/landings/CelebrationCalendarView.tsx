@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { OptimizedImage, IMAGE_SIZE_PRESETS } from '@/components/ui/OptimizedImage';
 import {
   CELEBRATION_ITEMS,
   celebrationHref,
@@ -57,13 +58,13 @@ export function CelebrationCalendarPage() {
               {upcoming.map((item) => (
                 <Link key={item.slug} className="cc-card cc-card--feature" href={celebrationHref(item)}>
                   <span className="cc-card__media">
-                    <img
+                    <OptimizedImage
                       src={item.image}
                       alt={`${item.title} flowers`}
                       width={400}
                       height={480}
-                      loading="eager"
-                      decoding="async"
+                      priority
+                      sizes={IMAGE_SIZE_PRESETS.productCard}
                     />
                   </span>
                   <span className="cc-card__body">
@@ -109,13 +110,12 @@ export function CelebrationCalendarPage() {
                 {group.items.map((item) => (
                   <Link key={item.slug} className="cc-card" href={celebrationHref(item)}>
                     <span className="cc-card__media">
-                      <img
+                      <OptimizedImage
                         src={item.image}
                         alt={`${item.title} celebration gifts`}
                         width={320}
                         height={400}
-                        loading="lazy"
-                        decoding="async"
+                        sizes={IMAGE_SIZE_PRESETS.productCard}
                       />
                     </span>
                     <span className="cc-card__body">

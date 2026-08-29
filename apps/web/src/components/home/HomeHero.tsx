@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { OptimizedImage, IMAGE_SIZE_PRESETS } from '@/components/ui/OptimizedImage';
 import type { HomepageSlide } from '@/lib/homepage-slides';
 
 const THEMES: Record<string, string> = {
@@ -311,13 +312,13 @@ export function HomeHero({ slides = [] }: HomeHeroProps) {
                           className="lx-hero-side-card__img"
                           style={{ backgroundImage: `url('${slide.img}')` }}
                         >
-                          <img
+                          <OptimizedImage
                             src={slide.img}
                             alt={plainTitle(slide.title)}
                             width={400}
                             height={400}
-                            loading={i === 0 ? 'eager' : 'lazy'}
-                            decoding="async"
+                            priority={i === 0}
+                            sizes="400px"
                           />
                         </span>
                       </Link>
@@ -375,15 +376,14 @@ export function HomeHero({ slides = [] }: HomeHeroProps) {
                             className="hp-hero-slide__mobile block w-full h-full"
                           >
                             <picture className="w-full h-full block">
-                              <img
+                              <OptimizedImage
                                 src={slide.img}
                                 className="w-full h-full block object-cover"
                                 alt={plainTitle(slide.title)}
                                 width={1920}
                                 height={685}
-                                decoding="sync"
-                                loading={index === 0 ? 'eager' : 'lazy'}
-                                {...(index === 0 ? { fetchPriority: 'high' as const } : {})}
+                                priority={index === 0}
+                                sizes={IMAGE_SIZE_PRESETS.hero}
                               />
                             </picture>
                           </Link>
@@ -446,7 +446,7 @@ export function HomeHero({ slides = [] }: HomeHeroProps) {
                   </span>
                 </span>
                 <span className="sf-offer__media">
-                  <img src={offer.img} alt={offer.title} width={320} height={320} loading="lazy" />
+                  <OptimizedImage src={offer.img} alt={offer.title} width={320} height={320} sizes="320px" />
                 </span>
               </Link>
             ))}
@@ -486,14 +486,13 @@ export function HomeHero({ slides = [] }: HomeHeroProps) {
                       </Link>
                     </div>
                     <div className="sf-banner__media">
-                      <img
+                      <OptimizedImage
                         src={banner.img}
                         alt={banner.title}
                         width={900}
                         height={700}
-                        decoding={index === 0 ? 'sync' : 'async'}
-                        loading={index === 0 ? 'eager' : 'lazy'}
-                        {...(index === 0 ? { fetchPriority: 'high' as const } : {})}
+                        priority={index === 0}
+                        sizes="(max-width: 1024px) 50vw, 900px"
                       />
                     </div>
                   </article>

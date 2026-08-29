@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import { useCallback, useEffect, useId, useRef, useState, type CSSProperties } from 'react';
+import { OptimizedImage } from '@/components/ui/OptimizedImage';
 import { apiUrl } from '@/lib/api';
-import { resolveImageSrc } from '@/lib/images';
 import { SiteIcon } from '@/components/icons/SiteIcon';
 import type { SearchHit, SearchResponse } from '@/lib/types';
 
@@ -156,13 +156,12 @@ export function HeaderSearchBox({
                   className={`sf-suggest-item${active === i ? ' is-active' : ''}`}
                   onMouseEnter={() => setActive(i)}
                 >
-                  <img
-                    src={resolveImageSrc(item.image)}
+                  <OptimizedImage
+                    src={item.image}
                     alt=""
                     width={40}
                     height={40}
-                    loading="lazy"
-                    decoding="async"
+                    sizes="40px"
                   />
                   <span className="sf-suggest-copy">
                     <span className="sf-suggest-name">{item.name}</span>

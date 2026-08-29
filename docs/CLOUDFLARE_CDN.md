@@ -14,10 +14,26 @@ Putting Cloudflare in front of the VPS cuts global latency and offloads static a
 Include real client IPs when traffic is proxied:
 
 ```bash
-# In /etc/nginx/nginx.conf http { } block, or saiflower.com server block:
+cd /var/www/saiflower-vps && sudo bash scripts/vps-install-cloudflare-nginx.sh
+```
+
+Or manually:
+
+```bash
+# In /etc/nginx/nginx.conf http { } block:
 include /var/www/saiflower-vps/deploy/nginx/cloudflare.conf;
 sudo nginx -t && sudo systemctl reload nginx
 ```
+
+## 2b. Responsive upload variants (Phase 4)
+
+After new product images land in `uploads/`, generate width variants for srcset:
+
+```bash
+cd /var/www/saiflower-vps && bash scripts/vps-generate-image-variants.sh
+```
+
+Creates `image-w320.webp`, `image-w640.webp`, etc. next to each source WebP.
 
 ## 3. Cache rules (recommended)
 

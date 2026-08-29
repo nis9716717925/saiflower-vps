@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
-import { formatInr, productHref, resolveImageSrc } from '@/lib/images';
+import { OptimizedImage, IMAGE_SIZE_PRESETS } from '@/components/ui/OptimizedImage';
+import { formatInr, productHref } from '@/lib/images';
 import type { Product } from '@/lib/types';
 
 export interface LookbookItem {
@@ -139,13 +140,12 @@ export function LookbookPage({
                       role="listitem"
                     >
                       <span className="cat-card__media">
-                        <img
-                          src={resolveImageSrc(item.image)}
+                        <OptimizedImage
+                          src={item.image}
                           alt={item.title}
                           width={320}
                           height={320}
-                          loading="lazy"
-                          decoding="async"
+                          sizes={IMAGE_SIZE_PRESETS.gallery}
                         />
                         {item.badge ? <span className="cat-card__stock cat-card__stock--soon">{item.badge}</span> : null}
                       </span>
@@ -176,13 +176,12 @@ export function LookbookPage({
                 {recommendProducts.map((item) => (
                   <Link key={`${item.type}-${item.id}`} className="cat-card" href={productHref(item.type, item.slug)}>
                     <span className="cat-card__media">
-                      <img
-                        src={resolveImageSrc(item.image)}
+                      <OptimizedImage
+                        src={item.image}
                         alt={item.name}
                         width={320}
                         height={320}
-                        loading="lazy"
-                        decoding="async"
+                        sizes={IMAGE_SIZE_PRESETS.productGrid}
                       />
                     </span>
                     <span className="cat-card__body">

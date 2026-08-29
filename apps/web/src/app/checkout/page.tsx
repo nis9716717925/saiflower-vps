@@ -7,7 +7,8 @@ import { SHIPPING } from '@saiflower/shared';
 import { apiGet, apiSend, getCustomer } from '@/lib/api';
 import { useCart } from '@/components/providers/AppProviders';
 import { CheckoutProgress } from '@/components/checkout/CheckoutProgress';
-import { formatInr, resolveImageSrc } from '@/lib/images';
+import { OptimizedImage } from '@/components/ui/OptimizedImage';
+import { formatInr } from '@/lib/images';
 import type {
   AddressSuggestion,
   AddressType,
@@ -853,13 +854,12 @@ function CheckoutPageContent() {
       {cart.items.map((item) => (
         <div key={`${item.category}-${item.id}`} className="qc-item">
           <div className="qc-item__img">
-            <img
+            <OptimizedImage
               alt={item.name}
-              src={resolveImageSrc(item.image)}
+              src={item.image}
               width={72}
               height={72}
-              loading="lazy"
-              decoding="async"
+              sizes="72px"
             />
           </div>
           <div className="qc-item__body">

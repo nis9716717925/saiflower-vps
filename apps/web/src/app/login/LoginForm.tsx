@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { apiSend, setAuth } from '@/lib/api';
 import { useCart } from '@/components/providers/AppProviders';
 import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton';
+import { OptimizedImage } from '@/components/ui/OptimizedImage';
 import { CheckoutProgress } from '@/components/checkout/CheckoutProgress';
 import type { AuthPayload } from '@/lib/types';
 
@@ -50,7 +51,7 @@ export function LoginForm({ googleClientId }: LoginFormProps) {
       {toCheckout ? <CheckoutProgress current="address" /> : null}
 
       <Link href="/" className="qc-auth-logo-wrap">
-        <img src="/assets/images/logo-transparent.webp" alt="Sai Flower" className="qc-auth-logo" />
+        <OptimizedImage src="/assets/images/logo-transparent.webp" alt="Sai Flower" className="qc-auth-logo" responsive={false} width={168} height={43} />
       </Link>
       <h1 className="qc-title" style={{ textAlign: 'center', marginTop: '1rem', fontSize: '1.45rem' }}>
         Welcome back

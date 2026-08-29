@@ -5,7 +5,8 @@ import { useEffect, useState } from 'react';
 import { apiGet, apiSend, getAccessToken } from '@/lib/api';
 import { useCart } from '@/components/providers/AppProviders';
 import { CheckoutProgress } from '@/components/checkout/CheckoutProgress';
-import { formatInr, resolveImageSrc } from '@/lib/images';
+import { OptimizedImage, IMAGE_SIZE_PRESETS } from '@/components/ui/OptimizedImage';
+import { formatInr } from '@/lib/images';
 import type { CartData } from '@/lib/types';
 
 const CHECKOUT_REDIRECT = encodeURIComponent('/checkout');
@@ -325,13 +326,12 @@ export default function CartPage() {
             {cart.items.map((item, index) => (
               <div key={`${item.category}-${item.id}-${index}`} className="qc-item">
                 <div className="qc-item__img">
-                  <img
-                    src={resolveImageSrc(item.image)}
+                  <OptimizedImage
+                    src={item.image}
                     alt={item.name}
                     width={96}
                     height={96}
-                    loading="lazy"
-                    decoding="async"
+                    sizes="96px"
                   />
                 </div>
                 <div className="qc-item__body">

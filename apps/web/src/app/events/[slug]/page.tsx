@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { OptimizedImage, IMAGE_SIZE_PRESETS } from '@/components/ui/OptimizedImage';
 import { fetchEvent } from '@/lib/api';
-import { resolveImageSrc } from '@/lib/images';
 import { pageMetadata } from '@/lib/site-metadata';
 
 export const revalidate = 120;
@@ -42,13 +42,14 @@ export default async function EventDetailPage({ params }: PageProps) {
   return (
     <div className="cat-page">
       <div className="relative w-full overflow-hidden" style={{ maxHeight: '70vh' }}>
-        <img
-          src={resolveImageSrc(event.image)}
+        <OptimizedImage
+          src={event.image}
           alt={event.title}
           style={{ width: '100%', height: '70vh', objectFit: 'cover', display: 'block' }}
-          loading="eager"
-          decoding="async"
-          fetchPriority="high"
+          width={1200}
+          height={840}
+          priority
+          sizes={IMAGE_SIZE_PRESETS.hero}
         />
         <div
           style={{

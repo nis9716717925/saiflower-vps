@@ -35,6 +35,7 @@
     "uploads:supabase": "node tools/deploy/upload-to-supabase.mjs",
     "images:webp": "node tools/optimize-images.mjs",
     "images:webp:prune": "node tools/optimize-images.mjs --delete-originals",
+    "images:responsive": "node tools/generate-responsive-variants.mjs",
     "deploy:web": "npm run build:web && node tools/deploy/verify-next-static.mjs",
     "deploy:probe": "node tools/deploy/probe-live-chunks.mjs",
     "setup:uploads": "bash scripts/vps/setup-uploads.sh"

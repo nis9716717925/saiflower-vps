@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { apiGet, apiSend, getCustomer } from '@/lib/api';
-import { formatInr, productHref, resolveImageSrc } from '@/lib/images';
+import { OptimizedImage, IMAGE_SIZE_PRESETS } from '@/components/ui/OptimizedImage';
+import { formatInr, productHref } from '@/lib/images';
 import type { CustomerProfile } from '@/lib/types';
 
 interface WishlistItem {
@@ -99,14 +100,13 @@ export default function WishlistPage() {
                 className="bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm"
               >
                 <Link href={href}>
-                  <img
-                    src={resolveImageSrc(item.image)}
+                  <OptimizedImage
+                    src={item.image}
                     alt={item.name}
                     className="w-full h-56 object-cover"
                     width={400}
                     height={224}
-                    loading="lazy"
-                    decoding="async"
+                    sizes={IMAGE_SIZE_PRESETS.productCard}
                   />
                 </Link>
                 <div className="p-4">

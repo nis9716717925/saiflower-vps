@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import Script from 'next/script';
 import { useMemo, useState } from 'react';
-import { discountPercent, formatInr, productHref, resolveImageSrc } from '@/lib/images';
+import { OptimizedImage, IMAGE_SIZE_PRESETS } from '@/components/ui/OptimizedImage';
+import { discountPercent, formatInr, productHref } from '@/lib/images';
 import type { Product } from '@/lib/types';
 
 export interface LocationInfo {
@@ -121,7 +122,6 @@ export function LocationLandingView({
             ) : (
               visible.map((item) => {
                 const href = item.url ?? productHref(item.type, item.slug);
-                const img = resolveImageSrc(item.image);
                 const discount = discountPercent(item.price, item.originalPrice);
                 const tags = productFilters(item).join(' ');
                 return (
@@ -136,13 +136,12 @@ export function LocationLandingView({
                     title={item.name}
                   >
                     <div className="loc-card__img">
-                      <img
-                        src={img}
+                      <OptimizedImage
+                        src={item.image}
                         alt={item.name}
                         width={320}
                         height={320}
-                        loading="lazy"
-                        decoding="async"
+                        sizes={IMAGE_SIZE_PRESETS.productGrid}
                       />
                       {discount > 0 ? (
                         <span className="loc-card__badge">{discount}% OFF</span>

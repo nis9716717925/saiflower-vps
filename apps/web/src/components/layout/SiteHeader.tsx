@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Script from 'next/script';
 import { useCallback, useEffect, useState } from 'react';
+import { OptimizedImage } from '@/components/ui/OptimizedImage';
 import { getCustomer } from '@/lib/api';
 import { SiteIcon } from '@/components/icons/SiteIcon';
 import { useCart } from '@/components/providers/AppProviders';
@@ -101,14 +102,14 @@ export function SiteHeader() {
             </button>
 
             <Link className="sf-site-header__logo" href="/">
-              <img
+              <OptimizedImage
                 src="/assets/images/logo-transparent.webp"
                 alt="Sai Flower logo"
                 width={168}
                 height={43}
                 className="sf-site-header__logo-img"
-                decoding="async"
-                fetchPriority="high"
+                priority
+                responsive={false}
               />
             </Link>
 
@@ -222,12 +223,12 @@ export function SiteHeader() {
       >
         <div className="sf-mnav-drawer__head">
           <Link className="sf-mnav-drawer__logo" href="/" onClick={closeMenu}>
-            <img
+            <OptimizedImage
               src="/assets/images/logo-transparent.webp"
               alt="Sai Flower"
               width={128}
               height={33}
-              decoding="async"
+              responsive={false}
             />
           </Link>
           <div className="sf-mnav-drawer__head-actions">

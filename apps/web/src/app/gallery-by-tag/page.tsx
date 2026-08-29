@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { OptimizedImage, IMAGE_SIZE_PRESETS } from '@/components/ui/OptimizedImage';
 import { fetchGallery } from '@/lib/api';
-import { resolveImageSrc } from '@/lib/images';
 import { pageMetadata } from '@/lib/site-metadata';
 
 export const metadata = pageMetadata({
@@ -71,7 +71,7 @@ export default async function GalleryByTagPage({ searchParams }: PageProps) {
             {items.map((item) => (
               <Link key={item.id} className="cat-card" href={item.url} role="listitem">
                 <span className="cat-card__media">
-                  <img src={resolveImageSrc(item.image)} alt={item.title} width={320} height={320} loading="lazy" />
+                  <OptimizedImage src={item.image} alt={item.title} width={320} height={320} sizes={IMAGE_SIZE_PRESETS.gallery} />
                 </span>
                 <span className="cat-card__body">
                   <span className="cat-card__name">{item.title}</span>

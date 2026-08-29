@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { formatInr, productHref, resolveImageSrc } from '@/lib/images';
+import { OptimizedImage, IMAGE_SIZE_PRESETS } from '@/components/ui/OptimizedImage';
+import { formatInr, productHref } from '@/lib/images';
 import type { Product } from '@/lib/types';
 
 export interface PersonalizedEntry {
@@ -195,18 +196,16 @@ export function PersonalizedLandingView({
               <div className="cat-grid" style={{ marginTop: '1rem' }} role="list">
                 {products.map((item) => {
                   const href = item.url ?? productHref(item.type, item.slug);
-                  const img = resolveImageSrc(item.image);
                   const orig = item.originalPrice ?? 0;
                   return (
                     <Link key={item.id} className="cat-card" href={href} role="listitem" title={item.name}>
                       <span className="cat-card__media">
-                        <img
-                          src={img}
+                        <OptimizedImage
+                          src={item.image}
                           alt={item.name}
                           width={320}
                           height={320}
-                          loading="lazy"
-                          decoding="async"
+                          sizes={IMAGE_SIZE_PRESETS.productGrid}
                         />
                       </span>
                       <span className="cat-card__body">

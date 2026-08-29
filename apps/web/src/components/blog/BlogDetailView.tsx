@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { resolveImageSrc } from '@/lib/images';
+import { OptimizedImage, IMAGE_SIZE_PRESETS } from '@/components/ui/OptimizedImage';
 import type { BlogPost } from '@/lib/types';
 
 const FALLBACK =
@@ -56,18 +56,15 @@ export function BlogDetailView({ blog }: { blog: BlogPost }) {
       <div className="blog-detail__layout">
         <div>
           {blog.image ? (
-            <img
-              src={resolveImageSrc(blog.image, FALLBACK)}
+            <OptimizedImage
+              src={blog.image}
+              fallback={FALLBACK}
               alt={blog.title}
               className="blog-detail__img"
               width={1200}
               height={500}
-              loading="eager"
-              decoding="async"
-              fetchPriority="high"
-              onError={(e) => {
-                (e.target as HTMLImageElement).src = FALLBACK;
-              }}
+              priority
+              sizes={IMAGE_SIZE_PRESETS.hero}
             />
           ) : null}
           <article className="blog-detail__article">

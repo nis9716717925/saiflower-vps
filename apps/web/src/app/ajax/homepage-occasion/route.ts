@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { IMAGE_SIZE_PRESETS, buildResponsiveSrcSet } from '@saiflower/shared';
 import { fetchLandingBouquets } from '@/lib/bouquet';
 import {
   discountPercent,
@@ -44,6 +45,8 @@ function renderCards(products: Product[]): string {
     .map((p) => {
       const href = escapeHtml(p.url ?? productHref(p.type, p.slug));
       const img = escapeHtml(resolveImageSrc(p.image));
+      const srcSet = buildResponsiveSrcSet(resolveImageSrc(p.image));
+      const srcSetAttr = srcSet ? ` srcset="${escapeHtml(srcSet)}" sizes="${IMAGE_SIZE_PRESETS.productCard}"` : '';
       const name = escapeHtml(p.name);
       const discount = discountPercent(p.price, p.originalPrice);
       const rating = (p.rating && p.rating > 0 ? p.rating : 4.8).toFixed(1);
@@ -55,7 +58,7 @@ function renderCards(products: Product[]): string {
 
       return `<article class="hp-occasion-card snap-start">
                 <a href="${href}" class="hp-occasion-card__media">
-                    <img src="${img}" alt="${name}" width="280" height="350" loading="lazy" decoding="async">
+                    <img src="${img}" alt="${name}" width="280" height="350" loading="lazy" decoding="async"${srcSetAttr}>
                     ${badge}
                     <span class="hp-occasion-card__trust"><i class="fas fa-shield-halved" aria-hidden="true"></i> Secure checkout</span>
                 </a>

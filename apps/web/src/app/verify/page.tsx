@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { OptimizedImage } from '@/components/ui/OptimizedImage';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
 import { apiGet, setAuth } from '@/lib/api';
@@ -39,7 +40,7 @@ function VerifyContent() {
 
   return (
     <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl border border-slate-100 text-center">
-      <img src="/assets/images/logo-transparent.webp" alt="Sai Flower" className="h-12 w-auto mx-auto mb-6" />
+      <OptimizedImage src="/assets/images/logo-transparent.webp" alt="Sai Flower" className="h-12 w-auto mx-auto mb-6" responsive={false} width={168} height={43} />
       <h1 className="text-2xl font-bold mb-3">Email Verification</h1>
       <p
         className={

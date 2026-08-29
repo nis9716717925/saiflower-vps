@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { apiSend } from '@/lib/api';
 import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton';
+import { OptimizedImage } from '@/components/ui/OptimizedImage';
 import { CheckoutProgress } from '@/components/checkout/CheckoutProgress';
 
 interface RegisterFormProps {
@@ -63,7 +64,7 @@ export function RegisterForm({ googleClientId }: RegisterFormProps) {
       {toCheckout ? <CheckoutProgress current="address" /> : null}
 
       <Link href="/">
-        <img src="/assets/images/logo-transparent.webp" alt="Sai Flower" className="qc-auth-logo" />
+        <OptimizedImage src="/assets/images/logo-transparent.webp" alt="Sai Flower" className="qc-auth-logo" responsive={false} width={168} height={43} />
       </Link>
       <h1 className="qc-title" style={{ textAlign: 'center', marginTop: '1rem', fontSize: '1.45rem' }}>
         Create account

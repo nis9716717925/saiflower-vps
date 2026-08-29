@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
+import { OptimizedImage, IMAGE_SIZE_PRESETS } from '@/components/ui/OptimizedImage';
 import { apiUrl } from '@/lib/api';
-import { resolveImageSrc } from '@/lib/images';
 import type { SearchHit, SearchResponse } from '@/lib/types';
 
 function SearchResultsContent() {
@@ -97,13 +97,12 @@ function SearchResultsContent() {
                 className="sf-search-card"
               >
                 <span className="sf-search-card__media">
-                  <img
-                    src={resolveImageSrc(hit.image)}
+                  <OptimizedImage
+                    src={hit.image}
                     alt={hit.name}
                     width={320}
                     height={400}
-                    loading="lazy"
-                    decoding="async"
+                    sizes={IMAGE_SIZE_PRESETS.productCard}
                   />
                 </span>
                 <span className="sf-search-card__body">

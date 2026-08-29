@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { OptimizedImage, IMAGE_SIZE_PRESETS } from '@/components/ui/OptimizedImage';
 import { HomeOccasionCard } from '@/components/home/HomeProductRail';
 import type { Product } from '@/lib/types';
 
@@ -237,13 +238,13 @@ export function FavFlowersSection() {
           {FAV_FLOWERS.map((flower) => (
             <Link key={flower.title} href={flower.href} className="lx-tile lx-tile--portrait" role="listitem">
               <span className="lx-tile__img">
-                <img
+                <OptimizedImage
                   src={flower.img}
                   alt={`${flower.title} bouquets`}
                   width={260}
                   height={347}
-                  loading="eager"
-                  decoding="async"
+                  priority
+                  sizes={IMAGE_SIZE_PRESETS.productGrid}
                 />
               </span>
               <span className="lx-tile__label">{flower.title}</span>
@@ -354,13 +355,12 @@ export function SameDayTilesSection() {
           {SAME_DAY.map((tile) => (
             <Link key={tile.label} href={tile.href} className="lx-tile lx-tile--square" role="listitem">
               <span className="lx-tile__img">
-                <img
+                <OptimizedImage
                   src={tile.img}
                   alt={`Same day ${tile.label.toLowerCase()} delivery`}
                   width={240}
                   height={240}
-                  loading="lazy"
-                  decoding="async"
+                  sizes={IMAGE_SIZE_PRESETS.productGrid}
                 />
               </span>
               <span className="lx-tile__label">{tile.label}</span>
@@ -404,13 +404,12 @@ export function CelebrationsCalendarSection() {
                 >
                   <span className="hp-celebration-card__date">{item.date}</span>
                   <span className="hp-celebration-card__img-wrap">
-                    <img
+                    <OptimizedImage
                       src={item.image}
                       alt={`${item.title} celebration gifts`}
                       width={320}
                       height={400}
-                      loading="lazy"
-                      decoding="async"
+                      sizes={IMAGE_SIZE_PRESETS.productCard}
                     />
                   </span>
                   <span className="hp-celebration-card__title">{item.title}</span>
@@ -443,13 +442,12 @@ export function RelationshipsSection() {
               role="listitem"
             >
               <span className="lx-tile__img">
-                <img
+                <OptimizedImage
                   src={rel.img}
                   alt={`Gifts for ${rel.label.toLowerCase()}`}
                   width={220}
                   height={220}
-                  loading="lazy"
-                  decoding="async"
+                  sizes={IMAGE_SIZE_PRESETS.productGrid}
                 />
               </span>
               <span className="lx-tile__label">{rel.label}</span>
@@ -477,13 +475,12 @@ export function ExploreLuxurySection() {
           {LUXURY.map((tile) => (
             <Link key={tile.label} href={tile.href} className="lx-tile lx-tile--square" role="listitem">
               <span className="lx-tile__img">
-                <img
+                <OptimizedImage
                   src={tile.img}
                   alt={`${tile.label} — luxury collection`}
                   width={240}
                   height={240}
-                  loading="lazy"
-                  decoding="async"
+                  sizes={IMAGE_SIZE_PRESETS.productGrid}
                 />
               </span>
               <span className="lx-tile__label">
@@ -516,13 +513,13 @@ export function GiftFinderSection() {
             {GIFT_FINDER.map((opt) => (
               <Link key={opt.label} href={opt.link} className="hp-finder-card">
                 <span className="hp-finder-card__img">
-                  <img
+                  <OptimizedImage
                     src={opt.image}
                     alt={`${opt.label} gift finder option`}
                     width={120}
                     height={120}
-                    loading="lazy"
-                    decoding="async"
+                    sizes="120px"
+                    responsive={false}
                   />
                 </span>
                 <span className="hp-finder-card__icon" aria-hidden="true">
@@ -555,13 +552,12 @@ export function SendGiftsAnywhereSection() {
           {CITIES.map((city) => (
             <Link key={city.name} href={city.link} className="hp-abroad-card" role="listitem">
               <span className="hp-abroad-card__img-wrap">
-                <img
+                <OptimizedImage
                   src={city.image}
                   alt={`${city.name} gifting`}
                   width={150}
                   height={150}
-                  loading="lazy"
-                  decoding="async"
+                  sizes="150px"
                 />
               </span>
               <span className="hp-abroad-card__label">{city.name}</span>
@@ -589,34 +585,31 @@ export function AboutUsSection() {
             </span>
           </div>
           <div className="lx-about__main">
-            <img
+            <OptimizedImage
               src="/uploads/sections/img_69c12ca4d6812_img69b5447deae89WhatsAppImage20260314at31518PM.webp"
               alt="Sai Flower handcrafted bouquet"
               width={480}
               height={580}
-              loading="lazy"
-              decoding="async"
+              sizes={IMAGE_SIZE_PRESETS.gallery}
             />
           </div>
           <div className="lx-about__side">
             <span className="lx-about__side-img">
-              <img
+              <OptimizedImage
                 src="/uploads/sections/img_69affbff9fce1_img69a6ad335b957WhatsAppImage20260303at23841PM.webp"
                 alt="Elegant white rose bouquet"
                 width={240}
                 height={240}
-                loading="lazy"
-                decoding="async"
+                sizes="240px"
               />
             </span>
             <span className="lx-about__side-img">
-              <img
+              <OptimizedImage
                 src="/uploads/sections/img_69b00d7d6b073_img69a6aa4b1d253WhatsAppImage20260303at23112PM.webp"
                 alt="Premium red rose bouquet"
                 width={240}
                 height={240}
-                loading="lazy"
-                decoding="async"
+                sizes="240px"
               />
             </span>
           </div>

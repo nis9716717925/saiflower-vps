@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { OptimizedImage } from '@/components/ui/OptimizedImage';
 import { MobileBottomNav } from '@/components/layout/MobileBottomNav';
 
 const WA_HREF = 'https://wa.me/918802004527';
@@ -57,12 +58,13 @@ export function SiteFooter() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 text-left md:text-left">
             <div className="text-center md:text-left">
               <Link className="inline-flex items-center gap-2 mb-6" href="/">
-                <img
+                <OptimizedImage
                   src="/assets/images/logo-transparent.webp"
                   alt="Sai Flower Logo"
                   width={220}
                   height={64}
                   className="h-16 w-auto object-contain"
+                  responsive={false}
                 />
               </Link>
               <p className="text-slate-500 text-sm leading-relaxed mb-6">{FOOTER_ABOUT}</p>

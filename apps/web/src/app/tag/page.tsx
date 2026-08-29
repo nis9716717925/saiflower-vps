@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { OptimizedImage, IMAGE_SIZE_PRESETS } from '@/components/ui/OptimizedImage';
 import { fetchProducts } from '@/lib/api';
-import { formatInr, productHref, resolveImageSrc } from '@/lib/images';
+import { formatInr, productHref } from '@/lib/images';
 import { pageMetadata } from '@/lib/site-metadata';
 import type { Product } from '@/lib/types';
 
@@ -73,7 +74,7 @@ export default async function TagSearchPage({ searchParams }: PageProps) {
             {results.map((p) => (
               <Link key={`${p.type}-${p.id}`} className="cat-card" href={productHref(p.type, p.slug)} role="listitem">
                 <span className="cat-card__media">
-                  <img src={resolveImageSrc(p.image)} alt={p.name} width={320} height={320} loading="lazy" />
+                  <OptimizedImage src={p.image} alt={p.name} width={320} height={320} sizes={IMAGE_SIZE_PRESETS.productGrid} />
                 </span>
                 <span className="cat-card__body">
                   <span className="cat-card__name">{p.name}</span>
