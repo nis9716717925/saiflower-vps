@@ -16,6 +16,10 @@ function isLogoPath(value: string): boolean {
 }
 
 function supabasePublicBase(): string | null {
+  const mode =
+    (typeof process !== 'undefined' && process.env.NEXT_PUBLIC_MEDIA_ORIGIN) || 'local';
+  if (mode !== 'supabase') return null;
+
   const fromEnv =
     (typeof process !== 'undefined' &&
       (process.env.NEXT_PUBLIC_SUPABASE_STORAGE_PUBLIC_URL ||
@@ -42,7 +46,10 @@ function storageObjectKey(raw: string, defaultFolder: string): string {
  */
 export function preferWebpSrc(src: string): string {
   if (!src || !RASTER_EXT_RE.test(src)) return src;
+  // Category icons: jpg/png only on disk.
   if (/(?:^|\/)categories\//i.test(src)) return src;
+  // Upload paths: keep DB extension — webp rewrite breaks when only jpeg/png exists on disk.
+  if (/(?:^|\/)uploads\//i.test(src) || /^uploads\//i.test(src)) return src;
   if (/^https?:\/\//i.test(src)) {
     try {
       const host = new URL(src).hostname;
@@ -132,6 +139,8 @@ export function buildResponsiveSrcSet(src: string): string | undefined {
   }
 
   if (isUploadImagePath(trimmed)) {
+    // Width variants are only generated for source .webp files on disk.
+    if (!/\.webp(?:\?|#|$)/i.test(trimmed)) return undefined;
     return RESPONSIVE_WIDTHS.map((w) => `${uploadWidthVariantUrl(trimmed, w)} ${w}w`).join(', ');
   }
 
@@ -154,7 +163,7 @@ export function resolveImageSrc(
 ): string {
   if (!src?.trim()) return fallback;
   const trimmed = src.trim();
-  if (isLogoPath(trimmed)) return fallback;
+  if (isLogoPath(trimmed)) return preferWebpSrc(trimmed);
   if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
     return preferWebpSrc(trimmed);
   }

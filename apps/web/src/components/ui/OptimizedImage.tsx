@@ -6,7 +6,7 @@ import {
   preferWebpSrc,
   resolveImageSrc,
 } from '@saiflower/shared';
-import type { ImgHTMLAttributes } from 'react';
+import { useCallback, useEffect, useState, type ImgHTMLAttributes, type SyntheticEvent } from 'react';
 
 type ImgProps = Omit<ImgHTMLAttributes<HTMLImageElement>, 'src' | 'alt' | 'loading' | 'sizes'>;
 
@@ -24,8 +24,14 @@ export interface OptimizedImageProps extends ImgProps {
   responsive?: boolean;
 }
 
+function rasterFallbackUrl(url: string): string | null {
+  if (!/\.webp(\?|#|$)/i.test(url)) return null;
+  return url.replace(/\.webp(\?|#|$)/i, '.jpeg$1');
+}
+
 /**
- * Performance-minded <img>: WebP URLs, optional srcset, lazy-load by default, async decode.
+ * Performance-minded <img>: lazy-load by default, optional srcset for verified hosts.
+ * On error: drops srcset, retries alternate raster extension, then optional fallback.
  */
 export function OptimizedImage({
   src,
@@ -44,26 +50,65 @@ export function OptimizedImage({
 }: OptimizedImageProps) {
   const resolved = resolveImageSrc(src, fallback);
   const finalSrc = webp ? preferWebpSrc(resolved) : resolved;
-  const srcSet = srcSetProp ?? (responsive ? buildResponsiveSrcSet(finalSrc) : undefined);
+  const initialSrcSet =
+    srcSetProp ?? (responsive ? buildResponsiveSrcSet(finalSrc) : undefined);
+
+  const [imgSrc, setImgSrc] = useState(finalSrc);
+  const [imgSrcSet, setImgSrcSet] = useState<string | undefined>(initialSrcSet);
+  const [altExtTried, setAltExtTried] = useState(false);
+
+  useEffect(() => {
+    setImgSrc(finalSrc);
+    setImgSrcSet(initialSrcSet);
+    setAltExtTried(false);
+  }, [finalSrc, initialSrcSet]);
+
+  const handleError = useCallback(
+    (e: SyntheticEvent<HTMLImageElement>) => {
+      const el = e.target as HTMLImageElement;
+
+      if (imgSrcSet) {
+        setImgSrcSet(undefined);
+        setImgSrc(finalSrc);
+        el.removeAttribute('srcset');
+        el.src = finalSrc;
+        return;
+      }
+
+      if (!altExtTried && /\.webp(?:\?|#|$)/i.test(imgSrc)) {
+        const altSrc = rasterFallbackUrl(imgSrc);
+        if (altSrc && altSrc !== imgSrc) {
+          setAltExtTried(true);
+          setImgSrc(altSrc);
+          el.src = altSrc;
+          return;
+        }
+      }
+
+      if (fallback && el.src !== fallback) {
+        setImgSrc(fallback);
+        el.src = fallback;
+        return;
+      }
+
+      onError?.(e);
+    },
+    [altExtTried, fallback, finalSrc, imgSrc, imgSrcSet, onError],
+  );
 
   return (
     <img
-      src={finalSrc}
+      src={imgSrc}
       alt={alt}
       className={className}
       width={width}
       height={height}
       sizes={sizes}
-      srcSet={srcSet}
+      srcSet={imgSrcSet}
       loading={priority ? 'eager' : 'lazy'}
       decoding={priority ? 'sync' : 'async'}
       {...(priority ? { fetchPriority: 'high' as const } : { fetchPriority: 'low' as const })}
-      onError={(e) => {
-        if (fallback && (e.target as HTMLImageElement).src !== fallback) {
-          (e.target as HTMLImageElement).src = fallback;
-        }
-        onError?.(e);
-      }}
+      onError={handleError}
       {...rest}
     />
   );
