@@ -7,7 +7,7 @@ import { useMemo, useRef, useState } from 'react';
 import { apiSend } from '@/lib/api';
 import { useCart } from '@/components/providers/AppProviders';
 import { ProductCard } from '@/components/shop/ProductCard';
-import { OptimizedImage } from '@/components/ui/OptimizedImage';
+import { OptimizedImage, IMAGE_SIZE_PRESETS } from '@/components/ui/OptimizedImage';
 import { discountPercent, formatInr, productGalleryUrls, resolveImageSrc } from '@/lib/images';
 import type { Product } from '@/lib/types';
 
@@ -100,6 +100,7 @@ export function ProductDetailView({ product, listLabel, listHref }: ProductDetai
                 width={800}
                 height={800}
                 priority
+                sizes={IMAGE_SIZE_PRESETS.productDetail}
                 className="visible-media"
                 alt={product.name}
               />

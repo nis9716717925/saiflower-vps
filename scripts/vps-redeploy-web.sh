@@ -29,7 +29,7 @@ echo "==> Build API + packages"
 npm run build:server
 
 echo "==> Atomic web build into .next-build (live .next untouched)"
-rm -rf "$BUILD_DIR"
+rm -rf "$BUILD_DIR" "$WEB_DIR/.next/types"
 export NEXT_DIST_DIR=.next-build
 npm run build:packages
 npm run build -w @saiflower/web

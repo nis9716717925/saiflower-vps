@@ -80,6 +80,40 @@ export function mediaUrl(path?: string | null, defaultFolder = ''): string | nul
   return preferWebpSrc(`/uploads/${folder}${raw}`.replace(/ /g, '%20'));
 }
 
+const RESPONSIVE_WIDTHS = [320, 640, 828, 1080] as const;
+
+/** Build srcset for hosts that support width params (Unsplash). Local uploads stay single-URL. */
+export function buildResponsiveSrcSet(src: string): string | undefined {
+  if (!src?.trim()) return undefined;
+  const trimmed = preferWebpSrc(src.trim());
+
+  if (/images\.unsplash\.com/i.test(trimmed)) {
+    try {
+      const base = new URL(trimmed);
+      return RESPONSIVE_WIDTHS.map((w) => {
+        const url = new URL(base.toString());
+        url.searchParams.set('w', String(w));
+        url.searchParams.set('auto', 'format');
+        url.searchParams.set('q', '80');
+        return `${url.toString()} ${w}w`;
+      }).join(', ');
+    } catch {
+      return undefined;
+    }
+  }
+
+  return undefined;
+}
+
+/** Common `sizes` hints for product/media layouts. */
+export const IMAGE_SIZE_PRESETS = {
+  productCard: '(max-width: 640px) 46vw, (max-width: 1024px) 33vw, 280px',
+  productGrid: '(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 320px',
+  productDetail: '(max-width: 768px) 100vw, 50vw',
+  hero: '100vw',
+  gallery: '(max-width: 640px) 100vw, 50vw',
+} as const;
+
 /** Normalize image src for `<img>` tags; use placeholder only when truly missing. */
 export function resolveImageSrc(
   src: string | null | undefined,

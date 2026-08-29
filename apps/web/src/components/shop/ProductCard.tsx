@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { OptimizedImage } from '@/components/ui/OptimizedImage';
+import { OptimizedImage, IMAGE_SIZE_PRESETS } from '@/components/ui/OptimizedImage';
 import { apiSend } from '@/lib/api';
 import { useCart } from '@/components/providers/AppProviders';
 import {
@@ -95,6 +95,7 @@ export function ProductCard({ product, variant = 'grid' }: ProductCardProps) {
             alt={product.name}
             width={420}
             height={520}
+            sizes={IMAGE_SIZE_PRESETS.productCard}
           />
         </Link>
 

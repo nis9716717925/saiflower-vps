@@ -58,9 +58,9 @@ curl -sI https://saiflower.com/api/v1/health
 | Option | Benefit | Notes |
 |--------|---------|--------|
 | Keep atomic VPS deploys (current) | Stops in-place build races | Lowest cost; already in-repo |
-| Cron watchdog (`vps-watch-static.sh`) | Auto-heals within minutes | Enable after first successful redeploy |
+| Cron watchdog (`vps-install-watch-cron.sh`) | Auto-heals within minutes | Enabled on VPS |
+| [Cloudflare CDN](CLOUDFLARE_CDN.md) | Global edge cache for static assets | Recommended next step |
 | Release folders (`/var/www/releases/<id>` + symlink) | Easy rollback | Next step if you outgrow single `.next` swap |
-| Put hashed `/_next/static` on Cloudflare/R2 CDN | Global cache, less VPS load | Still need atomic HTML↔chunk consistency |
 | Host storefront on Vercel + API on VPS | Platform handles asset deploy | Bigger architecture move |
 
 **Do not** run `rm -rf apps/web/.next && npm run build` on the live server outside

@@ -789,6 +789,14 @@ export function TestimonialsSection() {
           <p>Real words from the people we&apos;ve helped celebrate, apologise, surprise and remember.</p>
         </div>
         <div className="lx-testimonials__wrap">
+          <button
+            type="button"
+            className="lx-testimonials__nav lx-testimonials__nav--prev"
+            id="lxTestimonialsPrev"
+            aria-label="Previous testimonial"
+          >
+            <i className="fas fa-chevron-left" aria-hidden="true" />
+          </button>
           <div
             className="lx-testimonials__track hide-scrollbar"
             id="lxTestimonialsTrack"
@@ -816,6 +824,14 @@ export function TestimonialsSection() {
               </figure>
             ))}
           </div>
+          <button
+            type="button"
+            className="lx-testimonials__nav lx-testimonials__nav--next"
+            id="lxTestimonialsNext"
+            aria-label="Next testimonial"
+          >
+            <i className="fas fa-chevron-right" aria-hidden="true" />
+          </button>
         </div>
       </div>
     </section>

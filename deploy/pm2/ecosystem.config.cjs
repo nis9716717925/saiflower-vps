@@ -29,8 +29,8 @@ module.exports = {
       cwd: '/var/www/saiflower-vps/apps/server',
       script: 'npm',
       args: 'run start',
-      instances: 1,
-      exec_mode: 'fork',
+      instances: 2,
+      exec_mode: 'cluster',
       max_memory_restart: '512M',
       env: {
         NODE_ENV: 'production',

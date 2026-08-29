@@ -1,3 +1,4 @@
+import { HomepageInteractions } from '@/components/home/HomepageInteractions';
 import { HomeHero } from '@/components/home/HomeHero';
 import { loadHomepageSlides } from '@/lib/homepage-slides';
 import { pageMetadata } from '@/lib/site-metadata';
@@ -16,7 +17,6 @@ import {
 } from '@/components/home/HomeSections';
 import { loadHomepageRails } from '@/lib/homepage-rails';
 import Link from 'next/link';
-import Script from 'next/script';
 
 /** Cache the homepage HTML + catalog fetches for two minutes. */
 export const revalidate = 120;
@@ -166,8 +166,7 @@ export default async function HomePage() {
         </section>
       </div>
 
-      <Script src="/assets/js/homepage-premium.js?v=1" strategy="afterInteractive" />
-      <Script src="/assets/js/homepage-luxe.js?v=1" strategy="afterInteractive" />
+      <HomepageInteractions />
     </div>
   );
 }

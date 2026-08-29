@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { OptimizedImage } from '@/components/ui/OptimizedImage';
+import { OptimizedImage, IMAGE_SIZE_PRESETS } from '@/components/ui/OptimizedImage';
 import {
   discountPercent,
   formatInr,
@@ -18,7 +18,13 @@ export function HomeOccasionCard({ product }: { product: Product }) {
   return (
     <article className="hp-occasion-card snap-start">
       <Link href={href} className="hp-occasion-card__media">
-        <OptimizedImage src={product.image} alt={product.name} width={280} height={350} />
+        <OptimizedImage
+          src={product.image}
+          alt={product.name}
+          width={280}
+          height={350}
+          sizes={IMAGE_SIZE_PRESETS.productCard}
+        />
         {discount > 0 ? <span className="hp-occasion-card__badge">{discount}% OFF</span> : null}
         <span className="hp-occasion-card__trust">
           <i className="fas fa-shield-halved" aria-hidden="true" /> Secure checkout
