@@ -20,7 +20,13 @@ PUBLIC_ORIGIN="${PUBLIC_ORIGIN:-https://saiflower.com}"
 echo "==> Repo root: $ROOT"
 
 echo "==> Pull latest code"
+BEFORE_HEAD="$(git rev-parse HEAD)"
 git pull --ff-only origin main
+AFTER_HEAD="$(git rev-parse HEAD)"
+if [ "$BEFORE_HEAD" != "$AFTER_HEAD" ] && git diff --name-only "$BEFORE_HEAD" "$AFTER_HEAD" -- "$0" | grep -q .; then
+  echo "==> Deploy script updated — re-running with latest version"
+  exec bash "$0" "$@"
+fi
 
 echo "==> Install dependencies"
 npm ci
