@@ -79,7 +79,8 @@ async function generateVariant(sourcePath, width) {
   const meta = await sharp(sourcePath, { failOn: 'none' }).metadata();
   const sourceWidth = meta.width || 0;
   if (sourceWidth > 0 && sourceWidth <= width) {
-    return { status: 'skip-small', outPath };
+    fs.copyFileSync(sourcePath, outPath);
+    return { status: 'copied', outPath };
   }
 
   await sharp(sourcePath, { failOn: 'none' })
@@ -120,6 +121,9 @@ async function main() {
         if (result.status === 'created') {
           created += 1;
           console.log(`✓ ${path.relative(root, result.outPath)}`);
+        } else if (result.status === 'copied') {
+          created += 1;
+          console.log(`↳ ${path.relative(root, result.outPath)} (source copy)`);
         } else {
           skipped += 1;
         }

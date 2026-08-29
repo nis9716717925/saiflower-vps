@@ -70,7 +70,7 @@ export function preferWebpSrc(src: string): string {
 /** Build a public image URL from a DB path, filename, or full URL. */
 export function mediaUrl(path?: string | null, defaultFolder = ''): string | null {
   if (!path?.trim()) return null;
-  const raw = path.trim();
+  const raw = stripUploadWidthVariant(path.trim());
   if (isLogoPath(raw)) return null;
   if (/^https?:\/\//i.test(raw)) return preferWebpSrc(raw.replace(/ /g, '%20'));
   if (raw.startsWith('/uploads/')) return preferWebpSrc(raw.replace(/ /g, '%20'));
@@ -89,8 +89,28 @@ export function mediaUrl(path?: string | null, defaultFolder = ''): string | nul
 }
 
 export const RESPONSIVE_WIDTHS = [320, 640, 828, 1080] as const;
+/** Upload srcset widths — omit 1080 until variant exists (generator skips when source ≤1080px). */
+export const UPLOAD_SRCSET_WIDTHS = [320, 640, 828] as const;
 
 const UPLOAD_VARIANT_RE = /-w\d+(?=\.[^.]+$)/;
+
+/** Strip responsive width suffix so src/srcset always start from the on-disk base file. */
+export function stripUploadWidthVariant(src: string): string {
+  if (!src?.trim()) return src;
+  const trimmed = src.trim();
+  const hashIdx = trimmed.indexOf('#');
+  const hash = hashIdx >= 0 ? trimmed.slice(hashIdx) : '';
+  const withoutHash = hashIdx >= 0 ? trimmed.slice(0, hashIdx) : trimmed;
+  const queryIdx = withoutHash.indexOf('?');
+  const query = queryIdx >= 0 ? withoutHash.slice(queryIdx) : '';
+  const pathOnly = queryIdx >= 0 ? withoutHash.slice(0, queryIdx) : withoutHash;
+  if (!UPLOAD_VARIANT_RE.test(pathOnly)) return trimmed;
+  const lastDot = pathOnly.lastIndexOf('.');
+  if (lastDot === -1) return trimmed;
+  const base = pathOnly.slice(0, lastDot).replace(UPLOAD_VARIANT_RE, '');
+  const ext = pathOnly.slice(lastDot);
+  return `${base}${ext}${query}${hash}`;
+}
 
 function isUploadImagePath(src: string): boolean {
   if (/(?:^|\/)categories\//i.test(src)) return false;
@@ -142,7 +162,8 @@ export function buildResponsiveSrcSet(src: string): string | undefined {
   if (isUploadImagePath(trimmed)) {
     // Width variants are only generated for source .webp files on disk.
     if (!/\.webp(?:\?|#|$)/i.test(trimmed)) return undefined;
-    return RESPONSIVE_WIDTHS.map((w) => `${uploadWidthVariantUrl(trimmed, w)} ${w}w`).join(', ');
+    const base = stripUploadWidthVariant(trimmed);
+    return UPLOAD_SRCSET_WIDTHS.map((w) => `${uploadWidthVariantUrl(base, w)} ${w}w`).join(', ');
   }
 
   return undefined;
@@ -163,10 +184,10 @@ export function resolveImageSrc(
   fallback = FLOWER_PLACEHOLDER_IMAGE,
 ): string {
   if (!src?.trim()) return fallback;
-  const trimmed = src.trim();
+  const trimmed = stripUploadWidthVariant(src.trim());
   if (isLogoPath(trimmed)) return preferWebpSrc(trimmed);
   if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
-    return preferWebpSrc(trimmed);
+    return preferWebpSrc(stripUploadWidthVariant(trimmed));
   }
   if (trimmed.startsWith('/uploads/')) {
     return preferWebpSrc(trimmed.replace(/ /g, '%20'));

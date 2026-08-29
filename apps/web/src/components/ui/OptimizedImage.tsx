@@ -69,9 +69,12 @@ export function OptimizedImage({
 
       if (imgSrcSet) {
         setImgSrcSet(undefined);
-        setImgSrc(finalSrc);
         el.removeAttribute('srcset');
-        el.src = finalSrc;
+        // Browser may keep a failed srcset pick while `src` is already the base URL — force reload.
+        const base = finalSrc;
+        el.src = '';
+        el.src = base;
+        setImgSrc(base);
         return;
       }
 
