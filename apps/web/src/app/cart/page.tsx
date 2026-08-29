@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { apiGet, apiSend, getAccessToken } from '@/lib/api';
 import { useCart } from '@/components/providers/AppProviders';
 import { CheckoutProgress } from '@/components/checkout/CheckoutProgress';
-import { OptimizedImage, IMAGE_SIZE_PRESETS } from '@/components/ui/OptimizedImage';
+import { OptimizedImage } from '@/components/ui/OptimizedImage';
 import { formatInr } from '@/lib/images';
 import type { CartData } from '@/lib/types';
 

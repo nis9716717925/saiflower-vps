@@ -27,36 +27,39 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     <html lang="en" className={siteFontClassName} style={themeCssVars(themePrimary)}>
       <head>
         <CriticalPaintGuard />
-        <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
         <link
           rel="preload"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-solid-900.woff2"
+          href="/assets/vendor/fontawesome/webfonts/fa-solid-900.woff2"
           as="font"
           type="font/woff2"
           crossOrigin=""
         />
         <link
           rel="preload"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-brands-400.woff2"
+          href="/assets/vendor/fontawesome/webfonts/fa-brands-400.woff2"
           as="font"
           type="font/woff2"
           crossOrigin=""
         />
         <link
           rel="preload"
-          href="https://fonts.gstatic.com/s/materialiconsoutlined/v109/gok-H7zzDkdnRel8-DQ6KAXJFi-w.woff2"
+          href="/assets/vendor/fontawesome/webfonts/fa-regular-400.woff2"
           as="font"
           type="font/woff2"
           crossOrigin=""
         />
         <link
-          href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined&display=swap"
-          rel="stylesheet"
+          rel="preload"
+          href="/assets/vendor/material-icons/material-icons-outlined.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin=""
         />
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-        />
+        <link rel="stylesheet" href="/assets/vendor/fontawesome/css/fontawesome.min.css" />
+        <link rel="stylesheet" href="/assets/vendor/fontawesome/css/solid.min.css" />
+        <link rel="stylesheet" href="/assets/vendor/fontawesome/css/brands.min.css" />
+        <link rel="stylesheet" href="/assets/vendor/fontawesome/css/regular.min.css" />
+        <link rel="stylesheet" href="/assets/vendor/material-icons-outlined.css" />
         <GlobalSiteSchema />
       </head>
       <body className="text-gray-800">

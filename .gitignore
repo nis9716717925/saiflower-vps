@@ -36,8 +36,9 @@ packages/prisma/generated/
 tools/mysql-to-pg/migration-output/
 tools/mysql-to-pg/saiflower_*_full.sql
 
-# Test / coverage
-coverage/
+# Generated vendor fonts (copied by npm run vendor:fonts)
+apps/web/public/assets/vendor/
+
 .nyc_output/
 
 # Misc

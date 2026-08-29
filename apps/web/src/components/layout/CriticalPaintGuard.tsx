@@ -1,9 +1,5 @@
-/** Blocking first-paint guard — hide UI until stylesheets + fonts are ready. */
+/** Inline critical layout CSS — no body hide; fonts are self-hosted on /assets/vendor/. */
 const CRITICAL_CSS = `
-html.sf-loading{background:#fdfcf9}
-html.sf-loading body{opacity:0!important;pointer-events:none!important}
-html.sf-nav-loading #sf-page{opacity:0;pointer-events:none}
-html.sf-ready body,html.sf-ready #sf-page{opacity:1;transition:opacity .2s ease}
 button,input,select,textarea{font:inherit;color:inherit}
 button{border:none;background:transparent;padding:0;cursor:pointer}
 .sf-site-header__icon-btn{display:inline-flex;align-items:center;justify-content:center;width:2.75rem;height:2.75rem;border-radius:999px;border:1px solid #e2e8f0;background:#fff;color:#374151}
@@ -19,14 +15,9 @@ button{border:none;background:transparent;padding:0;cursor:pointer}
 .hp-fnp-icons__label{font-size:.6875rem;font-weight:600;text-align:center;line-height:1.25}
 .sf-offer__badge,.sf-banner__badge{display:inline-flex;align-items:center;border:none;border-radius:999px;background:#1f5138;color:#fff;font-size:.65rem;font-weight:800;text-transform:uppercase}
 .sf-icon{display:inline-block;flex-shrink:0;vertical-align:middle}
-html.sf-loading .fas,html.sf-loading .fab,html.sf-loading .far,html.sf-loading .material-icons-outlined{visibility:hidden}
 `.replace(/\s+/g, ' ');
 
-/**
- * Reveal when CSSOM + fonts are ready — do NOT wait for full window.load
- * (images), which either delays forever or times out into FOUC.
- */
-const BOOT_SCRIPT = `(function(){var h=document.documentElement;if(h.classList.contains('sf-ready'))return;h.classList.add('sf-loading');var done=false;function reveal(){if(done)return;done=true;requestAnimationFrame(function(){requestAnimationFrame(function(){h.classList.remove('sf-loading');h.classList.add('sf-ready','fonts-ready')})})}function waitLink(l){try{if(l.sheet)return Promise.resolve()}catch(e){}return new Promise(function(res){l.addEventListener('load',res,{once:true});l.addEventListener('error',res,{once:true})})}function isThirdPartySheet(l){var u=l.href||'';return u.indexOf('fonts.googleapis.com')>-1||u.indexOf('cdnjs.cloudflare.com')>-1}function waitCss(){var links=[].slice.call(document.querySelectorAll('link[rel="stylesheet"]')).filter(function(l){return!isThirdPartySheet(l)});return Promise.all(links.map(waitLink))}var fonts=(document.fonts&&document.fonts.ready)?document.fonts.ready:Promise.resolve();Promise.all([waitCss(),fonts]).then(reveal).catch(reveal);setTimeout(reveal,1200)})();`;
+const BOOT_SCRIPT = `(function(){document.documentElement.classList.add('sf-ready','fonts-ready');})();`;
 
 export function CriticalPaintGuard() {
   return (

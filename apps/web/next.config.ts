@@ -75,6 +75,10 @@ const nextConfig: NextConfig = {
     const weekCache = 'public, max-age=604800, stale-while-revalidate=86400';
     return [
       {
+        source: '/assets/vendor/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=2592000, immutable' }],
+      },
+      {
         source: '/assets/:path*',
         headers: [{ key: 'Cache-Control', value: weekCache }],
       },

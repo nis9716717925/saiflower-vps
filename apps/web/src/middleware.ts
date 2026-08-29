@@ -18,6 +18,30 @@ const ID_REDIRECTS: Record<string, string> = {
   '/gift-detail': 'gift',
 };
 
+const PRIVATE_PREFIXES = [
+  '/cart',
+  '/checkout',
+  '/login',
+  '/register',
+  '/logout',
+  '/profile',
+  '/wishlist',
+  '/verify',
+  '/admin',
+  '/api',
+];
+
+/** Public catalog/content pages safe for short CDN edge cache (matches ISR revalidate). */
+function cdnCacheControl(pathname: string): string | null {
+  if (PRIVATE_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`))) {
+    return null;
+  }
+  if (pathname.startsWith('/_next') || pathname.startsWith('/assets') || pathname.startsWith('/uploads')) {
+    return null;
+  }
+  return 'public, s-maxage=120, stale-while-revalidate=600';
+}
+
 export function middleware(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
   const prefix = SLUG_REDIRECTS[pathname];
@@ -62,6 +86,10 @@ export function middleware(request: NextRequest) {
   });
   if (process.env.ALLOW_INDEXING !== 'true') {
     response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+  }
+  const cache = cdnCacheControl(pathname);
+  if (cache && request.method === 'GET') {
+    response.headers.set('Cache-Control', cache);
   }
   return response;
 }

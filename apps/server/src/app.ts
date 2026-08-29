@@ -1,4 +1,5 @@
 import express from 'express';
+import compression from 'compression';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -16,6 +17,7 @@ const uploadsDir = resolveUploadsDirectory();
 // instead of collapsing every visitor into 127.0.0.1.
 app.set('trust proxy', 1);
 
+app.use(compression({ threshold: 1024 }));
 app.use(helmet());
 app.use(
   cors({

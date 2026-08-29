@@ -25,6 +25,9 @@ git pull --ff-only origin main
 echo "==> Install dependencies"
 npm ci
 
+echo "==> Copy self-hosted icon fonts to /assets/vendor"
+npm run vendor:fonts
+
 echo "==> Build API + packages"
 npm run build:server
 

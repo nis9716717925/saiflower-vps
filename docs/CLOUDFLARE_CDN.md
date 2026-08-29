@@ -50,7 +50,7 @@ Create **Cache Rules** in Cloudflare (order matters):
 For HTML on catalog pages (optional, after verifying ISR):
 
 - Cache Rule: `/*` → **Eligible for cache**, **Respect origin `Cache-Control`**
-- Origin already sends `revalidate` / static HTML for most catalog routes after Phase 2.
+- Origin sends `Cache-Control: public, s-maxage=120, stale-while-revalidate=600` on public catalog pages (Phase 5 middleware). Cart/checkout/login bypass cache.
 
 ## 4. Speed optimizations (Cloudflare dashboard)
 
