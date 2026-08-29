@@ -38,17 +38,30 @@ export function CookieConsent() {
           <p className="sf-cookie-banner__title">
             <i className="fas fa-cookie-bite" aria-hidden="true" /> We use cookies
           </p>
-          <p className="sf-cookie-banner__desc">
+          <p className="sf-cookie-banner__desc sf-cookie-banner__desc--desktop">
             Sai Flower uses cookies to keep your cart and sign-in working, remember your
             preferences, and improve our website. See our{' '}
             <Link href="/privacy">Privacy Policy</Link> for details.
           </p>
+          <p className="sf-cookie-banner__desc sf-cookie-banner__desc--mobile">
+            For cart, sign-in &amp; preferences.{' '}
+            <Link href="/privacy">Privacy</Link>
+          </p>
         </div>
         <div className="sf-cookie-banner__actions">
-          <button type="button" className="sf-cookie-banner__btn sf-cookie-banner__btn--ghost" onClick={() => choose('essential')}>
-            Essential only
+          <button
+            type="button"
+            className="sf-cookie-banner__btn sf-cookie-banner__btn--ghost"
+            onClick={() => choose('essential')}
+          >
+            <span className="sf-cookie-banner__btn-label sf-cookie-banner__btn-label--desktop">Essential only</span>
+            <span className="sf-cookie-banner__btn-label sf-cookie-banner__btn-label--mobile">Essential</span>
           </button>
-          <button type="button" className="sf-cookie-banner__btn sf-cookie-banner__btn--primary" onClick={() => choose('all')}>
+          <button
+            type="button"
+            className="sf-cookie-banner__btn sf-cookie-banner__btn--primary"
+            onClick={() => choose('all')}
+          >
             Accept all
           </button>
         </div>
