@@ -41,8 +41,8 @@ pm2 save
 # Every deploy / when JS is broken:
 bash scripts/vps-redeploy-web.sh
 
-# Optional watchdog every 5 minutes:
-# */5 * * * * /var/www/saiflower-vps/scripts/vps-watch-static.sh >> /var/log/saiflower-chunk-watch.log 2>&1
+# Optional watchdog every 5 minutes (auto-redeploy after 2 failed chunk probes):
+sudo bash scripts/vps-install-watch-cron.sh
 ```
 
 ## Manual health checks

@@ -280,3 +280,9 @@ export function bodyBackgroundForPath(pathname: string): string | undefined {
   }
   return '#fdfcf9';
 }
+
+/** Inline script: set body class/background before React hydrates (no server headers()). */
+export function routeBodyBootScript(): string {
+  const reserved = JSON.stringify([...RESERVED_ROOT_SEGMENTS]);
+  return `(function(){var p=location.pathname,r=${reserved},c=['text-gray-800'],root=p.replace(/^\\/+|\\/+$/g,'').split('/')[0],b='#fdfcf9',seg=p.indexOf('/',1)>0;if(p==='/')c.push('homepage-premium');if(/^\\/(collection|occasion|relation)\\//.test(p)||p.indexOf('/flowers/')===0||p.indexOf('/personalized')===0||p.indexOf('/celebration-calendar')===0||p.indexOf('/flower-delivery-in-')===0)c.push('cl-page-body');if(p==='/flowers'||p==='/cakes'||p==='/gifts')c.push('shop-listing-body');if(root&&!seg&&r.indexOf(root)<0)c.push('cl-page-body');if(p==='/cart'||p.indexOf('/checkout')===0||p.indexOf('/login')===0||p.indexOf('/register')===0){c.push('checkout-funnel-body');b='#f3f5f4';}else if(p==='/'){b='#fdfcf9';}else if(/^\\/(collection|occasion|relation)\\//.test(p)||p.indexOf('/flowers/')===0||p.indexOf('/personalized')===0||p.indexOf('/celebration-calendar')===0||p.indexOf('/flower-delivery-in-')===0){b='#f6f2ea';}else if(p==='/flowers'||p==='/cakes'||p==='/gifts'){b='#f7f4ee';}else if(root&&!seg&&r.indexOf(root)<0){b='#f6f2ea';}document.body.className=c.join(' ');document.body.style.backgroundColor=b;})();`;
+}

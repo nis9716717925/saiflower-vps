@@ -72,7 +72,7 @@ router.get('/', (_req, res) => {
 router.use('/auth', authRoutes);
 router.use('/products', catalogCache, productRoutes);
 router.use('/categories', catalogCache, categoryRouter);
-router.use('/search', searchRouter);
+router.use('/search', catalogCache, searchRouter);
 router.use('/cart', cartRoutes);
 router.use('/addresses', addressRoutes);
 router.use('/shipping', shippingRouter);

@@ -9,6 +9,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
+import { usePathname } from 'next/navigation';
 import { apiGet, setGuestId, type CartData } from '@/lib/api';
 
 interface CartContextValue {
@@ -24,7 +25,17 @@ function sumQty(items: CartData['items']): number {
   return items.reduce((sum, item) => sum + (item.qty ?? 0), 0);
 }
 
+function needsCartImmediately(pathname: string): boolean {
+  return (
+    pathname === '/cart' ||
+    pathname.startsWith('/checkout') ||
+    pathname.startsWith('/profile') ||
+    pathname.startsWith('/wishlist')
+  );
+}
+
 export function AppProviders({ children }: { children: ReactNode }) {
+  const pathname = usePathname() || '/';
   const [cart, setCart] = useState<CartData | null>(null);
   const [guestId, setGuestIdState] = useState<string | null>(null);
 
@@ -42,8 +53,20 @@ export function AppProviders({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    void refreshCart();
-  }, [refreshCart]);
+    if (needsCartImmediately(pathname)) {
+      void refreshCart();
+      return;
+    }
+
+    const run = () => void refreshCart();
+    if (typeof window.requestIdleCallback === 'function') {
+      const id = window.requestIdleCallback(run, { timeout: 4000 });
+      return () => window.cancelIdleCallback(id);
+    }
+
+    const timer = window.setTimeout(run, 2000);
+    return () => window.clearTimeout(timer);
+  }, [pathname, refreshCart]);
 
   const value = useMemo(
     () => ({

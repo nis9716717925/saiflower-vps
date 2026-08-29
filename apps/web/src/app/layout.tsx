@@ -3,10 +3,7 @@ import { OrderSuccessBanner } from '@/components/home/OrderSuccessBanner';
 import { BodyClass } from '@/components/layout/BodyClass';
 import { ChunkLoadRecovery } from '@/components/layout/ChunkLoadRecovery';
 import { CriticalPaintGuard } from '@/components/layout/CriticalPaintGuard';
-import { CriticalRouteStyles } from '@/components/layout/CriticalRouteStyles';
-import { NavigationPaintGuard } from '@/components/layout/NavigationPaintGuard';
-import { RouteStyles } from '@/components/layout/RouteStyles';
-import { ServerBody } from '@/components/layout/ServerBody';
+import { RouteBodyBoot } from '@/components/layout/RouteBodyBoot';
 import { ServiceWorkerRegister } from '@/components/layout/ServiceWorkerRegister';
 import { CookieConsent } from '@/components/layout/CookieConsent';
 import { SiteFooter } from '@/components/layout/SiteFooter';
@@ -60,15 +57,12 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         />
-        <CriticalRouteStyles />
         <GlobalSiteSchema />
       </head>
-      <ServerBody>
-        {/* saiflower-build: fouc-v4 */}
-        <RouteStyles />
+      <body className="text-gray-800">
+        <RouteBodyBoot />
         <AppProviders>
           <ChunkLoadRecovery />
-          <NavigationPaintGuard />
           <BodyClass />
           <ServiceWorkerRegister />
           <SiteHeader />
@@ -79,7 +73,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           </div>
           <CookieConsent />
         </AppProviders>
-      </ServerBody>
+      </body>
     </html>
   );
 }
