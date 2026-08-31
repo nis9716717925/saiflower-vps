@@ -772,7 +772,7 @@ function CheckoutPageContent() {
         <span>
           <strong>Ordering for me</strong>
           <span className="qc-check__hint">
-            Only enter your name — we&apos;ll deliver to your location
+            We&apos;ll deliver to your location — confirm your name and mobile.
           </span>
         </span>
       </label>
@@ -788,19 +788,19 @@ function CheckoutPageContent() {
             required
           />
         </div>
-        {!(orderingForMe && (mobile.trim() || customer?.phone)) && (
-          <div className="qc-field" style={orderingForMe ? { gridColumn: '1 / -1' } : undefined}>
-            <label className="qc-label">Mobile number</label>
-            <input
-              className="qc-input"
-              type="tel"
-              inputMode="numeric"
-              value={mobile}
-              onChange={(e) => setMobile(e.target.value)}
-              required
-            />
-          </div>
-        )}
+        <div className="qc-field" style={orderingForMe ? { gridColumn: '1 / -1' } : undefined}>
+          <label className="qc-label">
+            {orderingForMe ? 'Your mobile number' : 'Mobile number'}
+          </label>
+          <input
+            className="qc-input"
+            type="tel"
+            inputMode="numeric"
+            value={mobile}
+            onChange={(e) => setMobile(e.target.value)}
+            required
+          />
+        </div>
         {!orderingForMe && (
           <div className="qc-field" style={{ gridColumn: '1 / -1' }}>
             <label className="qc-label">Email id (optional)</label>
