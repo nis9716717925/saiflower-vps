@@ -574,23 +574,34 @@
     padding: 1.1rem var(--hp-edge) 0.95rem;
 }
 
+.homepage-premium .hp-fnp-icons__marquee {
+    max-width: 1520px;
+    margin: 0 auto;
+}
+
+.homepage-premium .hp-fnp-icons__marquee-track {
+    --lx-marquee-duration: 36s;
+    gap: 0.85rem;
+}
+
+@media (min-width: 1024px) {
+    .homepage-premium .hp-fnp-icons__marquee-track {
+        gap: clamp(1.15rem, 2vw, 2rem);
+    }
+}
+
 .homepage-premium .hp-fnp-icons__scroll {
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
     gap: 0.85rem;
-    width: 100%;
-    max-width: 1520px;
-    margin: 0 auto;
     padding: 0;
-    scroll-padding-inline: 0.5rem;
+    flex-shrink: 0;
 }
 
 @media (min-width: 1024px) {
     .homepage-premium .hp-fnp-icons__scroll {
-        justify-content: center;
         gap: clamp(1.15rem, 2vw, 2rem);
-        overflow: visible;
     }
 }
 

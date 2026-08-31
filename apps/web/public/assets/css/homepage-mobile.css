@@ -165,12 +165,6 @@
     .homepage-premium .hp-fnp-icons__scroll {
         gap: 0.75rem;
         padding-bottom: 0.25rem;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior-x: contain;
-        scroll-snap-type: x proximity;
-        justify-content: flex-start;
-        max-width: 100%;
     }
 
     .homepage-premium .hp-fnp-icons__item {

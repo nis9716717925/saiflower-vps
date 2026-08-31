@@ -1,0 +1,76 @@
+/**
+ * GPU-friendly infinite horizontal marquee — duplicate groups + translate3d loop.
+ * No JavaScript; respects prefers-reduced-motion.
+ */
+.lx-marquee {
+    overflow: hidden;
+    max-width: 100%;
+    -webkit-mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        #000 3%,
+        #000 97%,
+        transparent 100%
+    );
+    mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        #000 3%,
+        #000 97%,
+        transparent 100%
+    );
+}
+
+.lx-marquee--no-fade {
+    -webkit-mask-image: none;
+    mask-image: none;
+}
+
+.lx-marquee__track {
+    display: flex;
+    width: max-content;
+    animation: lx-marquee-scroll var(--lx-marquee-duration, 40s) linear infinite;
+    will-change: transform;
+}
+
+.lx-marquee__track--slow {
+    --lx-marquee-duration: 55s;
+}
+
+.lx-marquee__track--normal {
+    --lx-marquee-duration: 40s;
+}
+
+.lx-marquee__track--fast {
+    --lx-marquee-duration: 28s;
+}
+
+.lx-marquee__track--pause-hover:hover {
+    animation-play-state: paused;
+}
+
+.lx-marquee__group {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+}
+
+@keyframes lx-marquee-scroll {
+    from {
+        transform: translate3d(0, 0, 0);
+    }
+    to {
+        transform: translate3d(-50%, 0, 0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lx-marquee__track {
+        animation: none;
+        will-change: auto;
+    }
+
+    .lx-marquee [aria-hidden='true'] {
+        display: none;
+    }
+}
