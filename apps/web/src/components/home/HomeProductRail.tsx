@@ -1,5 +1,11 @@
+'use client';
+
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { OptimizedImage, IMAGE_SIZE_PRESETS } from '@/components/ui/OptimizedImage';
+import { addProductToCart } from '@/lib/buy-now';
+import { useCart } from '@/components/providers/AppProviders';
 import {
   discountPercent,
   formatInr,
@@ -9,11 +15,28 @@ import type { Product } from '@/lib/types';
 
 /** Homepage product card — matches PHP `homepage_render_occasion_cards` markup. */
 export function HomeOccasionCard({ product }: { product: Product }) {
+  const router = useRouter();
+  const { refreshCart } = useCart();
+  const [buying, setBuying] = useState(false);
   const href = product.url ?? productHref(product.type, product.slug);
   const discount = discountPercent(product.price, product.originalPrice);
   const ratingRaw = product.rating && product.rating > 0 ? product.rating : 4.8;
   const rating = ratingRaw.toFixed(1);
   const orig = product.originalPrice ?? 0;
+
+  async function handleBuyNow(e: React.MouseEvent) {
+    e.preventDefault();
+    if (buying) return;
+    setBuying(true);
+    try {
+      await addProductToCart(product);
+      await refreshCart();
+      router.push('/cart');
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Could not add to cart');
+      setBuying(false);
+    }
+  }
 
   return (
     <article className="hp-occasion-card snap-start">
@@ -45,9 +68,14 @@ export function HomeOccasionCard({ product }: { product: Product }) {
           <span className="hp-price-current">{formatInr(product.price)}</span>
           {orig > product.price ? <span className="hp-price-old">{formatInr(orig)}</span> : null}
         </div>
-        <Link href={href} className="hp-occasion-card__cta">
-          Buy Now
-        </Link>
+        <button
+          type="button"
+          className="hp-occasion-card__cta"
+          onClick={(e) => void handleBuyNow(e)}
+          disabled={buying}
+        >
+          {buying ? 'Adding…' : 'Buy Now'}
+        </button>
       </div>
     </article>
   );

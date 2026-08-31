@@ -443,6 +443,40 @@ body.checkout-funnel-body .sf-bottom-nav {
   color: #6b7670;
 }
 
+.qc-slot-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  max-height: 14rem;
+  overflow-y: auto;
+  padding-right: 0.15rem;
+}
+
+.qc-slot--custom {
+  grid-column: 1 / -1;
+}
+
+.qc-check--deliver-now {
+  margin: 0 0 0.85rem;
+  border-color: #cfe3d8;
+  background: #f8fcf9;
+}
+
+.qc-schedule.is-disabled {
+  opacity: 0.55;
+}
+
+.qc-schedule__fields {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.qc-schedule__fields:disabled {
+  pointer-events: none;
+}
+
 .qc-address {
   width: 100%;
   text-align: left;

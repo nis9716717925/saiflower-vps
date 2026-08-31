@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
-import { SHIPPING } from '@saiflower/shared';
+import { SHIPPING, buildHourlyDeliverySlots, defaultDeliverySlotForDate, resolveCheckoutDelivery, todayDateString } from '@saiflower/shared';
 import { apiGet, apiSend, getCustomer } from '@/lib/api';
 import { useCart } from '@/components/providers/AppProviders';
 import { CheckoutProgress } from '@/components/checkout/CheckoutProgress';
@@ -46,11 +46,18 @@ type CheckoutAddressSnapshot = {
 
 const ADDRESS_TYPES: AddressType[] = ['Home', 'Work', 'Other'];
 
-const TIME_SLOTS = [
-  { value: 'Morning (9am - 12pm)', title: 'Morning', hint: '9am – 12pm' },
-  { value: 'Afternoon (12pm - 4pm)', title: 'Afternoon', hint: '12pm – 4pm' },
-  { value: 'Evening (4pm - 8pm)', title: 'Evening', hint: '4pm – 8pm' },
-] as const;
+const HOURLY_TIME_SLOTS = buildHourlyDeliverySlots();
+
+function resetDeliverySchedule(): {
+  date: string;
+  hourlySlot: string;
+} {
+  const today = todayDateString();
+  return {
+    date: today,
+    hourlySlot: defaultDeliverySlotForDate(today),
+  };
+}
 
 function buildDeliveryAddress(flatHouseNo: string, locality: string, pincode: string): string {
   return [flatHouseNo.trim(), locality.trim(), 'Delhi', pincode.trim(), 'India']
@@ -116,7 +123,10 @@ function CheckoutPageContent() {
   const autoDetectAttempted = useRef(false);
 
   const [delDate, setDelDate] = useState('');
-  const [delTime, setDelTime] = useState('Morning (9am - 12pm)');
+  const [delTime, setDelTime] = useState('');
+  const [deliverNow, setDeliverNow] = useState(false);
+  const [slotMode, setSlotMode] = useState<'hourly' | 'custom'>('hourly');
+  const [customTime, setCustomTime] = useState('');
 
   const customer = getCustomer();
   const selectedAddress = useMemo(
@@ -177,9 +187,45 @@ function CheckoutPageContent() {
   }, [router, isGuest]);
 
   useEffect(() => {
-    const minDate = new Date().toISOString().slice(0, 10);
-    setDelDate(minDate);
+    const { date, hourlySlot } = resetDeliverySchedule();
+    setDelDate(date);
+    setDelTime(hourlySlot);
+    setDeliverNow(false);
+    setSlotMode('hourly');
+    setCustomTime('');
   }, []);
+
+  const resolvedDelivery = useMemo(
+    () =>
+      resolveCheckoutDelivery({
+        deliverNow,
+        date: delDate,
+        hourlySlot: delTime,
+        slotMode,
+        customTime,
+      }),
+    [customTime, delDate, delTime, deliverNow, slotMode],
+  );
+
+  function handleDeliverNowChange(next: boolean) {
+    setDeliverNow(next);
+    if (next) {
+      setDelDate(todayDateString());
+      return;
+    }
+    const { date, hourlySlot } = resetDeliverySchedule();
+    setDelDate(date);
+    setDelTime(hourlySlot);
+    setSlotMode('hourly');
+    setCustomTime('');
+  }
+
+  function handleDeliveryDateChange(nextDate: string) {
+    setDelDate(nextDate);
+    setDelTime(defaultDeliverySlotForDate(nextDate));
+    setSlotMode('hourly');
+    setCustomTime('');
+  }
 
   function fillFormFromAddress(address: CustomerAddress) {
     setRecipientName(address.recipientName);
@@ -401,6 +447,22 @@ function CheckoutPageContent() {
   async function handleSaveAndContinue(e: React.FormEvent) {
     e.preventDefault();
     setFormError('');
+
+    if (!deliverNow) {
+      if (!delDate.trim()) {
+        setFormError('Please choose a delivery date.');
+        return;
+      }
+      if (slotMode === 'custom' && !customTime.trim()) {
+        setFormError('Please enter your preferred custom delivery time.');
+        return;
+      }
+      if (slotMode === 'hourly' && !delTime.trim()) {
+        setFormError('Please choose a delivery time slot.');
+        return;
+      }
+    }
+
     setSavingAddress(true);
     try {
       if (isGuest) {
@@ -599,8 +661,8 @@ function CheckoutPageContent() {
         phone: customerPhone,
         email: paymentAddress.email || sender?.email || '',
         address,
-        date: delDate,
-        delivery_time: delTime,
+        date: resolvedDelivery.date,
+        delivery_time: resolvedDelivery.deliveryTime,
         recipient_name: forMe ? customerName : paymentAddress.recipientName,
         recipient_phone: forMe ? customerPhone : paymentAddress.mobile,
         ordering_for_me: forMe,
@@ -980,42 +1042,88 @@ function CheckoutPageContent() {
 
               {showAddressForm ? addressForm : null}
 
-              <div className="qc-card">
+              <label className="qc-check qc-check--deliver-now">
+                <input
+                  type="checkbox"
+                  checked={deliverNow}
+                  onChange={(e) => handleDeliverNowChange(e.target.checked)}
+                />
+                <span>
+                  <strong>Deliver Now</strong>
+                  <span className="qc-check__hint">
+                    Skip scheduling — we&apos;ll prepare your order for the earliest possible delivery.
+                  </span>
+                </span>
+              </label>
+
+              <div className={`qc-card qc-schedule${deliverNow ? ' is-disabled' : ''}`}>
                 <div className="qc-card__head">
                   <h2 className="qc-card__title">
                     <span className="material-icons-outlined">schedule</span>
                     Delivery schedule
                   </h2>
+                  <span className="qc-muted" style={{ fontSize: '0.78rem' }}>
+                    24-hour delivery · 1-hour slots
+                  </span>
                 </div>
-                <div className="qc-grid qc-grid--2">
-                  <div className="qc-field">
-                    <label className="qc-label">Preferred date</label>
-                    <input
-                      className="qc-input"
-                      type="date"
-                      min={new Date().toISOString().slice(0, 10)}
-                      value={delDate}
-                      onChange={(e) => setDelDate(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="qc-field">
-                    <label className="qc-label">Time slot</label>
-                    <div className="qc-stack">
-                      {TIME_SLOTS.map((slot) => (
+                <fieldset className="qc-schedule__fields" disabled={deliverNow}>
+                  <div className="qc-grid qc-grid--2">
+                    <div className="qc-field">
+                      <label className="qc-label">Preferred date</label>
+                      <input
+                        className="qc-input"
+                        type="date"
+                        min={todayDateString()}
+                        value={delDate}
+                        onChange={(e) => handleDeliveryDateChange(e.target.value)}
+                        required={!deliverNow}
+                      />
+                    </div>
+                    <div className="qc-field">
+                      <label className="qc-label">Time slot</label>
+                      <div className="qc-slot-grid">
+                        {HOURLY_TIME_SLOTS.map((slot) => (
+                          <button
+                            key={slot.value}
+                            type="button"
+                            className={`qc-slot${
+                              slotMode === 'hourly' && delTime === slot.value ? ' is-active' : ''
+                            }`}
+                            onClick={() => {
+                              setSlotMode('hourly');
+                              setCustomTime('');
+                              setDelTime(slot.value);
+                            }}
+                          >
+                            <strong>{slot.title}</strong>
+                            <span>{slot.hint}</span>
+                          </button>
+                        ))}
                         <button
-                          key={slot.value}
                           type="button"
-                          className={`qc-slot${delTime === slot.value ? ' is-active' : ''}`}
-                          onClick={() => setDelTime(slot.value)}
+                          className={`qc-slot qc-slot--custom${
+                            slotMode === 'custom' ? ' is-active' : ''
+                          }`}
+                          onClick={() => setSlotMode('custom')}
                         >
-                          <strong>{slot.title}</strong>
-                          <span>{slot.hint}</span>
+                          <strong>Custom time</strong>
+                          <span>Enter your preferred slot</span>
                         </button>
-                      ))}
+                      </div>
+                      {slotMode === 'custom' ? (
+                        <input
+                          className="qc-input"
+                          type="text"
+                          value={customTime}
+                          onChange={(e) => setCustomTime(e.target.value)}
+                          placeholder="e.g. Tomorrow 2:30 PM, after 6 PM"
+                          required={!deliverNow}
+                          style={{ marginTop: '0.65rem' }}
+                        />
+                      ) : null}
                     </div>
                   </div>
-                </div>
+                </fieldset>
               </div>
 
               {formError && <div className="qc-alert qc-alert--err">{formError}</div>}
@@ -1058,7 +1166,15 @@ function CheckoutPageContent() {
                 </div>
                 <div className="qc-divider" />
                 <p className="qc-muted" style={{ margin: 0 }}>
-                  <strong style={{ color: '#14261c' }}>{delDate}</strong> · {delTime}
+                  {deliverNow ? (
+                    <strong style={{ color: '#14261c' }}>{resolvedDelivery.deliveryTime}</strong>
+                  ) : (
+                    <>
+                      <strong style={{ color: '#14261c' }}>{resolvedDelivery.date}</strong>
+                      {' · '}
+                      {resolvedDelivery.deliveryTime}
+                    </>
+                  )}
                 </p>
               </div>
 

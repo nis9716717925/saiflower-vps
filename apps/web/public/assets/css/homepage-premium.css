@@ -852,6 +852,17 @@
     transition: background 0.2s, color 0.2s;
 }
 
+button.hp-occasion-card__cta {
+    background: transparent;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+button.hp-occasion-card__cta:disabled {
+    opacity: 0.7;
+    cursor: wait;
+}
+
 .hp-occasion-card__cta:hover {
     background: var(--hp-gold);
     color: #fff;

@@ -1,9 +1,11 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { OptimizedImage, IMAGE_SIZE_PRESETS } from '@/components/ui/OptimizedImage';
 import { apiSend } from '@/lib/api';
+import { addProductToCart } from '@/lib/buy-now';
 import { useCart } from '@/components/providers/AppProviders';
 import { discountPercent, formatInr, productHref } from '@/lib/images';
 import type { Product } from '@/lib/types';
@@ -30,9 +32,9 @@ export function isDecorationProduct(product: Product): boolean {
 }
 
 export function FlowerShopCard({ product }: { product: Product }) {
+  const router = useRouter();
   const { refreshCart } = useCart();
   const [adding, setAdding] = useState(false);
-  const [added, setAdded] = useState(false);
   const [wished, setWished] = useState(false);
 
   const href = product.url ?? productHref(product.type, product.slug);
@@ -62,26 +64,17 @@ export function FlowerShopCard({ product }: { product: Product }) {
     }
   }
 
-  async function handleAddToCart(e: React.MouseEvent) {
+  async function handleBuyNow(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
     if (!inStock || adding) return;
     setAdding(true);
     try {
-      await apiSend('/cart/items', 'POST', {
-        productId: product.id,
-        category: product.type,
-        quantity: 1,
-        name: product.name,
-        price: product.price,
-        image: product.image,
-      });
+      await addProductToCart(product);
       await refreshCart();
-      setAdded(true);
-      window.setTimeout(() => setAdded(false), 1600);
+      router.push('/cart');
     } catch (err) {
       alert(err instanceof Error ? err.message : 'Could not add to cart');
-    } finally {
       setAdding(false);
     }
   }
@@ -148,11 +141,11 @@ export function FlowerShopCard({ product }: { product: Product }) {
         {inStock ? (
           <button
             type="button"
-            onClick={handleAddToCart}
+            onClick={handleBuyNow}
             disabled={adding}
-            className={`sf-pcard__add${added ? ' is-added' : ''}`}
+            className={`sf-pcard__add${adding ? ' is-added' : ''}`}
           >
-            {adding ? 'Buying…' : added ? 'Added ✓' : 'BUY'}
+            {adding ? 'Buying…' : 'BUY'}
           </button>
         ) : (
           <button type="button" className="sf-pcard__add is-disabled" disabled>

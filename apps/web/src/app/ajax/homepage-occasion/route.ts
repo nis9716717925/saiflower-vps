@@ -73,7 +73,7 @@ function renderCards(products: Product[]): string {
                         <span class="hp-price-current">${escapeHtml(formatInr(p.price))}</span>
                         ${old}
                     </div>
-                    <a href="${href}" class="hp-occasion-card__cta">Buy Now</a>
+                    <a href="${href}?buy=1" class="hp-occasion-card__cta">Buy Now</a>
                 </div>
             </article>`;
     })

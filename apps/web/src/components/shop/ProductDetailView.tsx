@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Script from 'next/script';
-import { useMemo, useRef, useState } from 'react';
-import { apiSend } from '@/lib/api';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { addProductToCart } from '@/lib/buy-now';
 import { useCart } from '@/components/providers/AppProviders';
 import { ProductCard } from '@/components/shop/ProductCard';
 import { OptimizedImage, IMAGE_SIZE_PRESETS } from '@/components/ui/OptimizedImage';
@@ -22,6 +22,7 @@ export function ProductDetailView({ product, listLabel, listHref }: ProductDetai
   const { refreshCart } = useCart();
   const [adding, setAdding] = useState(false);
   const [buying, setBuying] = useState(false);
+  const buyTriggered = useRef(false);
   const [qty, setQty] = useState(1);
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const galleryImages = useMemo(() => productGalleryUrls(product), [product]);
@@ -40,14 +41,7 @@ export function ProductDetailView({ product, listLabel, listHref }: ProductDetai
   }
 
   async function addToCartRequest() {
-    await apiSend('/cart/items', 'POST', {
-      productId: product.id,
-      category: product.type,
-      quantity: qty,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-    });
+    await addProductToCart(product, qty);
     await refreshCart();
   }
 
@@ -74,6 +68,15 @@ export function ProductDetailView({ product, listLabel, listHref }: ProductDetai
       setBuying(false);
     }
   }
+
+  useEffect(() => {
+    if (buyTriggered.current || !inStock) return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('buy') !== '1') return;
+    buyTriggered.current = true;
+    void handleBuyNow();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inStock]);
 
   return (
     <>
