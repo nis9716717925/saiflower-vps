@@ -675,6 +675,10 @@ body.checkout-funnel-body .sf-bottom-nav {
 }
 
 @media (max-width: 1023px) {
+  .qc-shell--no-mobile-bar {
+    padding-bottom: 3rem;
+  }
+
   .qc-cta--desktop-only {
     display: none !important;
   }

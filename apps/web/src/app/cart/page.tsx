@@ -152,26 +152,11 @@ export default function CartPage() {
       </p>
     </div>
   ) : (
-    <Link href={continueHref} className="qc-cta qc-cta--desktop-only" style={{ marginTop: '1rem' }}>
+    <Link href={continueHref} className="qc-cta" style={{ marginTop: '1rem' }}>
       Continue
       <span className="material-icons-outlined" style={{ fontSize: '1.1rem' }}>
         arrow_forward
       </span>
-    </Link>
-  );
-
-  const mobileContinue = !loggedIn ? (
-    <div className="qc-mobile-bar__actions">
-      <Link href={guestCheckoutHref} className="qc-cta qc-cta--guest qc-cta--compact">
-        Guest
-      </Link>
-      <Link href={continueHref} className="qc-cta qc-cta--compact">
-        Log in
-      </Link>
-    </div>
-  ) : (
-    <Link href={continueHref} className="qc-cta">
-      Continue
     </Link>
   );
 
@@ -275,7 +260,7 @@ export default function CartPage() {
   );
 
   return (
-    <main className="qc-shell">
+    <main className={`qc-shell${loggedIn ? '' : ' qc-shell--no-mobile-bar'}`}>
       <CheckoutProgress current="cart" />
 
       <div className="qc-title-row">
@@ -371,15 +356,19 @@ export default function CartPage() {
         <aside className="qc-sticky-summary">{billCard}</aside>
       </div>
 
-      <div className="qc-mobile-bar">
-        <div className="qc-mobile-bar__inner">
-          <div className="qc-mobile-bar__meta">
-            <small>Estimated total</small>
-            <strong>{formatInr(cart.grandTotal)}</strong>
+      {loggedIn ? (
+        <div className="qc-mobile-bar">
+          <div className="qc-mobile-bar__inner">
+            <div className="qc-mobile-bar__meta">
+              <small>Estimated total</small>
+              <strong>{formatInr(cart.grandTotal)}</strong>
+            </div>
+            <Link href={continueHref} className="qc-cta">
+              Continue
+            </Link>
           </div>
-          {mobileContinue}
         </div>
-      </div>
+      ) : null}
     </main>
   );
 }
