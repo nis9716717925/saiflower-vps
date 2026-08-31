@@ -108,13 +108,19 @@
 .hp-fnp-icons__scroll {
     display: flex;
     gap: 0.65rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
     padding: 0.25rem 0.75rem 0.35rem;
-    flex-shrink: 0;
 }
 
 @media (min-width: 1024px) {
     .hp-fnp-icons__scroll {
+        justify-content: center;
+        overflow: visible;
+        flex-wrap: nowrap;
         gap: 1.25rem;
+        max-width: 100%;
         padding: 0.25rem 1rem;
     }
 }

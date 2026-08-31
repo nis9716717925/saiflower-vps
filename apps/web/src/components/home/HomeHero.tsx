@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { OptimizedImage, IMAGE_SIZE_PRESETS } from '@/components/ui/OptimizedImage';
-import { InfiniteMarquee } from '@/components/ui/InfiniteMarquee';
 import type { HomepageSlide } from '@/lib/homepage-slides';
 
 const THEMES: Record<string, string> = {
@@ -273,22 +272,16 @@ export function HomeHero({ slides = [] }: HomeHeroProps) {
       <h1 className="sr-only">Sai Flower — Online flower delivery in Delhi NCR</h1>
 
       <section className="hp-fnp-icons" aria-label="Popular categories">
-        <InfiniteMarquee
-          className="hp-fnp-icons__marquee"
-          trackClassName="hp-fnp-icons__marquee-track"
-          speed="normal"
-        >
-          <div className="hp-fnp-icons__scroll">
-            {CATEGORY_ICONS.map((icon) => (
-              <Link key={icon.label} href={icon.href} className="hp-fnp-icons__item">
-                <span className="hp-fnp-icons__img hp-fnp-icons__img--icon">
-                  <i className={`fas ${icon.icon}`} aria-hidden="true" />
-                </span>
-                <span className="hp-fnp-icons__label">{icon.label}</span>
-              </Link>
-            ))}
-          </div>
-        </InfiniteMarquee>
+        <div className="hp-fnp-icons__scroll hide-scrollbar">
+          {CATEGORY_ICONS.map((icon) => (
+            <Link key={icon.label} href={icon.href} className="hp-fnp-icons__item">
+              <span className="hp-fnp-icons__img hp-fnp-icons__img--icon">
+                <i className={`fas ${icon.icon}`} aria-hidden="true" />
+              </span>
+              <span className="hp-fnp-icons__label">{icon.label}</span>
+            </Link>
+          ))}
+        </div>
       </section>
 
       {/* Mobile: previous image carousel + trust cards */}

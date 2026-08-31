@@ -11,7 +11,6 @@ export const CORE_CSS = [
 /** Legacy sheets shipped inside the Next.js CSS bundle (not loaded via <link>). */
 export const BUNDLED_CSS_FILES = new Set([
   'style.css',
-  'infinite-marquee.css',
   'catnav.css',
   'mobile-nav.css',
   'search-suggest.css',
