@@ -430,6 +430,22 @@ body.checkout-funnel-body .sf-bottom-nav {
   background: #f1faf5;
 }
 
+.qc-slot.is-disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.qc-slot.is-midnight:not(.is-disabled) {
+  border-color: #e8d4a8;
+  background: #fffaf0;
+}
+
+.qc-slot.is-midnight.is-active {
+  border-color: #c9a227;
+  background: #fff6e0;
+}
+
 .qc-slot strong {
   display: block;
   font-size: 0.88rem;
@@ -539,6 +555,11 @@ body.checkout-funnel-body .sf-bottom-nav {
 
 .qc-bill__row--discount {
   color: #157a4b;
+  font-weight: 700;
+}
+
+.qc-bill__row--warn {
+  color: #8a6110;
   font-weight: 700;
 }
 

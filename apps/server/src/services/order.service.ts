@@ -1,3 +1,8 @@
+import {
+  calcMidnightSurcharge,
+  DELIVER_NOW_LABEL,
+  shouldApplyMidnightCharge,
+} from '@saiflower/shared';
 import { config } from '../config';
 import { prisma, num } from '../db/client';
 import { AppError, ValidationError } from '../utils/errors';
@@ -89,6 +94,10 @@ export async function placeOrder(input: {
   recipient_name?: string;
   recipient_phone?: string;
   delivery_time?: string;
+  midnight_fee?: number;
+  deliver_now?: boolean;
+  slot_mode?: 'hourly' | 'custom';
+  custom_delivery_time?: string;
   address_id?: number;
   ordering_for_me?: boolean;
   latitude?: number | null;
@@ -125,6 +134,30 @@ export async function placeOrder(input: {
   }
 
   const cart = await getCart(input.userId, input.guestId);
+  const deliveryTime = (input.delivery_time ?? '').trim();
+  const deliverNow =
+    Boolean(input.deliver_now) || deliveryTime === DELIVER_NOW_LABEL;
+  const slotMode =
+    input.slot_mode === 'custom' || deliveryTime.startsWith('Custom:')
+      ? 'custom'
+      : 'hourly';
+  const customTime =
+    input.custom_delivery_time?.trim() ||
+    (deliveryTime.startsWith('Custom:') ? deliveryTime.slice('Custom:'.length).trim() : '');
+
+  const midnightApplies = shouldApplyMidnightCharge({
+    deliverNow,
+    date: input.date ?? '',
+    deliveryTime,
+    slotMode,
+    customTime,
+  });
+  const midnightFee = midnightApplies ? calcMidnightSurcharge(cart.subtotal) : 0;
+  const clientMidnightFee = Number(input.midnight_fee ?? 0);
+  if (Math.abs(midnightFee - clientMidnightFee) > 1) {
+    throw new AppError('Midnight surcharge changed. Please refresh checkout and try again.', 400);
+  }
+
   const discountAmount = Number(input.discount_amount ?? cart.discountAmount ?? 0);
   const couponCode = (input.coupon_code ?? cart.coupon?.code ?? '').trim();
 
@@ -156,12 +189,15 @@ export async function placeOrder(input: {
 
   itemsText += `\n--------------------------------\n`;
   itemsText += `Shipping (${shippingResult.distance_km.toFixed(2)} km @ ₹${config.shipping.ratePerKm}/km): ₹${shippingResult.shipping_fee.toFixed(2)}`;
+  if (midnightFee > 0) {
+    itemsText += `\nMidnight surcharge (1.5× items): ₹${midnightFee.toFixed(2)}`;
+  }
   if (discountAmount > 0) {
     itemsText += `\nDiscount (${couponCode}): -₹${discountAmount.toFixed(2)}`;
   }
 
   const computedTotal =
-    cart.subtotal + shippingResult.shipping_fee - (discountAmount || cart.discountAmount);
+    cart.subtotal + shippingResult.shipping_fee + midnightFee - (discountAmount || cart.discountAmount);
   const total = Number(input.total ?? computedTotal);
 
   const dateStr = (input.date ?? '').trim();
@@ -219,6 +255,7 @@ export async function placeOrder(input: {
     itemsText: itemsWithUrls,
     total,
     shippingFee: shippingResult.shipping_fee,
+    midnightFee,
     distanceText: shippingResult.distance_text,
     date: input.date ?? '',
     time: input.delivery_time ?? '',
@@ -251,6 +288,7 @@ function buildWhatsAppMessage(p: {
   itemsText: string;
   total: number;
   shippingFee: number;
+  midnightFee: number;
   distanceText: string;
   date: string;
   time: string;
@@ -265,7 +303,11 @@ function buildWhatsAppMessage(p: {
   let msg = `*✨ NEW ORDER ✨*\n\n`;
   msg += `*🛍️ ITEMS:*\n${p.itemsText}\n\n`;
   msg += `*💰 TOTAL: ₹${p.total}*\n`;
-  msg += `*(Incl. Shipping: ₹${p.shippingFee} for ${p.distanceText})*\n\n`;
+  msg += `*(Incl. Shipping: ₹${p.shippingFee} for ${p.distanceText}`;
+  if (p.midnightFee > 0) {
+    msg += `; Midnight surcharge: ₹${p.midnightFee}`;
+  }
+  msg += `)*\n\n`;
   msg += `*📍 DELIVERY:* ${p.date} | ${p.time}\n`;
   if (p.orderingForMe) {
     msg += `*👤 CUSTOMER (ordering for self):* ${p.senderName} (${p.senderPhone})\n`;

@@ -3,7 +3,18 @@
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
-import { SHIPPING, buildHourlyDeliverySlots, defaultDeliverySlotForDate, resolveCheckoutDelivery, todayDateString } from '@saiflower/shared';
+import {
+  SHIPPING,
+  buildHourlyDeliverySlots,
+  calcMidnightSurcharge,
+  defaultDeliverySlotForDate,
+  firstAvailableHourlySlotForDate,
+  isHourlySlotPastForDate,
+  isMidnightNow,
+  resolveCheckoutDelivery,
+  shouldApplyMidnightCharge,
+  todayDateString,
+} from '@saiflower/shared';
 import { apiGet, apiSend, getCustomer } from '@/lib/api';
 import { useCart } from '@/components/providers/AppProviders';
 import { CheckoutProgress } from '@/components/checkout/CheckoutProgress';
@@ -207,6 +218,18 @@ function CheckoutPageContent() {
     [customTime, delDate, delTime, deliverNow, slotMode],
   );
 
+  const midnightApplies = useMemo(
+    () =>
+      shouldApplyMidnightCharge({
+        deliverNow,
+        date: delDate,
+        deliveryTime: resolvedDelivery.deliveryTime,
+        slotMode,
+        customTime,
+      }),
+    [customTime, delDate, deliverNow, resolvedDelivery.deliveryTime, slotMode],
+  );
+
   function handleDeliverNowChange(next: boolean) {
     setDeliverNow(next);
     if (next) {
@@ -222,10 +245,17 @@ function CheckoutPageContent() {
 
   function handleDeliveryDateChange(nextDate: string) {
     setDelDate(nextDate);
-    setDelTime(defaultDeliverySlotForDate(nextDate));
+    setDelTime(firstAvailableHourlySlotForDate(nextDate));
     setSlotMode('hourly');
     setCustomTime('');
   }
+
+  useEffect(() => {
+    if (deliverNow || slotMode !== 'hourly' || !delDate || !delTime) return;
+    const slot = HOURLY_TIME_SLOTS.find((s) => s.value === delTime);
+    if (!slot || !isHourlySlotPastForDate(slot.hour, delDate)) return;
+    setDelTime(firstAvailableHourlySlotForDate(delDate));
+  }, [delDate, delTime, deliverNow, slotMode]);
 
   function fillFormFromAddress(address: CustomerAddress) {
     setRecipientName(address.recipientName);
@@ -385,7 +415,8 @@ function CheckoutPageContent() {
 
   const subtotal = cart?.subtotal ?? 0;
   const discount = cart?.discountAmount ?? 0;
-  const grandTotal = Math.max(0, subtotal + shippingFee - discount);
+  const midnightFee = midnightApplies ? calcMidnightSurcharge(subtotal) : 0;
+  const grandTotal = Math.max(0, subtotal + shippingFee + midnightFee - discount);
 
   async function calculateShipping(
     addressOverride?: { flatHouseNo: string; locality: string; pincode: string },
@@ -452,6 +483,17 @@ function CheckoutPageContent() {
       if (!delDate.trim()) {
         setFormError('Please choose a delivery date.');
         return;
+      }
+      if (slotMode === 'hourly') {
+        const slot = HOURLY_TIME_SLOTS.find((s) => s.value === delTime);
+        if (!slot) {
+          setFormError('Please choose a delivery time slot.');
+          return;
+        }
+        if (isHourlySlotPastForDate(slot.hour, delDate)) {
+          setFormError('That time slot has already passed. Please pick a later slot.');
+          return;
+        }
       }
       if (slotMode === 'custom' && !customTime.trim()) {
         setFormError('Please enter your preferred custom delivery time.');
@@ -639,7 +681,7 @@ function CheckoutPageContent() {
     const itemLines = cart.items.map(
       (item) => `• ${item.name} (x${item.qty}) - ${formatInr(item.price * item.qty)}`,
     );
-    const payable = Math.max(0, subtotal + fee - discount);
+    const payable = Math.max(0, subtotal + fee + midnightFee - discount);
     const sender = getCustomer();
     const forMe =
       orderingForMe ||
@@ -663,6 +705,9 @@ function CheckoutPageContent() {
         address,
         date: resolvedDelivery.date,
         delivery_time: resolvedDelivery.deliveryTime,
+        deliver_now: deliverNow,
+        slot_mode: slotMode,
+        custom_delivery_time: customTime.trim() || undefined,
         recipient_name: forMe ? customerName : paymentAddress.recipientName,
         recipient_phone: forMe ? customerPhone : paymentAddress.mobile,
         ordering_for_me: forMe,
@@ -675,6 +720,7 @@ function CheckoutPageContent() {
         items: itemLines.join('\n'),
         total: payable,
         shipping_fee: fee,
+        midnight_fee: midnightFee,
         distance_km: km,
         discount_amount: discount,
       });
@@ -945,6 +991,12 @@ function CheckoutPageContent() {
           <span>Delivery {shippingReady ? `(${distanceText})` : ''}</span>
           <span>{shippingReady ? formatInr(shippingFee) : 'After address'}</span>
         </div>
+        {midnightFee > 0 && (
+          <div className="qc-bill__row qc-bill__row--warn">
+            <span>Midnight surcharge (1.5× items)</span>
+            <span>{formatInr(midnightFee)}</span>
+          </div>
+        )}
         {discount > 0 && (
           <div className="qc-bill__row qc-bill__row--discount">
             <span>Discount</span>
@@ -1052,6 +1104,14 @@ function CheckoutPageContent() {
                   <strong>Deliver Now</strong>
                   <span className="qc-check__hint">
                     Skip scheduling — we&apos;ll prepare your order for the earliest possible delivery.
+                    {isMidnightNow() ? (
+                      <>
+                        {' '}
+                        <strong style={{ color: '#8a6110' }}>
+                          Midnight surcharge (1.5× items) applies for 11 PM – 7 AM IST.
+                        </strong>
+                      </>
+                    ) : null}
                   </span>
                 </span>
               </label>
@@ -1063,7 +1123,7 @@ function CheckoutPageContent() {
                     Delivery schedule
                   </h2>
                   <span className="qc-muted" style={{ fontSize: '0.78rem' }}>
-                    24-hour delivery · 1-hour slots
+                    24-hour delivery · 1-hour slots (IST)
                   </span>
                 </div>
                 <fieldset className="qc-schedule__fields" disabled={deliverNow}>
@@ -1082,23 +1142,35 @@ function CheckoutPageContent() {
                     <div className="qc-field">
                       <label className="qc-label">Time slot</label>
                       <div className="qc-slot-grid">
-                        {HOURLY_TIME_SLOTS.map((slot) => (
-                          <button
-                            key={slot.value}
-                            type="button"
-                            className={`qc-slot${
-                              slotMode === 'hourly' && delTime === slot.value ? ' is-active' : ''
-                            }`}
-                            onClick={() => {
-                              setSlotMode('hourly');
-                              setCustomTime('');
-                              setDelTime(slot.value);
-                            }}
-                          >
-                            <strong>{slot.title}</strong>
-                            <span>{slot.hint}</span>
-                          </button>
-                        ))}
+                        {HOURLY_TIME_SLOTS.map((slot) => {
+                          const slotPast = isHourlySlotPastForDate(slot.hour, delDate);
+                          return (
+                            <button
+                              key={slot.value}
+                              type="button"
+                              disabled={slotPast}
+                              className={`qc-slot${
+                                slotMode === 'hourly' && delTime === slot.value ? ' is-active' : ''
+                              }${slotPast ? ' is-disabled' : ''}${
+                                slot.hour >= 23 || slot.hour < 7 ? ' is-midnight' : ''
+                              }`}
+                              onClick={() => {
+                                if (slotPast) return;
+                                setSlotMode('hourly');
+                                setCustomTime('');
+                                setDelTime(slot.value);
+                              }}
+                            >
+                              <strong>{slot.title}</strong>
+                              <span>
+                                {slotPast ? 'Unavailable' : slot.hint}
+                                {!slotPast && (slot.hour >= 23 || slot.hour < 7)
+                                  ? ' · 1.5× items'
+                                  : ''}
+                              </span>
+                            </button>
+                          );
+                        })}
                         <button
                           type="button"
                           className={`qc-slot qc-slot--custom${
@@ -1111,15 +1183,22 @@ function CheckoutPageContent() {
                         </button>
                       </div>
                       {slotMode === 'custom' ? (
-                        <input
-                          className="qc-input"
-                          type="text"
-                          value={customTime}
-                          onChange={(e) => setCustomTime(e.target.value)}
-                          placeholder="e.g. Tomorrow 2:30 PM, after 6 PM"
-                          required={!deliverNow}
-                          style={{ marginTop: '0.65rem' }}
-                        />
+                        <>
+                          <input
+                            className="qc-input"
+                            type="text"
+                            value={customTime}
+                            onChange={(e) => setCustomTime(e.target.value)}
+                            placeholder="e.g. Tomorrow 2:30 AM, after 11 PM"
+                            required={!deliverNow}
+                            style={{ marginTop: '0.65rem' }}
+                          />
+                          {customTime.trim() && midnightApplies && !deliverNow ? (
+                            <p className="qc-muted" style={{ margin: '0.5rem 0 0', color: '#8a6110' }}>
+                              Midnight window detected — 1.5× item surcharge applies.
+                            </p>
+                          ) : null}
+                        </>
                       ) : null}
                     </div>
                   </div>
