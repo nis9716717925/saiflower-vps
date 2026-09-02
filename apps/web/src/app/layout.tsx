@@ -1,3 +1,4 @@
+import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
 import { AppProviders } from '@/components/providers/AppProviders';
 import { OrderSuccessBanner } from '@/components/home/OrderSuccessBanner';
 import { BodyClass } from '@/components/layout/BodyClass';
@@ -26,6 +27,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   return (
     <html lang="en" className={siteFontClassName} style={themeCssVars(themePrimary)}>
       <head>
+        <GoogleAnalytics />
         <CriticalPaintGuard />
         <link
           rel="preload"
