@@ -154,6 +154,10 @@ export function pageCss(pathname: string): string[] {
     ];
   }
 
+  if (pathname === '/custom-pages') {
+    return ['/assets/css/category-page.css'];
+  }
+
   if (
     pathname.startsWith('/collection/') ||
     pathname.startsWith('/occasion/') ||

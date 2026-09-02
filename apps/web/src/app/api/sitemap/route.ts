@@ -26,11 +26,35 @@ function urlTag(path: string, priority = '0.5', changefreq = 'weekly'): string {
   </url>`;
 }
 
+async function fetchAllProductSlugs(type: 'flower' | 'cake' | 'gift'): Promise<string[]> {
+  const slugs: string[] = [];
+  const limit = 200;
+  let page = 1;
+  let totalPages = 1;
+
+  while (page <= totalPages && page <= 20) {
+    const result = await fetchProducts({ type, limit, page, sort: 'new' });
+    for (const item of result.items) {
+      if (item.slug) slugs.push(item.slug);
+    }
+    totalPages = Math.max(1, result.meta?.totalPages ?? 1);
+    if (!result.items.length) break;
+    page += 1;
+  }
+
+  return slugs;
+}
+
 /** Internal handler; public URL is /sitemap.xml via next.config rewrite. */
 export async function GET() {
+  const seen = new Set<string>();
   const urls: string[] = [];
+
   const add = (path: string, priority = '0.5', changefreq = 'weekly') => {
-    urls.push(urlTag(path, priority, changefreq));
+    const normalized = path.startsWith('/') ? path : `/${path}`;
+    if (seen.has(normalized)) return;
+    seen.add(normalized);
+    urls.push(urlTag(normalized, priority, changefreq));
   };
 
   add('/', '1.0', 'daily');
@@ -45,7 +69,8 @@ export async function GET() {
   add('/celebration-calendar', '0.85');
   add('/personalized', '0.8');
   add('/faq', '0.6', 'monthly');
-  add('/custom-pages', '0.5');
+  add('/custom-pages', '0.7');
+  add('/flower-delivery-in-delhi', '0.85');
   add('/sitemap', '0.4');
   add('/privacy', '0.3', 'yearly');
   add('/terms', '0.3', 'yearly');
@@ -62,22 +87,25 @@ export async function GET() {
   for (const loc of Object.values(LOCATION_REGISTRY)) add(`/${loc.slug}`, '0.7');
 
   try {
-    const [blogs, events, gallery, pages, flowers] = await Promise.all([
-      fetchBlogs(200),
-      fetchEvents(100),
-      fetchGallery(100),
-      fetchCmsPages(400),
-      fetchProducts({ type: 'flower', limit: 200, sort: 'new' }),
+    const [blogs, events, gallery, pages, flowerSlugs, cakeSlugs, giftSlugs] = await Promise.all([
+      fetchBlogs(300),
+      fetchEvents(200),
+      fetchGallery(200),
+      fetchCmsPages(500),
+      fetchAllProductSlugs('flower'),
+      fetchAllProductSlugs('cake'),
+      fetchAllProductSlugs('gift'),
     ]);
+
     for (const b of blogs) add(b.url, '0.6');
     for (const e of events) add(e.url, '0.55');
     for (const g of gallery) add(g.url.includes('?') ? g.url : `/gallery-detail?id=${g.id}`, '0.5');
-    for (const p of pages) add(p.url, '0.65');
-    for (const f of flowers.items) {
-      if (f.slug) add(`/flowers/${f.slug}`, '0.7', 'daily');
-    }
+    for (const p of pages) add(p.url, '0.7');
+    for (const slug of flowerSlugs) add(`/flowers/${slug}`, '0.7', 'daily');
+    for (const slug of cakeSlugs) add(`/cakes/${slug}`, '0.65', 'daily');
+    for (const slug of giftSlugs) add(`/gifts/${slug}`, '0.65', 'daily');
   } catch {
-    /* keep static */
+    /* keep static + taxonomy urls */
   }
 
   const body = `<?xml version="1.0" encoding="UTF-8"?>
@@ -89,7 +117,7 @@ ${urls.join('\n')}
   return new Response(body, {
     headers: {
       'Content-Type': 'application/xml; charset=utf-8',
-      'Cache-Control': 'public, max-age=3600',
+      'Cache-Control': 'public, max-age=1800',
     },
   });
 }

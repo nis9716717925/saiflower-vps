@@ -84,7 +84,9 @@ export function middleware(request: NextRequest) {
   const response = NextResponse.next({
     request: { headers: requestHeaders },
   });
-  if (process.env.ALLOW_INDEXING !== 'true') {
+  // Match robots.ts: allow indexing unless explicitly disabled.
+  // Missing ALLOW_INDEXING previously forced noindex on every page and blocked Google.
+  if (process.env.ALLOW_INDEXING === 'false') {
     response.headers.set('X-Robots-Tag', 'noindex, nofollow');
   }
   const cache = cdnCacheControl(pathname);

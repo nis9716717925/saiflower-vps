@@ -12,7 +12,7 @@ export const metadata = pageMetadata({
 export default async function CustomPagesIndex() {
   let pages: Awaited<ReturnType<typeof fetchCmsPages>> = [];
   try {
-    pages = await fetchCmsPages(300);
+    pages = await fetchCmsPages(500);
   } catch {
     pages = [];
   }

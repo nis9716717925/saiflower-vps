@@ -56,7 +56,7 @@ function parseFaqs(raw?: string | null): { question: string; answer: string }[] 
 export function DynamicCmsPage({ page, products = [] }: DynamicCmsPageProps) {
   const hero =
     page.heroImage ||
-    'https://images.unsplash.com/photo-1490750967868-88aa4486c946?q=80&w=1400';
+    '/assets/images/hero/main-premium-blooms.webp';
   const isShowcase = page.layoutType === 'product_showcase';
   const faqs = useMemo(() => parseFaqs(page.faqs), [page.faqs]);
 

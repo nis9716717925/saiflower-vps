@@ -122,7 +122,7 @@ export default async function SitemapPage() {
       fetchBlogs(100),
       fetchEvents(100),
       fetchGallery(100),
-      fetchCmsPages(300),
+      fetchCmsPages(500),
     ]);
     blogs = b.map((x) => ({ path: x.url, title: x.title }));
     events = e.map((x) => ({ path: x.url, title: x.title }));
