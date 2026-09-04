@@ -1,6 +1,6 @@
-import '@/styles/bundled-landing';
+import '@/styles/bundled-location';
 
-/** CMS catch-all pages at /:slug */
+/** CMS catch-all + location landings at /:slug */
 export default function CmsSlugLayout({ children }: { children: React.ReactNode }) {
   return children;
 }

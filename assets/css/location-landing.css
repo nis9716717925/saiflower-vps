@@ -477,3 +477,25 @@
         padding-bottom: 0.35rem;
     }
 }
+
+.loc-seo--rich {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 1.25rem 1rem 2rem;
+}
+
+.loc-seo--rich .cms-content {
+    max-width: none;
+}
+
+.loc-faq {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 0 1rem 2.5rem;
+}
+
+.loc-faq h2 {
+    margin: 0 0 0.85rem;
+    font-size: 1.25rem;
+    color: #2f6f4e;
+}

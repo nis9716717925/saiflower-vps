@@ -29,9 +29,13 @@ function productFilters(product: Product): string[] {
 export function LocationLandingView({
   location,
   products,
+  seoHtml,
+  faqs = [],
 }: {
   location: LocationInfo;
   products: Product[];
+  seoHtml?: string | null;
+  faqs?: { question: string; answer: string }[];
 }) {
   const [filter, setFilter] = useState('all');
   const [sort, setSort] = useState('recommended');
@@ -221,13 +225,33 @@ export function LocationLandingView({
         </section>
       ) : null}
 
-      <section className="showcase-text loc-seo" aria-label="About flower delivery">
-        <p>
-          Looking for reliable <strong>flower delivery in {location.local}</strong>? Sai Flowers
-          offers same-day bouquets across {location.region}, including {location.nearby}. Choose
-          roses, orchids, premium arrangements and more — packaged carefully for doorstep delivery.
-        </p>
-      </section>
+      {seoHtml ? (
+        <section className="loc-seo loc-seo--rich" aria-label={`About flower delivery in ${location.local}`}>
+          <article className="cms-content" dangerouslySetInnerHTML={{ __html: seoHtml }} />
+        </section>
+      ) : (
+        <section className="showcase-text loc-seo" aria-label="About flower delivery">
+          <p>
+            Looking for reliable <strong>flower delivery in {location.local}</strong>? Sai Flowers
+            offers same-day bouquets across {location.region}, including {location.nearby}. Choose
+            roses, orchids, premium arrangements and more — packaged carefully for doorstep delivery.
+          </p>
+        </section>
+      )}
+
+      {faqs.length > 0 ? (
+        <section className="loc-faq" aria-labelledby="loc-faq-title">
+          <h2 id="loc-faq-title">Flower delivery in {location.local} — FAQs</h2>
+          <div className="cl-faq">
+            {faqs.map((faq, i) => (
+              <details key={faq.question} className="cl-faq__item" open={i === 0}>
+                <summary>{faq.question}</summary>
+                <p>{faq.answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       <Script src="/assets/js/location-landing.js?v=1" strategy="afterInteractive" />
     </div>

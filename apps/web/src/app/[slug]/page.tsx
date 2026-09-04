@@ -13,15 +13,57 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
+function parseFaqs(raw?: string | null): { question: string; answer: string }[] {
+  if (!raw?.trim()) return [];
+  try {
+    const cleaned = raw.replace(/\\'/g, "'").replace(/\\"/g, '"');
+    const parsed = JSON.parse(cleaned) as unknown;
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .map((item) => {
+        if (!item || typeof item !== 'object') return null;
+        const row = item as Record<string, unknown>;
+        const question =
+          typeof row.question === 'string'
+            ? row.question
+            : typeof row.q === 'string'
+              ? row.q
+              : '';
+        const answer =
+          typeof row.answer === 'string' ? row.answer : typeof row.a === 'string' ? row.a : '';
+        if (!question || !answer) return null;
+        return {
+          question: question.replace(/\\'/g, "'"),
+          answer: answer.replace(/\\'/g, "'"),
+        };
+      })
+      .filter((item): item is { question: string; answer: string } => Boolean(item));
+  } catch {
+    return [];
+  }
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const location = locationGet(slug);
   if (location) {
-    return pageMetadata({
-      title: `Flower Delivery in ${location.local} | Same Day — Sai Flower`,
-      description: `Order fresh flowers for same-day delivery in ${location.local}, ${location.region}. Handcrafted bouquets from Sai Flowers.`,
-      canonical: `/${slug}`,
-    });
+    try {
+      const page = await fetchCmsPage(slug);
+      return pageMetadata({
+        title: page.metaTitle || `Flower Delivery in ${location.local} | Same Day — Sai Flower`,
+        description:
+          page.metaDescription ||
+          page.shortDescription ||
+          `Order fresh flowers for same-day delivery in ${location.local}, ${location.region}. Handcrafted bouquets from Sai Flowers.`,
+        canonical: `/${slug}`,
+      });
+    } catch {
+      return pageMetadata({
+        title: `Flower Delivery in ${location.local} | Same Day — Sai Flower`,
+        description: `Order fresh flowers for same-day delivery in ${location.local}, ${location.region}. Handcrafted bouquets from Sai Flowers.`,
+        canonical: `/${slug}`,
+      });
+    }
   }
 
   try {
@@ -46,8 +88,20 @@ export default async function CatchAllLandingPage({ params }: PageProps) {
   if (isLocationSlug(slug)) {
     const location = locationGet(slug);
     if (!location) notFound();
-    const products = await fetchLandingBouquets({ sort: 'bestseller', limit: 40 });
-    return <LocationLandingView location={location} products={products} />;
+
+    const [products, cms] = await Promise.all([
+      fetchLandingBouquets({ sort: 'bestseller', limit: 40 }),
+      fetchCmsPage(slug).catch(() => null),
+    ]);
+
+    return (
+      <LocationLandingView
+        location={location}
+        products={products}
+        seoHtml={cms?.contentHtml || null}
+        faqs={parseFaqs(cms?.faqs)}
+      />
+    );
   }
 
   let page: Awaited<ReturnType<typeof fetchCmsPage>>;

@@ -5,7 +5,7 @@
   --cat-muted: #6a6258;
   --cat-card: #fff;
   --cat-line: rgba(28, 24, 20, 0.08);
-  font-family: 'Manrope', system-ui, sans-serif;
+  font-family: var(--font-manrope), system-ui, sans-serif;
   color: var(--cat-ink);
   background:
     radial-gradient(900px 420px at 10% -10%, rgba(47, 111, 78, 0.08), transparent 55%),
@@ -18,7 +18,7 @@
 .cat-page h1,
 .cat-page h2,
 .cat-page .cat-serif {
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-cormorant), Georgia, serif;
   letter-spacing: -0.015em;
 }
 
@@ -197,7 +197,7 @@
 
 .cat-convert strong {
   display: block;
-  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--font-cormorant), Georgia, serif;
   font-size: 1.35rem;
   color: var(--cat-primary, #2f6f4e);
   margin-bottom: 0.2rem;
@@ -347,4 +347,79 @@
 @media (min-width: 980px) {
   .cat-wrap { width: min(1120px, calc(100% - 2rem)); }
   .cat-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* CMS article body — keep SEO HTML readable and unbroken */
+.cms-content {
+  color: #4b463e;
+  line-height: 1.75;
+  max-width: 72ch;
+  margin: 0 0 2rem;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.cms-content > *:first-child { margin-top: 0; }
+.cms-content > *:last-child { margin-bottom: 0; }
+
+.cms-content h1,
+.cms-content h2,
+.cms-content h3,
+.cms-content h4,
+.cms-content h5,
+.cms-content h6 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  color: #a3823e;
+  font-weight: 700;
+  line-height: 1.25;
+  margin: 1.6rem 0 0.65rem;
+}
+
+.cms-content h2 { font-size: clamp(1.35rem, 2.5vw, 1.75rem); }
+.cms-content h3 { font-size: clamp(1.15rem, 2vw, 1.4rem); }
+.cms-content h4,
+.cms-content h5,
+.cms-content h6 { font-size: 1.05rem; color: #2f6f4e; }
+
+.cms-content p {
+  margin: 0 0 1rem;
+  font-size: 0.98rem;
+}
+
+.cms-content a {
+  color: #2f6f4e;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.cms-content ul,
+.cms-content ol {
+  margin: 0 0 1rem;
+  padding-left: 1.25rem;
+}
+
+.cms-content li { margin: 0.35rem 0; }
+
+.cms-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.85rem;
+  display: block;
+  margin: 1rem 0;
+}
+
+.cms-content blockquote {
+  margin: 1rem 0;
+  padding: 0.85rem 1rem;
+  border-left: 3px solid rgba(163, 130, 62, 0.55);
+  background: rgba(250, 245, 234, 0.7);
+  border-radius: 0 0.75rem 0.75rem 0;
+}
+
+.cms-content br + br { display: none; }
+
+.cat-badge {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
