@@ -77,7 +77,11 @@ function withSocialMeta(input: PageMetaInput): Metadata {
       images: [image],
     },
     verification: {
-      google: ['eB9VORqGBu2riVGwdtWi5Ycg4aQyGLOlVnl1Elc7_sI', '_3OJRaDzm_rnfg5OqKQWnN6jxKp0bhQh6KkPVcU8Cio'],
+      google: [
+        'eB9VORqGBu2riVGwdtWi5Ycg4aQyGLOlVnl1Elc7_sI',
+        '_3OJRaDzm_rnfg5OqKQWnN6jxKp0bhQh6KkPVcU8Cio',
+        'Z-QEbIksUmuDqHRHIAJTRzW_cf5d-Z_qZ_gTgKCP9ho',
+      ],
     },
   };
 
