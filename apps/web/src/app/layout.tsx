@@ -27,6 +27,10 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   return (
     <html lang="en" className={siteFontClassName} style={themeCssVars(themePrimary)}>
       <head>
+        <meta
+          name="google-site-verification"
+          content="Z-QEbIksUmuDqHRHIAJTRzW_cf5d-Z_qZ_gTgKCP9ho"
+        />
         <GoogleAnalytics />
         <CriticalPaintGuard />
         <link
