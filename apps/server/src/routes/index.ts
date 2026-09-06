@@ -22,6 +22,7 @@ import { blogRouter, faqRouter } from './blog.routes';
 import { galleryRouter, eventsRouter } from './catalog-content.routes';
 import { homepageRouter } from './homepage.routes';
 import { pagesRouter } from './pages.routes';
+import evaRoutes from './eva.routes';
 import { publicCatalogCache } from '../middleware/cacheHeaders';
 
 const router = Router();
@@ -64,6 +65,7 @@ router.get('/', (_req, res) => {
         'GET /homepage/slides',
         'GET /pages',
         'GET /pages/:slug',
+        'GET|POST /eva/*',
       ],
     }),
   );
@@ -88,5 +90,6 @@ router.use('/gallery', catalogCache, galleryRouter);
 router.use('/events', catalogCache, eventsRouter);
 router.use('/homepage', catalogCache, homepageRouter);
 router.use('/pages', catalogCache, pagesRouter);
+router.use('/eva', evaRoutes);
 
 export default router;

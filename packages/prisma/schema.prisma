@@ -189,6 +189,16 @@ model Customers {
   avatarUrl         String?           @map("avatar_url") @db.VarChar(512)
   wishlist          Wishlist[]        @relation("wishlist_user_id_fkey")
   addresses         CustomerAddress[] @relation("customer_addresses_customer_id_fkey")
+  evaProfile        EvaProfile?
+  evaEligibility    EvaEligibility?
+  evaPreference     EvaPreference?
+  evaBlocksMade     EvaBlock[]        @relation("eva_blocks_blocker")
+  evaBlocksReceived EvaBlock[]        @relation("eva_blocks_blocked")
+  evaReportsMade    EvaReport[]       @relation("eva_reports_reporter")
+  evaNotifications  EvaNotification[]
+  evaModerationFlags EvaModerationFlag[]
+  evaEventInterests EvaEventInterest[]
+  evaRavePresence   EvaRavePresence[]
 
   @@unique([email], map: "customers_email_key")
   @@unique([googleId], map: "uniq_customers_google_id")
@@ -595,4 +605,411 @@ model Wishlist {
 
   @@unique([userId, productId, type], map: "unique_wishlist")
   @@map("wishlist")
+}
+
+// =============================================================================
+// EVA dating / connection platform
+// =============================================================================
+
+enum EvaGender {
+  WOMAN
+  MAN
+  NON_BINARY
+  OTHER
+  PREFER_NOT
+
+  @@map("eva_gender")
+}
+
+enum EvaIntent {
+  LONG_TERM
+  SERIOUS
+  DATING
+  NEW_CONNECTIONS
+  FRIENDSHIP
+  CASUAL
+
+  @@map("eva_intent")
+}
+
+enum EvaMediaKind {
+  PHOTO
+  VIDEO
+  SELFIE_VERIFY
+
+  @@map("eva_media_kind")
+}
+
+enum EvaModerationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  FLAGGED
+
+  @@map("eva_moderation_status")
+}
+
+enum EvaLikeTarget {
+  PROFILE
+  PROMPT
+  INTEREST
+  PHOTO
+
+  @@map("eva_like_target")
+}
+
+enum EvaVerificationStatus {
+  NONE
+  PENDING
+  APPROVED
+  REJECTED
+
+  @@map("eva_verification_status")
+}
+
+enum EvaEventInterestKind {
+  SAVED
+  INTERESTED
+  JOINED
+
+  @@map("eva_event_interest_kind")
+}
+
+enum EvaNotificationKind {
+  MATCH
+  MESSAGE
+  LIKE
+  EVENT
+  RAVE
+  VERIFICATION
+  SAFETY
+  SYSTEM
+
+  @@map("eva_notification_kind")
+}
+
+model EvaEligibility {
+  id             Int       @id @default(autoincrement())
+  customerId     Int       @unique @map("customer_id")
+  is18Confirmed  Boolean   @default(false) @map("is_18_confirmed")
+  confirmedAt    DateTime? @map("confirmed_at") @db.Timestamptz(6)
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  customer       Customers @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@map("eva_eligibility")
+}
+
+model EvaProfile {
+  id                 Int                    @id @default(autoincrement())
+  customerId         Int                    @unique @map("customer_id")
+  displayName        String                 @map("display_name") @db.VarChar(80)
+  birthYear          Int                    @map("birth_year")
+  gender             EvaGender
+  pronouns           String?                @db.VarChar(40)
+  bio                String?                @db.VarChar(600)
+  intent             EvaIntent?
+  city               String?                @db.VarChar(100)
+  latitude           Float?
+  longitude          Float?
+  completeness       Int                    @default(0)
+  onboardingComplete Boolean                @default(false) @map("onboarding_complete")
+  verificationStatus EvaVerificationStatus  @default(NONE) @map("verification_status")
+  photoVerifiedAt    DateTime?              @map("photo_verified_at") @db.Timestamptz(6)
+  lastActiveAt       DateTime?              @map("last_active_at") @db.Timestamptz(6)
+  isHidden           Boolean                @default(false) @map("is_hidden")
+  createdAt          DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime               @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  customer           Customers              @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  media              EvaMedia[]
+  interests          EvaProfileInterest[]
+  prompts            EvaProfilePrompt[]
+  likesSent          EvaLike[]              @relation("eva_likes_from")
+  likesReceived      EvaLike[]              @relation("eva_likes_to")
+  passesSent         EvaPass[]              @relation("eva_passes_from")
+  passesReceived     EvaPass[]              @relation("eva_passes_to")
+  matchesAsA         EvaMatch[]             @relation("eva_matches_a")
+  matchesAsB         EvaMatch[]             @relation("eva_matches_b")
+
+  @@index([gender, intent, lastActiveAt], map: "eva_profiles_discover_idx")
+  @@index([city], map: "eva_profiles_city_idx")
+  @@map("eva_profiles")
+}
+
+model EvaMedia {
+  id               Int                 @id @default(autoincrement())
+  profileId        Int                 @map("profile_id")
+  url              String              @db.VarChar(512)
+  kind             EvaMediaKind        @default(PHOTO)
+  sortOrder        Int                 @default(0) @map("sort_order")
+  isPrimary        Boolean             @default(false) @map("is_primary")
+  moderationStatus EvaModerationStatus @default(APPROVED) @map("moderation_status")
+  createdAt        DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  profile          EvaProfile          @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId, sortOrder], map: "eva_media_profile_idx")
+  @@map("eva_media")
+}
+
+model EvaInterest {
+  id       Int                  @id @default(autoincrement())
+  slug     String               @unique @db.VarChar(64)
+  label    String               @db.VarChar(80)
+  category String?              @db.VarChar(64)
+  active   Boolean              @default(true)
+  profiles EvaProfileInterest[]
+
+  @@map("eva_interests")
+}
+
+model EvaProfileInterest {
+  profileId  Int         @map("profile_id")
+  interestId Int         @map("interest_id")
+  profile    EvaProfile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  interest   EvaInterest @relation(fields: [interestId], references: [id], onDelete: Cascade)
+
+  @@id([profileId, interestId])
+  @@map("eva_profile_interests")
+}
+
+model EvaPrompt {
+  id       Int                @id @default(autoincrement())
+  slug     String             @unique @db.VarChar(64)
+  text     String             @db.VarChar(255)
+  active   Boolean            @default(true)
+  sortOrder Int               @default(0) @map("sort_order")
+  answers  EvaProfilePrompt[]
+
+  @@map("eva_prompts")
+}
+
+model EvaProfilePrompt {
+  id        Int        @id @default(autoincrement())
+  profileId Int        @map("profile_id")
+  promptId  Int        @map("prompt_id")
+  answer    String     @db.VarChar(400)
+  sortOrder Int        @default(0) @map("sort_order")
+  profile   EvaProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  prompt    EvaPrompt  @relation(fields: [promptId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, promptId], map: "eva_profile_prompts_unique")
+  @@index([profileId], map: "eva_profile_prompts_profile_idx")
+  @@map("eva_profile_prompts")
+}
+
+model EvaPreference {
+  id              Int      @id @default(autoincrement())
+  customerId      Int      @unique @map("customer_id")
+  ageMin          Int      @default(18) @map("age_min")
+  ageMax          Int      @default(50) @map("age_max")
+  maxKm           Int      @default(50) @map("max_km")
+  genders         EvaGender[]
+  intents         EvaIntent[]
+  interestIds     Int[]    @map("interest_ids")
+  showDistance    Boolean  @default(true) @map("show_distance")
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  customer        Customers @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@map("eva_preferences")
+}
+
+model EvaLike {
+  id           Int           @id @default(autoincrement())
+  fromProfileId Int           @map("from_profile_id")
+  toProfileId  Int           @map("to_profile_id")
+  targetType   EvaLikeTarget @default(PROFILE) @map("target_type")
+  targetId     Int?          @map("target_id")
+  comment      String?       @db.VarChar(280)
+  createdAt    DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  fromProfile  EvaProfile    @relation("eva_likes_from", fields: [fromProfileId], references: [id], onDelete: Cascade)
+  toProfile    EvaProfile    @relation("eva_likes_to", fields: [toProfileId], references: [id], onDelete: Cascade)
+
+  @@unique([fromProfileId, toProfileId], map: "eva_likes_pair_unique")
+  @@index([toProfileId, createdAt], map: "eva_likes_to_idx")
+  @@map("eva_likes")
+}
+
+model EvaPass {
+  id           Int        @id @default(autoincrement())
+  fromProfileId Int        @map("from_profile_id")
+  toProfileId  Int        @map("to_profile_id")
+  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  fromProfile  EvaProfile @relation("eva_passes_from", fields: [fromProfileId], references: [id], onDelete: Cascade)
+  toProfile    EvaProfile @relation("eva_passes_to", fields: [toProfileId], references: [id], onDelete: Cascade)
+
+  @@unique([fromProfileId, toProfileId], map: "eva_passes_pair_unique")
+  @@map("eva_passes")
+}
+
+model EvaMatch {
+  id             Int              @id @default(autoincrement())
+  profileAId     Int              @map("profile_a_id")
+  profileBId     Int              @map("profile_b_id")
+  unmatchedAt    DateTime?        @map("unmatched_at") @db.Timestamptz(6)
+  unmatchedById  Int?             @map("unmatched_by_id")
+  createdAt      DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  profileA       EvaProfile       @relation("eva_matches_a", fields: [profileAId], references: [id], onDelete: Cascade)
+  profileB       EvaProfile       @relation("eva_matches_b", fields: [profileBId], references: [id], onDelete: Cascade)
+  conversation   EvaConversation?
+
+  @@unique([profileAId, profileBId], map: "eva_matches_pair_unique")
+  @@index([createdAt], map: "eva_matches_created_idx")
+  @@map("eva_matches")
+}
+
+model EvaConversation {
+  id           Int          @id @default(autoincrement())
+  matchId      Int          @unique @map("match_id")
+  archivedA    Boolean      @default(false) @map("archived_a")
+  archivedB    Boolean      @default(false) @map("archived_b")
+  lastMessageAt DateTime?   @map("last_message_at") @db.Timestamptz(6)
+  createdAt    DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  match        EvaMatch     @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  messages     EvaMessage[]
+  typing       EvaTyping[]
+
+  @@index([lastMessageAt], map: "eva_conversations_last_msg_idx")
+  @@map("eva_conversations")
+}
+
+model EvaMessage {
+  id             Int             @id @default(autoincrement())
+  conversationId Int             @map("conversation_id")
+  senderProfileId Int            @map("sender_profile_id")
+  body           String          @db.VarChar(2000)
+  deliveredAt    DateTime?       @map("delivered_at") @db.Timestamptz(6)
+  readAt         DateTime?       @map("read_at") @db.Timestamptz(6)
+  deletedAt      DateTime?       @map("deleted_at") @db.Timestamptz(6)
+  createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  conversation   EvaConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId, createdAt], map: "eva_messages_thread_idx")
+  @@map("eva_messages")
+}
+
+model EvaTyping {
+  id             Int             @id @default(autoincrement())
+  conversationId Int             @map("conversation_id")
+  profileId      Int             @map("profile_id")
+  expiresAt      DateTime        @map("expires_at") @db.Timestamptz(6)
+  conversation   EvaConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, profileId], map: "eva_typing_unique")
+  @@map("eva_typing")
+}
+
+model EvaBlock {
+  id              Int       @id @default(autoincrement())
+  blockerCustomerId Int     @map("blocker_customer_id")
+  blockedCustomerId Int     @map("blocked_customer_id")
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  blocker         Customers @relation("eva_blocks_blocker", fields: [blockerCustomerId], references: [id], onDelete: Cascade)
+  blocked         Customers @relation("eva_blocks_blocked", fields: [blockedCustomerId], references: [id], onDelete: Cascade)
+
+  @@unique([blockerCustomerId, blockedCustomerId], map: "eva_blocks_unique")
+  @@map("eva_blocks")
+}
+
+model EvaReport {
+  id               Int       @id @default(autoincrement())
+  reporterCustomerId Int     @map("reporter_customer_id")
+  reportedCustomerId Int     @map("reported_customer_id")
+  reason           String    @db.VarChar(80)
+  details          String?   @db.VarChar(1000)
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  reporter         Customers @relation("eva_reports_reporter", fields: [reporterCustomerId], references: [id], onDelete: Cascade)
+
+  @@index([reportedCustomerId], map: "eva_reports_reported_idx")
+  @@map("eva_reports")
+}
+
+model EvaDatingEvent {
+  id          Int                @id @default(autoincrement())
+  title       String             @db.VarChar(160)
+  slug        String             @unique @db.VarChar(160)
+  summary     String?            @db.VarChar(400)
+  description String?            @db.Text
+  coverUrl    String?            @map("cover_url") @db.VarChar(512)
+  city        String?            @db.VarChar(100)
+  venueApprox String?            @map("venue_approx") @db.VarChar(160)
+  startsAt    DateTime           @map("starts_at") @db.Timestamptz(6)
+  endsAt      DateTime?          @map("ends_at") @db.Timestamptz(6)
+  capacity    Int?
+  active      Boolean            @default(true)
+  createdAt   DateTime           @default(now()) @map("created_at") @db.Timestamptz(6)
+  interests   EvaEventInterest[]
+
+  @@index([startsAt, active], map: "eva_dating_events_starts_idx")
+  @@map("eva_dating_events")
+}
+
+model EvaEventInterest {
+  id         Int                  @id @default(autoincrement())
+  eventId    Int                  @map("event_id")
+  customerId Int                  @map("customer_id")
+  kind       EvaEventInterestKind @default(INTERESTED)
+  discoverable Boolean            @default(true)
+  createdAt  DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
+  event      EvaDatingEvent       @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  customer   Customers            @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, customerId], map: "eva_event_interest_unique")
+  @@map("eva_event_interests")
+}
+
+model EvaRaveRoom {
+  id          Int               @id @default(autoincrement())
+  slug        String            @unique @db.VarChar(80)
+  title       String            @db.VarChar(120)
+  theme       String            @db.VarChar(80)
+  description String?           @db.VarChar(400)
+  prompt      String?           @db.VarChar(255)
+  active      Boolean           @default(true)
+  createdAt   DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  presence    EvaRavePresence[]
+
+  @@map("eva_rave_rooms")
+}
+
+model EvaRavePresence {
+  id         Int         @id @default(autoincrement())
+  roomId     Int         @map("room_id")
+  customerId Int         @map("customer_id")
+  joinedAt   DateTime    @default(now()) @map("joined_at") @db.Timestamptz(6)
+  expiresAt  DateTime    @map("expires_at") @db.Timestamptz(6)
+  room       EvaRaveRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  customer   Customers   @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@unique([roomId, customerId], map: "eva_rave_presence_unique")
+  @@index([expiresAt], map: "eva_rave_presence_expires_idx")
+  @@map("eva_rave_presence")
+}
+
+model EvaNotification {
+  id         Int                 @id @default(autoincrement())
+  customerId Int                 @map("customer_id")
+  kind       EvaNotificationKind
+  title      String              @db.VarChar(160)
+  body       String              @db.VarChar(400)
+  dataJson   Json?               @map("data_json")
+  readAt     DateTime?           @map("read_at") @db.Timestamptz(6)
+  createdAt  DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  customer   Customers           @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([customerId, createdAt], map: "eva_notifications_user_idx")
+  @@map("eva_notifications")
+}
+
+model EvaModerationFlag {
+  id         Int       @id @default(autoincrement())
+  customerId Int       @map("customer_id")
+  signal     String    @db.VarChar(80)
+  score      Int       @default(1)
+  metaJson   Json?     @map("meta_json")
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  customer   Customers @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([customerId, signal], map: "eva_moderation_flags_idx")
+  @@map("eva_moderation_flags")
 }
