@@ -101,6 +101,29 @@ export async function registerCustomer(input: {
   };
 }
 
+/** Temporary browse session for EVA / app preview — verified guest customer + tokens. */
+export async function createGuestSession() {
+  const suffix = crypto.randomBytes(4).toString('hex');
+  const email = `guest+${suffix}@saiflower.guest`;
+  const password = crypto.randomBytes(18).toString('hex');
+  const hashed = await bcrypt.hash(password, 10);
+
+  const customer = await prisma.customers.create({
+    data: {
+      name: 'EVA Guest',
+      email,
+      phone: null,
+      password: hashed,
+      isVerified: 1,
+      verificationToken: null,
+      authProvider: 'guest',
+    },
+    select: customerSelect,
+  });
+
+  return tokensForCustomer(customer);
+}
+
 export async function loginCustomer(emailRaw: string, password: string) {
   const email = emailRaw.trim().toLowerCase();
   if (!email || !password) {

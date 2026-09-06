@@ -50,6 +50,19 @@ router.post(
   },
 );
 
+router.post('/guest', async (req, res, next) => {
+  try {
+    const data = await authService.createGuestSession();
+    const guestId = typeof req.headers['x-guest-id'] === 'string' ? req.headers['x-guest-id'] : '';
+    if (guestId) {
+      await mergeGuestCart(data.customer.id, guestId);
+    }
+    res.status(201).json(successResponse('Guest session started', data));
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.post(
   '/google',
   validate([body('credential').isString().notEmpty()]),
